@@ -1,16 +1,16 @@
 {
-  "name": "get-extract",
-  "version": "0.1.0",
+  "name": "get-remote",
+  "version": "0.2.0",
   "description": "Download a file and optionally extract it",
   "keywords": [
     "download",
     "file",
     "extract"
   ],
-  "homepage": "https://github.com/kmalakoff/get-extract",
+  "homepage": "https://github.com/kmalakoff/get-remote",
   "repository": {
     "type": "git",
-    "url": "git@github.com:kmalakoff/get-extract.git"
+    "url": "git@github.com:kmalakoff/get-remote.git"
   },
   "license": "MIT",
   "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
