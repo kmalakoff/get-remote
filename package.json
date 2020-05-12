@@ -1,17 +1,16 @@
 {
-  "name": "download-decompress",
-  "version": "1.2.1",
-  "description": "Deep join an array",
+  "name": "download-extract",
+  "version": "0.1.0",
+  "description": "Download a file and optionally extract it",
   "keywords": [
-    "deep",
-    "join",
-    "array",
-    "joinDeep"
+    "download",
+    "file",
+    "extract"
   ],
-  "homepage": "https://github.com/kmalakoff/download-decompress",
+  "homepage": "https://github.com/kmalakoff/download-extract",
   "repository": {
     "type": "git",
-    "url": "git@github.com:kmalakoff/download-decompress.git"
+    "url": "git@github.com:kmalakoff/download-extract.git"
   },
   "license": "MIT",
   "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
@@ -24,7 +23,7 @@
   },
   "dependencies": {
     "decompress": "^4.2.1",
-    "decompress-zip": "^0.2.2",
+    "mkdirp": "^0.5.5",
     "uuid": "^1.4.2"
   },
   "devDependencies": {
@@ -42,6 +41,6 @@
     "prettier": "^2.0.5"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4"
   }
 }
