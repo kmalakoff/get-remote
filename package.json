@@ -1,5 +1,5 @@
 {
-  "name": "get-file",
+  "name": "get-extract",
   "version": "0.1.0",
   "description": "Download a file and optionally extract it",
   "keywords": [
@@ -7,10 +7,10 @@
     "file",
     "extract"
   ],
-  "homepage": "https://github.com/kmalakoff/get-file",
+  "homepage": "https://github.com/kmalakoff/get-extract",
   "repository": {
     "type": "git",
-    "url": "git@github.com:kmalakoff/get-file.git"
+    "url": "git@github.com:kmalakoff/get-extract.git"
   },
   "license": "MIT",
   "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
