@@ -1,0 +1,47 @@
+{
+  "name": "download-decompress",
+  "version": "1.2.1",
+  "description": "Deep join an array",
+  "keywords": [
+    "deep",
+    "join",
+    "array",
+    "joinDeep"
+  ],
+  "homepage": "https://github.com/kmalakoff/download-decompress",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:kmalakoff/download-decompress.git"
+  },
+  "license": "MIT",
+  "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
+  "main": "index.js",
+  "scripts": {
+    "compat": "nvs --engines -- mocha-compat test/spec/**/*.test.js --timeout=99999999",
+    "format": "prettier --write '**/*.js'",
+    "lint": "eslint .",
+    "test": "mocha-compat test/spec/**/*.test.js --timeout=99999999"
+  },
+  "dependencies": {
+    "decompress": "^4.2.1",
+    "decompress-zip": "^0.2.2",
+    "uuid": "^1.4.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "lodash.flattendeep": "^4.4.0",
+    "mocha-compat": "^3.5.5",
+    "nvs": "^0.3.0",
+    "prettier": "^2.0.5"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}
