@@ -16,15 +16,16 @@
   "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
   "main": "index.js",
   "scripts": {
-    "compat": "nvs --engines -- mocha-compat test/spec/**/*.test.js --timeout=99999999",
+    "compat": "nvs --engines -- mocha-compat test/spec/**/*.test.js --no-timeouts",
     "format": "prettier --write '**/*.js'",
     "lint": "eslint .",
-    "test": "mocha-compat test/spec/**/*.test.js --timeout=99999999"
+    "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
   },
   "dependencies": {
     "decompress": "^4.2.1",
+    "end-of-stream": "^1.4.4",
     "mkdirp": "^0.5.5",
-    "uuid": "^1.4.2"
+    "osenv": "^0.1.5"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
@@ -38,9 +39,11 @@
     "lodash.flattendeep": "^4.4.0",
     "mocha-compat": "^3.5.5",
     "nvs": "^0.3.0",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "progress-stream": "^2.0.0",
+    "single-line-log": "^1.1.2"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">0.8"
   }
 }
