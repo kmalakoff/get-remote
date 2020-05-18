@@ -1,6 +1,6 @@
 {
   "name": "get-remote",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Download a file and optionally extract it",
   "keywords": [
     "download",
@@ -40,8 +40,7 @@
     "mocha-compat": "^3.5.5",
     "nvs": "^0.3.0",
     "prettier": "^2.0.5",
-    "progress-stream": "^2.0.0",
-    "single-line-log": "^1.1.2"
+    "progress-stream": "^2.0.0"
   },
   "engines": {
     "node": ">0.8"
