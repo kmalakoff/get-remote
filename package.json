@@ -38,7 +38,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "lodash.flattendeep": "^4.4.0",
     "mocha-compat": "^3.5.5",
-    "nvs": "^0.4.0",
+    "nvs": "^0.4.1",
     "prettier": "^2.0.5",
     "progress-stream": "^2.0.0"
   },
