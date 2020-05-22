@@ -1,6 +1,12 @@
 var download = require('./lib/download');
 
 function getRemote(src, dest, options, callback) {
+  if (arguments.length === 2 && typeof dest !== 'string') {
+    callback = options;
+    options = dest;
+    dest = null;
+  }
+
   if (typeof options === 'function') {
     callback = options;
     options = null;
