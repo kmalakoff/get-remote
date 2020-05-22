@@ -8,26 +8,26 @@ var download = require('../..');
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp', 'test'));
 
-describe('download', function () {
+describe('decompress', function () {
   beforeEach(rimraf.bind(null, TMP_DIR));
   after(rimraf.bind(null, TMP_DIR));
 
-  it('should download file over https', function (done) {
-    var fullPath = path.join(TMP_DIR, 'README.md');
-    download('https://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', fullPath, function (err) {
+  it('should download zip over https', function (done) {
+    var fullPath = path.join(TMP_DIR, 'github.zip');
+    download('https://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', fullPath, { extract: true, strip: 1 }, function (err) {
       assert.ok(!err);
-      var files = fs.readdirSync(TMP_DIR);
-      assert.ok(files.length === 1);
+      var files = fs.readdirSync(fullPath);
+      assert.ok(files.length > 1);
       done();
     });
   });
 
-  it('should download file over https', function (done) {
-    var fullPath = path.join(TMP_DIR, 'README.md');
-    download('http://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', fullPath, function (err) {
+  it('should download zip over http', function (done) {
+    var fullPath = path.join(TMP_DIR, 'github.zip');
+    download('http://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', fullPath, { extract: true, strip: 1 }, function (err) {
       assert.ok(!err);
-      var files = fs.readdirSync(TMP_DIR);
-      assert.ok(files.length === 1);
+      var files = fs.readdirSync(fullPath);
+      assert.ok(files.length > 1);
       done();
     });
   });
@@ -46,7 +46,9 @@ describe('download', function () {
       return progress;
     }
 
-    download('http://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', fullPath, { progress: createProgressStream }, function (err) {
+    download('http://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', fullPath, { extract: true, strip: 1, progress: createProgressStream }, function (
+      err
+    ) {
       assert.ok(!err);
       var files = fs.readdirSync(TMP_DIR);
       assert.ok(files.length === 1);
