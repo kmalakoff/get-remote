@@ -9,9 +9,9 @@ var fstream = require('fstream');
 
 var download = require('../..');
 
-var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp', 'test'));
+var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 
-describe('download', function () {
+describe('get-file', function () {
   beforeEach(function (done) {
     rimraf(TMP_DIR, function () {
       mkdirp(TMP_DIR, done);
@@ -19,8 +19,7 @@ describe('download', function () {
   });
 
   it('should download file over https', function (done) {
-    var fullPath = path.join(TMP_DIR, 'README.md');
-    download('https://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', fullPath, function (err) {
+    download('https://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', TMP_DIR, function (err) {
       assert.ok(!err);
       var files = fs.readdirSync(TMP_DIR);
       assert.ok(files.length === 1);
@@ -29,8 +28,7 @@ describe('download', function () {
   });
 
   it('should download file over http', function (done) {
-    var fullPath = path.join(TMP_DIR, 'README.md');
-    download('http://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', fullPath, function (err) {
+    download('http://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', TMP_DIR, function (err) {
       assert.ok(!err);
       var files = fs.readdirSync(TMP_DIR);
       assert.ok(files.length === 1);
@@ -41,9 +39,8 @@ describe('download', function () {
   it('should support promises', function (done) {
     if (typeof Promise === 'undefined') return done(); // no promise support
 
-    var fullPath = path.join(TMP_DIR, 'README.md');
-    download('https://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', fullPath)
-      .then(function () {
+    download('https://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', TMP_DIR)
+      .then(function (stream) {
         var files = fs.readdirSync(TMP_DIR);
         assert.ok(files.length === 1);
         done();
@@ -52,7 +49,6 @@ describe('download', function () {
   });
 
   it('should download with progress', function (done) {
-    var fullPath = path.join(TMP_DIR, 'README.md');
     var progressUpdates = [];
 
     function createProgressStream(res) {
@@ -65,7 +61,7 @@ describe('download', function () {
       return progress;
     }
 
-    download('http://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', fullPath, { progress: createProgressStream }, function (err) {
+    download('http://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', TMP_DIR, { progress: createProgressStream }, function (err) {
       assert.ok(!err);
       var files = fs.readdirSync(TMP_DIR);
       assert.ok(files.length === 1);
@@ -77,12 +73,11 @@ describe('download', function () {
 
 describe('zip', function () {
   it('should download unzip over https', function (done) {
-    var fullPath = path.join(TMP_DIR, 'github');
-    mkdirp(fullPath, function () {
-      var dest = [unzip.Parse(), fstream.Writer(fullPath)];
+    mkdirp(TMP_DIR, function () {
+      var dest = [unzip.Parse(), fstream.Writer(TMP_DIR)];
       download('https://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', dest, function (err) {
         assert.ok(!err);
-        var files = fs.readdirSync(path.join(fullPath, 'get-remote-0.2.1'));
+        var files = fs.readdirSync(path.join(TMP_DIR, 'get-remote-0.2.1'));
         assert.ok(files.length > 1);
         done();
       });
@@ -90,12 +85,11 @@ describe('zip', function () {
   });
 
   it('should download unzip over http', function (done) {
-    var fullPath = path.join(TMP_DIR, 'github');
-    mkdirp(fullPath, function () {
-      var dest = [unzip.Parse(), fstream.Writer(fullPath)];
+    mkdirp(TMP_DIR, function () {
+      var dest = [unzip.Parse(), fstream.Writer(TMP_DIR)];
       download('http://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', dest, function (err) {
         assert.ok(!err);
-        var files = fs.readdirSync(path.join(fullPath, 'get-remote-0.2.1'));
+        var files = fs.readdirSync(path.join(TMP_DIR, 'get-remote-0.2.1'));
         assert.ok(files.length > 1);
         done();
       });
@@ -105,12 +99,11 @@ describe('zip', function () {
   it('should support promises', function (done) {
     if (typeof Promise === 'undefined') return done(); // no promise support
 
-    var fullPath = path.join(TMP_DIR, 'github');
-    mkdirp(fullPath, function () {
-      var dest = [unzip.Parse(), fstream.Writer(fullPath)];
+    mkdirp(TMP_DIR, function () {
+      var dest = [unzip.Parse(), fstream.Writer(TMP_DIR)];
       download('http://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', dest)
         .then(function () {
-          var files = fs.readdirSync(path.join(fullPath, 'get-remote-0.2.1'));
+          var files = fs.readdirSync(path.join(TMP_DIR, 'get-remote-0.2.1'));
           assert.ok(files.length > 1);
           done();
         })
@@ -119,9 +112,8 @@ describe('zip', function () {
   });
 
   it('should download with progress', function (done) {
-    var fullPath = path.join(TMP_DIR, 'github');
-    mkdirp(fullPath, function () {
-      var dest = [unzip.Parse(), fstream.Writer(fullPath)];
+    mkdirp(TMP_DIR, function () {
+      var dest = [unzip.Parse(), fstream.Writer(TMP_DIR)];
       var progressUpdates = [];
 
       function createProgressStream(res) {
@@ -136,7 +128,7 @@ describe('zip', function () {
 
       download('http://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', dest, { progress: createProgressStream }, function (err) {
         assert.ok(!err);
-        var files = fs.readdirSync(path.join(fullPath, 'get-remote-0.2.1'));
+        var files = fs.readdirSync(path.join(TMP_DIR, 'get-remote-0.2.1'));
         assert.ok(files.length > 1);
         done();
       });
