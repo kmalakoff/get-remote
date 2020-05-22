@@ -45,14 +45,15 @@
     "lodash.flattendeep": "^4.4.0",
     "mkdirp-classic": "^0.5.3",
     "mocha-compat": "^3.5.5",
-    "nock": "^8.2.2",
+    "nock": "^9.6.1",
     "nvs": "^0.4.4",
+    "object-assign": "^4.1.1",
     "prettier": "^2.0.5",
     "progress-stream": "^2.0.0",
     "random-buffer": "^0.1.0",
     "semver": "^5.7.1"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">=0.8"
   }
 }
