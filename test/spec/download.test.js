@@ -7,15 +7,23 @@ var contentDisposition = require('content-disposition');
 var isZip = require('is-zip');
 var nock = require('nock');
 var randomBuffer = require('random-buffer');
+var semver = require('semver');
 
 var access = require('../lib/access');
 var streamToBuffer = require('../lib/streamToBuffer');
 
 var m = require('../..');
 
+// // nock patches
+// if (!require('timers').setImmediate) {
+//   require('setimmediate');
+//   require('timers').setImmediate = global.setImmediate;
+// }
+
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 
 describe('download', function () {
+  if (semver.lt(process.versions.node, 'v0.10.0')) return;
   beforeEach(function (done) {
     rimraf(TMP_DIR, function () {
       mkdirp(TMP_DIR, done);
