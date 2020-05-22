@@ -6,6 +6,7 @@ var mkdirp = require('mkdirp-classic');
 var progressStream = require('progress-stream');
 var unzip = require('node-unzip-2');
 var fstream = require('fstream');
+var semver = require('semver');
 
 var download = require('../..');
 
@@ -72,6 +73,8 @@ describe('get-file', function () {
 });
 
 describe('zip', function () {
+  if (semver.lt(process.versions.node, 'v0.10.0')) return;
+
   it('should download unzip over https', function (done) {
     mkdirp(TMP_DIR, function () {
       var dest = [unzip.Parse(), fstream.Writer(TMP_DIR)];
