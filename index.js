@@ -1,8 +1,7 @@
-var isArray = require('isarray');
 var download = require('./lib/download');
 
 function getRemote(src, dest, options, callback) {
-  if (arguments.length === 2 && typeof dest !== 'string' && !isArray(dest)) {
+  if (arguments.length === 2 && typeof dest !== 'string') {
     callback = options;
     options = dest;
     dest = null;

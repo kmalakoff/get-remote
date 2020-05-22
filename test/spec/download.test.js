@@ -8,10 +8,9 @@ var isZip = require('is-zip');
 var randomBuffer = require('random-buffer');
 var semver = require('semver');
 
-var access = require('../lib/access');
 var streamToBuffer = require('../lib/streamToBuffer');
 
-var m = require('../..');
+var download = require('../..');
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 
@@ -61,7 +60,7 @@ describe('download', function () {
   });
 
   it('download as stream', function (done) {
-    m('http://foo.bar/foo.zip', function (err, stream) {
+    download('http://foo.bar/foo.zip', function (err, stream) {
       assert.ok(!err);
       streamToBuffer(stream, function (err, buffer) {
         assert.ok(!err);
@@ -72,7 +71,7 @@ describe('download', function () {
   });
 
   it.skip('download as promise', function (done) {
-    m('http://foo.bar/foo.zip', function (err, stream) {
+    download('http://foo.bar/foo.zip', function (err, stream) {
       assert.ok(!err);
       assert.ok(isZip(stream));
       done();
@@ -80,7 +79,7 @@ describe('download', function () {
   });
 
   it('download a very large file', function (done) {
-    m('http://foo.bar/large.bin', function (err, stream) {
+    download('http://foo.bar/large.bin', function (err, stream) {
       assert.ok(!err);
       streamToBuffer(stream, function (err, buffer) {
         assert.ok(!err);
@@ -91,47 +90,51 @@ describe('download', function () {
   });
 
   it('download and rename file', function (done) {
-    m('http://foo.bar/foo.zip', TMP_DIR, { filename: 'bar.zip' }, function (err) {
+    download('http://foo.bar/foo.zip', TMP_DIR, { filename: 'bar.zip' }, function (err) {
       assert.ok(!err);
-      access(path.join(TMP_DIR, 'bar.zip'), function (err) {
+      fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
+        assert.deepEqual(files.sort(), ['bar.zip']);
         done();
       });
     });
   });
 
   it('save file', function (done) {
-    m('http://foo.bar/foo.zip', TMP_DIR, function (err) {
+    download('http://foo.bar/foo.zip', TMP_DIR, function (err) {
       assert.ok(!err);
-      access(path.join(TMP_DIR, 'foo.zip'), function (err) {
+      fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
+        assert.deepEqual(files.sort(), ['foo.zip']);
         done();
       });
     });
   });
 
   it('extract file', function (done) {
-    m('http://foo.bar/foo.zip', TMP_DIR, { extract: true }, function (err) {
+    download('http://foo.bar/foo.zip', TMP_DIR, { extract: true }, function (err) {
       assert.ok(!err);
-      access(path.join(TMP_DIR, 'file.txt'), function (err) {
+      fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
+        assert.deepEqual(files.sort(), ['file.txt', 'link']);
         done();
       });
     });
   });
 
   it('extract file that is not compressed', function (done) {
-    m('http://foo.bar/foo.js', TMP_DIR, { extract: true }, function (err) {
+    download('http://foo.bar/foo.js', TMP_DIR, { extract: true }, function (err) {
       assert.ok(!err);
-      access(path.join(TMP_DIR, 'foo.js'), function (err) {
+      fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
+        assert.deepEqual(files.sort(), ['foo.js']);
         done();
       });
     });
   });
 
   it('error on 404', function (done) {
-    m('http://foo.bar/404', function (err) {
+    download('http://foo.bar/404', function (err) {
       assert.ok(err);
       assert.equal(err.message, 'Response code 404 (Not Found)');
       done();
@@ -139,17 +142,18 @@ describe('download', function () {
   });
 
   it('rename to valid filename', function (done) {
-    m('http://foo.bar/foo*bar.zip', TMP_DIR, function (err) {
+    download('http://foo.bar/foo*bar.zip', TMP_DIR, function (err) {
       assert.ok(!err);
-      access(path.join(TMP_DIR, 'foo!bar.zip'), function (err) {
+      fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
+        assert.deepEqual(files.sort(), ['foo!bar.zip']);
         done();
       });
     });
   });
 
   it('follow redirects', function (done) {
-    m('http://foo.bar/redirect.zip', function (err, stream) {
+    download('http://foo.bar/redirect.zip', function (err, stream) {
       assert.ok(!err);
       streamToBuffer(stream, function (err, buffer) {
         assert.ok(!err);
@@ -160,7 +164,7 @@ describe('download', function () {
   });
 
   it('follow redirect to https', function (done) {
-    m('http://foo.bar/redirect-https.zip', function (err, stream) {
+    download('http://foo.bar/redirect-https.zip', function (err, stream) {
       assert.ok(!err);
       streamToBuffer(stream, function (err, buffer) {
         assert.ok(!err);
@@ -171,32 +175,35 @@ describe('download', function () {
   });
 
   it('handle query string', function (done) {
-    m('http://foo.bar/querystring.zip?param=value', TMP_DIR, function (err) {
+    download('http://foo.bar/querystring.zip?param=value', TMP_DIR, function (err) {
       assert.ok(!err);
-      access(path.join(TMP_DIR, 'querystring.zip'), function (err) {
+      fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
+        assert.deepEqual(files.sort(), ['querystring.zip']);
         done();
       });
     });
   });
 
   it('handle content dispositon', function (done) {
-    m('http://foo.bar/dispo', TMP_DIR, function (err) {
+    download('http://foo.bar/dispo', TMP_DIR, function (err) {
       assert.ok(!err);
-      access(path.join(TMP_DIR, 'dispo.zip'), function (err) {
+      fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
+        assert.deepEqual(files.sort(), ['dispo.zip']);
         done();
       });
     });
   });
 
-  // it('handle filename = require(file type', function (done) {
-  //   m('http://foo.bar/filetype', TMP_DIR, function (err) {
-  //     assert.ok(!err);
-  //     access(path.join(TMP_DIR, 'filetype.zip'), function (err) {
-  //       assert.ok(!err);
-  //       fs.unlink(path.join(TMP_DIR, 'filetype.zip'), done);
-  //     });
-  //   });
-  // });
+  it.skip('handle filename from file type', function (done) {
+    download('http://foo.bar/filetype', TMP_DIR, function (err) {
+      assert.ok(!err);
+      fs.readdir(TMP_DIR, function (err, files) {
+        assert.ok(!err);
+        assert.deepEqual(files.sort(), ['filetype.zip']);
+        done();
+      });
+    });
+  });
 });
