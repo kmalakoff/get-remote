@@ -28,6 +28,7 @@
     "isarray": "^2.0.5",
     "node-unzip-2": "^0.2.8",
     "once": "^1.4.0",
+    "setimmediate": "^1.0.5",
     "tar-stream": "^2.1.2"
   },
   "devDependencies": {
@@ -48,7 +49,8 @@
     "nvs": "^0.4.4",
     "prettier": "^2.0.5",
     "progress-stream": "^2.0.0",
-    "random-buffer": "^0.1.0"
+    "random-buffer": "^0.1.0",
+    "semver": "^5.7.1"
   },
   "engines": {
     "node": ">=0.12"
