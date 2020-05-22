@@ -28,8 +28,11 @@
     "isarray": "^2.0.5",
     "node-unzip-2": "^0.2.8",
     "once": "^1.4.0",
-    "setimmediate": "^1.0.5",
-    "tar-stream": "^2.1.2"
+    "path-complete-extname": "^1.0.0",
+    "tar": "^6.0.2",
+    "tar-stream": "^2.1.2",
+    "unbzip2-stream": "^1.4.2",
+    "xz": "^2.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
