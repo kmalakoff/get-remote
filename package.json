@@ -22,13 +22,18 @@
     "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
   },
   "dependencies": {
-    "decompress": "^4.2.1",
     "fs-write-stream-atomic": "^1.0.10",
-    "mkdirp": "^0.5.5",
-    "osenv": "^0.1.5"
+    "fstream": "^1.0.12",
+    "gunzip-maybe": "^1.4.2",
+    "isarray": "^2.0.5",
+    "node-unzip-2": "^0.2.8",
+    "once": "^1.4.0",
+    "tar-stream": "^2.1.2",
+    "unzip2": "^0.2.5"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
+    "content-disposition": "^0.5.3",
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-standard": "^14.1.1",
@@ -36,13 +41,17 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
+    "is-zip": "^1.0.0",
     "lodash.flattendeep": "^4.4.0",
+    "mkdirp-classic": "^0.5.3",
     "mocha-compat": "^3.5.5",
+    "nock": "^12.0.3",
     "nvs": "^0.4.4",
     "prettier": "^2.0.5",
-    "progress-stream": "^2.0.0"
+    "progress-stream": "^2.0.0",
+    "random-buffer": "^0.1.0"
   },
   "engines": {
-    "node": "0.8"
+    "node": ">=0.12"
   }
 }
