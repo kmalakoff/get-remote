@@ -53,9 +53,9 @@ describe('download', function () {
       .get('/redirect.zip')
       .reply(302, null, { location: 'http://foo.bar/foo.zip' })
       .get('/redirect-https.zip')
-      .reply(301, null, { location: 'https://foo.bar/foo-https.zip' });
-    // .get('/filetype')
-    // .replyWithFile(200, fixturePath);
+      .reply(301, null, { location: 'https://foo.bar/foo-https.zip' })
+      .get('/filetype')
+      .replyWithFile(200, fixturePath);
 
     nock('https://foo.bar').persist().get('/foo-https.zip').replyWithFile(200, fixturePath);
   });
@@ -71,15 +71,13 @@ describe('download', function () {
     });
   });
 
-  // it('download as promise', function (done) {
-  //   m('http://foo.bar/foo.zip', function (err, stream) {
-  //     assert.ok(!err);
-  //     assert.ok(isZip(stream));
-  //     done();
-  //   });
-
-  //   // t.true(isZip(await m('http://foo.bar/foo.zip')));
-  // });
+  it.skip('download as promise', function (done) {
+    m('http://foo.bar/foo.zip', function (err, stream) {
+      assert.ok(!err);
+      assert.ok(isZip(stream));
+      done();
+    });
+  });
 
   it('download a very large file', function (done) {
     m('http://foo.bar/large.bin', function (err, stream) {
@@ -97,7 +95,7 @@ describe('download', function () {
       assert.ok(!err);
       access(path.join(TMP_DIR, 'bar.zip'), function (err) {
         assert.ok(!err);
-        fs.unlink(path.join(TMP_DIR, 'bar.zip'), done);
+        done();
       });
     });
   });
@@ -107,22 +105,30 @@ describe('download', function () {
       assert.ok(!err);
       access(path.join(TMP_DIR, 'foo.zip'), function (err) {
         assert.ok(!err);
-        fs.unlink(path.join(TMP_DIR, 'foo.zip'), done);
+        done();
       });
     });
   });
 
-  // it('extract file', function (done) {
-  //   await m('http://foo.bar/foo.zip', TMP_DIR, { extract: true });
-  //   t.true(await pathExists(path.join(TMP_DIR, 'file.txt')));
-  //   await fsP.unlink(path.join(TMP_DIR, 'file.txt'));
-  // });
+  it('extract file', function (done) {
+    m('http://foo.bar/foo.zip', TMP_DIR, { extract: true }, function (err) {
+      assert.ok(!err);
+      access(path.join(TMP_DIR, 'file.txt'), function (err) {
+        assert.ok(!err);
+        done();
+      });
+    });
+  });
 
-  // it('extract file that is not compressed', function (done) {
-  //   await m('http://foo.bar/foo.js', TMP_DIR, { extract: true });
-  //   t.true(await pathExists(path.join(TMP_DIR, 'foo.js')));
-  //   await fsP.unlink(path.join(TMP_DIR, 'foo.js'));
-  // });
+  it('extract file that is not compressed', function (done) {
+    m('http://foo.bar/foo.js', TMP_DIR, { extract: true }, function (err) {
+      assert.ok(!err);
+      access(path.join(TMP_DIR, 'foo.js'), function (err) {
+        assert.ok(!err);
+        done();
+      });
+    });
+  });
 
   it('error on 404', function (done) {
     m('http://foo.bar/404', function (err) {
@@ -137,7 +143,7 @@ describe('download', function () {
       assert.ok(!err);
       access(path.join(TMP_DIR, 'foo!bar.zip'), function (err) {
         assert.ok(!err);
-        fs.unlink(path.join(TMP_DIR, 'foo!bar.zip'), done);
+        done();
       });
     });
   });
@@ -169,7 +175,7 @@ describe('download', function () {
       assert.ok(!err);
       access(path.join(TMP_DIR, 'querystring.zip'), function (err) {
         assert.ok(!err);
-        fs.unlink(path.join(TMP_DIR, 'querystring.zip'), done);
+        done();
       });
     });
   });
@@ -179,7 +185,7 @@ describe('download', function () {
       assert.ok(!err);
       access(path.join(TMP_DIR, 'dispo.zip'), function (err) {
         assert.ok(!err);
-        fs.unlink(path.join(TMP_DIR, 'dispo.zip'), done);
+        done();
       });
     });
   });
