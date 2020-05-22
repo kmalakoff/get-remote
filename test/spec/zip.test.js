@@ -21,9 +21,8 @@ describe('zip', function () {
     });
   });
 
-  it('should download unzip over https', function (done) {
-    var dest = [unzip.Parse(), fstream.Writer(TMP_DIR)];
-    download('https://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', dest, function (err) {
+  it('should download unzip over http with redirect', function (done) {
+    download('http://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', TMP_DIR, { extract: '.zip' }, function (err) {
       assert.ok(!err);
       var files = fs.readdirSync(path.join(TMP_DIR, 'get-remote-0.2.1'));
       assert.ok(files.length > 1);
@@ -31,48 +30,28 @@ describe('zip', function () {
     });
   });
 
-  it('should download unzip over http', function (done) {
-    var dest = [unzip.Parse(), fstream.Writer(TMP_DIR)];
-    download('http://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', dest, function (err) {
+  it('should support manual extraction', function (done) {
+    download('http://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', function (err, res) {
       assert.ok(!err);
-      var files = fs.readdirSync(path.join(TMP_DIR, 'get-remote-0.2.1'));
-      assert.ok(files.length > 1);
-      done();
+      res = res.pipe(unzip.Parse()).pipe(fstream.Writer(TMP_DIR));
+      res.on('error', done);
+      res.on('close', function () {
+        var files = fs.readdirSync(path.join(TMP_DIR, 'get-remote-0.2.1'));
+        assert.ok(files.length > 1);
+        done();
+      });
     });
   });
 
   it('should support promises', function (done) {
     if (typeof Promise === 'undefined') return done(); // no promise support
 
-    var dest = [unzip.Parse(), fstream.Writer(TMP_DIR)];
-    download('http://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', dest)
+    download('http://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', TMP_DIR, { extract: '.zip' })
       .then(function () {
         var files = fs.readdirSync(path.join(TMP_DIR, 'get-remote-0.2.1'));
         assert.ok(files.length > 1);
         done();
       })
       .catch(done);
-  });
-
-  it('should download with progress', function (done) {
-    var dest = [unzip.Parse(), fstream.Writer(TMP_DIR)];
-    var progressUpdates = [];
-
-    function createProgressStream(res) {
-      var progress = progressStream({
-        length: res.headers['content-length'] || 0,
-        drain: true,
-        speed: 20,
-      });
-      progress.on('progress', progressUpdates.push.bind(progressUpdates));
-      return progress;
-    }
-
-    download('http://codeload.github.com/kmalakoff/get-remote/zip/0.2.1', dest, { progress: createProgressStream }, function (err) {
-      assert.ok(!err);
-      var files = fs.readdirSync(path.join(TMP_DIR, 'get-remote-0.2.1'));
-      assert.ok(files.length > 1);
-      done();
-    });
   });
 });
