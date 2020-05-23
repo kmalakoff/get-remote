@@ -1,6 +1,6 @@
 {
   "name": "get-remote",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Download a file and optionally extract it",
   "keywords": [
     "download",
@@ -22,6 +22,7 @@
     "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
   },
   "dependencies": {
+    "content-disposition": "^0.5.3",
     "fast-extract": "^0.1.1",
     "fs-write-stream-atomic": "^1.0.10",
     "once": "^1.4.0",
@@ -29,7 +30,6 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "content-disposition": "^0.5.3",
     "eslint": "^7.1.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-standard": "^14.1.1",
