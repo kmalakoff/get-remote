@@ -29,6 +29,7 @@
     "isarray": "^2.0.5",
     "node-unzip-2": "^0.2.8",
     "once": "^1.4.0",
+    "osenv": "^0.1.5",
     "path-complete-extname": "^1.0.0",
     "tar": "^6.0.2",
     "tar-stream": "^2.1.2",
