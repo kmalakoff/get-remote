@@ -15,11 +15,10 @@ function addTests(extractType) {
     download('http://extractors.com/foo.' + extractType, TMP_DIR, { strip: 1, extract: true }, function (err) {
       assert.ok(!err);
 
-      var destPath = extractType === 'zip' ? path.join(TMP_DIR, 'data') : TMP_DIR;
-      fs.readdir(destPath, function (err, files) {
+      fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
         assert.deepEqual(files.sort(), ['file.txt', 'link']);
-        extractType === 'zip' || assert.equal(fs.realpathSync(path.join(destPath, 'link')), path.join(destPath, 'file.txt'));
+        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
         done();
       });
     });
@@ -29,11 +28,10 @@ function addTests(extractType) {
     download('http://extractors.com/foo-' + extractType, TMP_DIR, { strip: 1, extract: '.' + extractType, filename: 'fixture.' + extractType }, function (err) {
       assert.ok(!err);
 
-      var destPath = extractType === 'zip' ? path.join(TMP_DIR, 'data') : TMP_DIR;
-      fs.readdir(destPath, function (err, files) {
+      fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
         assert.deepEqual(files.sort(), ['file.txt', 'link']);
-        extractType === 'zip' || assert.equal(fs.realpathSync(path.join(destPath, 'link')), path.join(destPath, 'file.txt'));
+        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
         done();
       });
     });
@@ -42,7 +40,7 @@ function addTests(extractType) {
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 
-describe.only('extract', function () {
+describe('extract', function () {
   if (semver.lt(process.versions.node, 'v0.10.0')) return;
 
   // nock patch

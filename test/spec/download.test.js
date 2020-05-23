@@ -114,9 +114,10 @@ describe('download', function () {
   it('extract file', function (done) {
     download('http://foo.bar/foo.zip', TMP_DIR, { extract: true, strip: 1 }, function (err) {
       assert.ok(!err);
-      fs.readdir(path.join(TMP_DIR, 'data'), function (err, files) {
+      fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
         assert.deepEqual(files.sort(), ['file.txt', 'link']);
+        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
         done();
       });
     });
