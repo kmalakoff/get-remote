@@ -7,8 +7,11 @@ var semver = require('semver');
 
 var download = require('../..');
 
-var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tar.xz', 'tgz', 'zip'];
-// var EXTRACT_TYPES = ['zip'];
+var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip'];
+try {
+  var lzmaNative = require('require_optional')('lzma-native');
+  if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
+} catch (err) {}
 
 function addTests(extractType) {
   it('extract file (' + extractType + ')', function (done) {
