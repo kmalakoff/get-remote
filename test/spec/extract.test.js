@@ -7,27 +7,33 @@ var semver = require('semver');
 
 var download = require('../..');
 
-var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tar.xz', 'tgz', 'zip'];
+// var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tar.xz', 'tgz', 'zip'];
+var EXTRACT_TYPES = ['zip'];
 
 function addTests(extractType) {
   it('extract file (' + extractType + ')', function (done) {
-    download('http://extractors.com/foo.' + extractType, TMP_DIR, { extract: true }, function (err) {
+    download('http://extractors.com/foo.' + extractType, TMP_DIR, { strip: 1, extract: true }, function (err) {
       assert.ok(!err);
-      fs.readdir(path.join(TMP_DIR, 'data'), function (err, files) {
+
+      var destPath = extractType === 'zip' ? path.join(TMP_DIR, 'data') : TMP_DIR;
+      fs.readdir(destPath, function (err, files) {
         assert.ok(!err);
         assert.deepEqual(files.sort(), ['file.txt', 'link']);
+        extractType === 'zip' || assert.equal(fs.realpathSync(path.join(destPath, 'link')), path.join(destPath, 'file.txt'));
         done();
       });
     });
   });
 
   it('extract file without extension (' + extractType + ')', function (done) {
-    download('http://extractors.com/foo-' + extractType, TMP_DIR, { extract: '.' + extractType }, function (err) {
+    download('http://extractors.com/foo-' + extractType, TMP_DIR, { strip: 1, extract: '.' + extractType, filename: 'fixture.zip' }, function (err) {
       assert.ok(!err);
-      fs.readdir(path.join(TMP_DIR, 'data'), function (err, files) {
+
+      var destPath = extractType === 'zip' ? path.join(TMP_DIR, 'data') : TMP_DIR;
+      fs.readdir(destPath, function (err, files) {
         assert.ok(!err);
         assert.deepEqual(files.sort(), ['file.txt', 'link']);
-        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'data', 'link')), path.join(TMP_DIR, 'data', 'file.txt'));
+        extractType === 'zip' || assert.equal(fs.realpathSync(path.join(destPath, 'link')), path.join(destPath, 'file.txt'));
         done();
       });
     });
@@ -36,7 +42,7 @@ function addTests(extractType) {
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 
-describe.only('extract', function () {
+describe('extract', function () {
   if (semver.lt(process.versions.node, 'v0.10.0')) return;
 
   // nock patch

@@ -22,6 +22,7 @@
     "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
   },
   "dependencies": {
+    "decompress-zip": "^0.2.2",
     "fs-write-stream-atomic": "^1.0.10",
     "fstream": "^1.0.12",
     "gunzip-maybe": "^1.4.2",
@@ -32,6 +33,7 @@
     "tar": "^6.0.2",
     "tar-stream": "^2.1.2",
     "unbzip2-stream": "^1.4.2",
+    "unzip-stream": "^0.3.0",
     "xz": "^2.0.2"
   },
   "devDependencies": {
