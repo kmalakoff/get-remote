@@ -112,7 +112,7 @@ describe('download', function () {
   });
 
   it('extract file', function (done) {
-    download('http://foo.bar/foo.zip', TMP_DIR, { extract: true }, function (err) {
+    download('http://foo.bar/foo.zip', TMP_DIR, { extract: true, strip: 1 }, function (err) {
       assert.ok(!err);
       fs.readdir(path.join(TMP_DIR, 'data'), function (err, files) {
         assert.ok(!err);
