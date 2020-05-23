@@ -1,14 +1,14 @@
 var once = require('once');
 
-module.exports = function toBuffer(stream, callback) {
+module.exports = function streamToBuffer(stream, callback) {
   callback = once(callback);
 
-  var bufs = [];
-  stream.on('data', function (data) {
-    bufs.push(data);
+  var chunks = [];
+  stream.on('data', function (chunk) {
+    chunks.push(chunk);
   });
   stream.on('error', callback);
   stream.on('end', function () {
-    callback(null, Buffer.concat(bufs));
+    callback(null, Buffer.concat(chunks));
   });
 };

@@ -48,18 +48,11 @@ describe('get-file', function () {
 
   it('should download with progress', function (done) {
     var progressUpdates = [];
-
-    function createProgressStream(res) {
-      var progress = progressStream({
-        length: res.headers['content-length'] || 0,
-        drain: true,
-        speed: 20,
-      });
-      progress.on('progress', progressUpdates.push.bind(progressUpdates));
-      return progress;
+    function progress(update) {
+      progressUpdates.push(update);
     }
 
-    download('http://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', TMP_DIR, { progress: createProgressStream }, function (err) {
+    download('http://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', TMP_DIR, { progress: progress }, function (err) {
       assert.ok(!err);
       var files = fs.readdirSync(TMP_DIR);
       assert.ok(files.length === 1);
