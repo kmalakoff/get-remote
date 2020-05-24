@@ -2,7 +2,7 @@ var assert = require('assert');
 var path = require('path');
 var fs = require('fs');
 var rimraf = require('rimraf');
-var mkdirp = require('mkdirp-classic');
+var mkpath = require('mkpath');
 
 var download = require('../..');
 
@@ -11,7 +11,7 @@ var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 describe('get-file', function () {
   beforeEach(function (done) {
     rimraf(TMP_DIR, function () {
-      mkdirp(TMP_DIR, done);
+      mkpath(TMP_DIR, done);
     });
   });
 
