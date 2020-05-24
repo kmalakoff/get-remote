@@ -16,14 +16,13 @@
   "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
   "main": "index.js",
   "scripts": {
-    "compat": "nvs --engines -- mocha-compat test/spec/**/*.test.js --no-timeouts",
     "format": "eslint . --fix",
     "lint": "eslint .",
     "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
   },
   "dependencies": {
     "content-disposition": "^0.5.3",
-    "fast-extract": "^0.1.5",
+    "fast-extract": "^0.1.6",
     "fs-write-stream-atomic": "^1.0.10",
     "once": "^1.4.0",
     "progress-stream": "^2.0.0"
@@ -41,7 +40,6 @@
     "mkdirp-classic": "^0.5.3",
     "mocha-compat": "^3.5.5",
     "nock": "^9.6.1",
-    "nvs": "^0.4.4",
     "object-assign": "^4.1.1",
     "prettier": "^2.0.5",
     "random-buffer": "^0.1.0",
