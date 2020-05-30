@@ -1,6 +1,6 @@
 var download = require('./lib/download');
 
-function getRemote(src, dest, options, callback) {
+function getRemote(endpoint, dest, options, callback) {
   if (arguments.length === 2 && typeof dest !== 'string') {
     callback = options;
     options = dest;
@@ -12,9 +12,9 @@ function getRemote(src, dest, options, callback) {
     options = null;
   }
   options = options || {};
-  if (typeof callback === 'function') return download(src, dest, options, callback);
+  if (typeof callback === 'function') return download(endpoint, dest, options, callback);
   return new Promise(function (resolve, reject) {
-    getRemote(src, dest, options, function (err, res) {
+    getRemote(endpoint, dest, options, function (err, res) {
       err ? reject(err) : resolve(res);
     });
   });
