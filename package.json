@@ -1,6 +1,6 @@
 {
   "name": "get-remote",
-  "version": "0.4.12",
+  "version": "0.4.13",
   "description": "Download a file and optionally extract it",
   "keywords": [
     "download",
