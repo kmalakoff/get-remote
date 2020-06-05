@@ -5,7 +5,7 @@ var rimraf = require('rimraf');
 var mkpath = require('mkpath');
 var semver = require('semver');
 
-var download = require('../..');
+var get = require('../..');
 
 var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip'];
 try {
@@ -16,7 +16,7 @@ try {
 function addTests(extractType) {
   describe(extractType, function () {
     it('extract file', function (done) {
-      download('http://extractors.com/foo.' + extractType).extract(TMP_DIR, { strip: 1 }, function (err) {
+      get('http://extractors.com/foo.' + extractType).extract(TMP_DIR, { strip: 1 }, function (err) {
         assert.ok(!err);
 
         fs.readdir(TMP_DIR, function (err, files) {
@@ -29,7 +29,7 @@ function addTests(extractType) {
     });
 
     it('extract file without extension', function (done) {
-      download('http://extractors.com/foo-' + extractType).extract(TMP_DIR, { strip: 1, extension: extractType }, function (err) {
+      get('http://extractors.com/foo-' + extractType).extract(TMP_DIR, { strip: 1, extension: extractType }, function (err) {
         assert.ok(!err);
 
         fs.readdir(TMP_DIR, function (err, files) {
