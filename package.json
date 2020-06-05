@@ -1,6 +1,6 @@
 {
   "name": "get-remote",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Download a text, json, a file with optional extract, get a stream, or head an endpoint",
   "keywords": [
     "download",
@@ -24,7 +24,8 @@
   "dependencies": {
     "content-disposition": "^0.5.3",
     "end-of-stream": "^1.4.4",
-    "progress-stream": "^2.0.0"
+    "progress-stream": "^2.0.0",
+    "require_optional": "^1.0.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
@@ -46,7 +47,6 @@
     "object-assign": "^4.1.1",
     "prettier": "^2.0.5",
     "random-buffer": "^0.1.0",
-    "require_optional": "^1.0.1",
     "rimraf": "^2.7.1",
     "semver": "^5.7.1"
   },
