@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "content-disposition": "^0.5.3",
-    "fast-extract": "^0.1.20",
+    "fast-extract": "^0.1.21",
     "fs-write-stream-atomic": "^1.0.10",
     "once": "^1.4.0",
     "progress-stream": "^2.0.0"
