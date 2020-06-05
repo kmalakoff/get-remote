@@ -16,7 +16,7 @@ try {
 function addTests(extractType) {
   describe(extractType, function () {
     it('extract file', function (done) {
-      download('http://extractors.com/foo.' + extractType, TMP_DIR, { strip: 1, extract: true }, function (err) {
+      download('http://extractors.com/foo.' + extractType).extract(TMP_DIR, { strip: 1 }, function (err) {
         assert.ok(!err);
 
         fs.readdir(TMP_DIR, function (err, files) {
@@ -29,9 +29,7 @@ function addTests(extractType) {
     });
 
     it('extract file without extension', function (done) {
-      download('http://extractors.com/foo-' + extractType, TMP_DIR, { strip: 1, extract: '.' + extractType, filename: 'fixture.' + extractType }, function (
-        err
-      ) {
+      download('http://extractors.com/foo-' + extractType).extract(TMP_DIR, { strip: 1, extension: extractType }, function (err) {
         assert.ok(!err);
 
         fs.readdir(TMP_DIR, function (err, files) {
@@ -52,6 +50,7 @@ describe('extract', function () {
 
   // nock patch
   if (!Object.assign) Object.assign = require('object-assign');
+  if (!require('timers').setImmediate) require('timers').setImmediate = require('next-tick');
   var nock = require('nock');
 
   beforeEach(function (done) {
