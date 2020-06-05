@@ -48,6 +48,32 @@ describe.only('api', function () {
       });
     });
 
+    it('should provide a extract method', function (done) {
+      download('http://api.com/fixture.tar.gz').extract(TMP_DIR, { strip: 1 }, function (err) {
+        assert.ok(!err);
+
+        fs.readdir(TMP_DIR, function (err, files) {
+          assert.ok(!err);
+          assert.deepEqual(files.sort(), ['file.txt', 'link']);
+          assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
+          done();
+        });
+      });
+    });
+
+    it('should provide a file method', function (done) {
+      download('http://api.com/fixture.json').file(TMP_DIR, function (err) {
+        assert.ok(!err);
+
+        fs.readdir(TMP_DIR, function (err, files) {
+          assert.ok(!err);
+          assert.deepEqual(files.sort(), ['fixture.json']);
+          assert.ok(require(path.join(TMP_DIR, 'fixture.json')), require(path.join(DATA_DIR, 'fixture.json')));
+          done();
+        });
+      });
+    });
+
     it('should provide a head method', function (done) {
       download('http://api.com/fixture.json').head(function (err, res) {
         assert.ok(!err);
@@ -57,11 +83,28 @@ describe.only('api', function () {
       });
     });
 
+    it('should provide a json method', function (done) {
+      download('http://api.com/fixture.json').json(function (err, res) {
+        assert.ok(!err);
+        assert.equal(res.statusCode, 200);
+        assert.ok(res.body, require(path.join(DATA_DIR, 'fixture.json')));
+        done();
+      });
+    });
+
+    it('should provide a pipe method', function (done) {
+      download('http://api.com/fixture.json').pipe(fs.createWriteStream(path.join(TMP_DIR, 'fixture.json')), function (err) {
+        assert.ok(!err);
+        assert.ok(require(path.join(TMP_DIR, 'fixture.json')), require(path.join(DATA_DIR, 'fixture.json')));
+        done();
+      });
+    });
+
     it('should provide a text method', function (done) {
       download('http://api.com/fixture.text').text(function (err, res) {
         assert.ok(!err);
         assert.equal(res.statusCode, 200);
-        assert.ok(res.body, require(path.join(DATA_DIR, 'fixture.text')));
+        assert.ok(res.body, fs.readFileSync(path.join(DATA_DIR, 'fixture.text')));
         done();
       });
     });
