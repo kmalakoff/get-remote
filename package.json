@@ -1,6 +1,6 @@
 {
   "name": "get-remote",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Download a text, json, a file with optional extract, get a stream, or head an endpoint",
   "keywords": [
     "download",
@@ -24,6 +24,7 @@
   "dependencies": {
     "content-disposition": "^0.5.3",
     "end-of-stream": "^1.4.4",
+    "object-assign": "^4.1.1",
     "progress-stream": "^2.0.0",
     "require_optional": "^1.0.1"
   },
@@ -44,7 +45,6 @@
     "mocha-compat": "^3.5.5",
     "next-tick": "^1.1.0",
     "nock": "^9.6.1",
-    "object-assign": "^4.1.1",
     "prettier": "^2.0.5",
     "random-buffer": "^0.1.0",
     "rimraf": "^2.7.1",
