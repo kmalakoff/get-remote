@@ -25,6 +25,7 @@
     "content-disposition": "^0.5.3",
     "end-of-stream": "^1.4.4",
     "object-assign": "^4.1.1",
+    "once": "^1.4.0",
     "progress-stream": "^2.0.0",
     "require_optional": "^1.0.1"
   },
