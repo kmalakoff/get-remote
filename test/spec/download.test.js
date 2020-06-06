@@ -14,7 +14,7 @@ var get = require('../..');
 
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 
-describe('get', function () {
+describe('download', function () {
   if (semver.lt(process.versions.node, 'v0.10.0')) return;
 
   // nock patch
@@ -24,7 +24,7 @@ describe('get', function () {
   var scope1 = null;
   var scope2 = null;
 
-  before(function (done) {
+  before(function () {
     var fixturePath = path.join(__dirname, '..', 'data', 'fixture.tar');
 
     scope1 = nock('http://foo.bar')
@@ -57,7 +57,8 @@ describe('get', function () {
   });
 
   beforeEach(function (done) {
-    rimraf(TMP_DIR, function () {
+    rimraf(TMP_DIR, function (err) {
+      if (err && err.code !== 'EEXIST') return callback(err);
       mkpath(TMP_DIR, done);
     });
   });
