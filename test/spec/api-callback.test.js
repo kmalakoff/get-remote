@@ -11,13 +11,27 @@ var streamToBuffer = require('../lib/streamToBuffer');
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
 
-describe('api-callback', function () {
+describe.only('api-callback', function () {
   if (semver.lt(process.versions.node, 'v0.10.0')) return;
 
   // nock patch
   if (!Object.assign) Object.assign = require('object-assign');
   if (!require('timers').setImmediate) require('timers').setImmediate = require('next-tick');
   var nock = require('nock');
+  var scope = null;
+
+  before(function (done) {
+    scope = nock('http://api.com').persist();
+
+    fs.readdir(DATA_DIR, function (err, names) {
+      if (err) return done(err);
+      for (var index = 0; index < names.length; index++) {
+        scope.get('/' + names[index]).replyWithFile(200, path.join(DATA_DIR, names[index]));
+        scope.head('/' + names[index]).reply(200);
+      }
+      done();
+    });
+  });
 
   beforeEach(function (done) {
     rimraf(TMP_DIR, function () {
@@ -25,17 +39,9 @@ describe('api-callback', function () {
     });
   });
 
-  before(function (done) {
-    var endpoint = nock('http://api.com').persist();
-
-    fs.readdir(DATA_DIR, function (err, names) {
-      if (err) return done(err);
-      for (var index = 0; index < names.length; index++) {
-        endpoint.get('/' + names[index]).replyWithFile(200, path.join(DATA_DIR, names[index]));
-        endpoint.head('/' + names[index]).reply(200);
-      }
-      done();
-    });
+  after(function () {
+    scope.persist(false);
+    scope = null;
   });
 
   describe('happy path', function () {
@@ -114,49 +120,49 @@ describe('api-callback', function () {
   });
 
   describe('unhappy path', function () {
-    it('should fail to stream  a missing endpoint', function (done) {
+    it('should fail to stream  a missing scope', function (done) {
       get('http://api.com/fixture.json-junk').stream(function (err) {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail to extract a missing endpoint', function (done) {
+    it('should fail to extract a missing scope', function (done) {
       get('http://api.com/fixture.tar.gz-junk').extract(TMP_DIR, { strip: 1 }, function (err) {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail to down file for a missing endpoint', function (done) {
+    it('should fail to down file for a missing scope', function (done) {
       get('http://api.com/fixture.json-junk').file(TMP_DIR, function (err) {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should failt to head a missing endpoint', function (done) {
+    it('should failt to head a missing scope', function (done) {
       get('http://api.com/fixture.json-junk').head(function (err) {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail to get json for a missing endpoint', function (done) {
+    it('should fail to get json for a missing scope', function (done) {
       get('http://api.com/fixture.json-junk').json(function (err) {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail to pipe a missing endpoint', function (done) {
+    it('should fail to pipe a missing scope', function (done) {
       get('http://api.com/fixture.json-junk').pipe(fs.createWriteStream(path.join(TMP_DIR, 'fixture.json')), function (err) {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail to get text for a missing endpoint', function (done) {
+    it('should fail to get text for a missing scope', function (done) {
       get('http://api.com/fixture.text-junk').text(function (err) {
         assert.ok(!!err);
         done();

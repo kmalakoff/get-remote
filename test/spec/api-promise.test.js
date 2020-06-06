@@ -11,7 +11,7 @@ var streamToBuffer = require('../lib/streamToBuffer');
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
 
-describe('api-promise', function () {
+describe.only('api-promise', function () {
   if (typeof Promise === 'undefined') return;
   if (semver.lt(process.versions.node, 'v0.10.0')) return;
 
@@ -19,6 +19,20 @@ describe('api-promise', function () {
   if (!Object.assign) Object.assign = require('object-assign');
   if (!require('timers').setImmediate) require('timers').setImmediate = require('next-tick');
   var nock = require('nock');
+  var scope = null;
+
+  before(function (done) {
+    scope = nock('http://api.com').persist();
+
+    fs.readdir(DATA_DIR, function (err, names) {
+      if (err) return done(err);
+      for (var index = 0; index < names.length; index++) {
+        scope.get('/' + names[index]).replyWithFile(200, path.join(DATA_DIR, names[index]));
+        scope.head('/' + names[index]).reply(200);
+      }
+      done();
+    });
+  });
 
   beforeEach(function (done) {
     rimraf(TMP_DIR, function () {
@@ -26,17 +40,9 @@ describe('api-promise', function () {
     });
   });
 
-  before(function (done) {
-    var endpoint = nock('http://api.com').persist();
-
-    fs.readdir(DATA_DIR, function (err, names) {
-      if (err) return done(err);
-      for (var index = 0; index < names.length; index++) {
-        endpoint.get('/' + names[index]).replyWithFile(200, path.join(DATA_DIR, names[index]));
-        endpoint.head('/' + names[index]).reply(200);
-      }
-      done();
-    });
+  after(function () {
+    scope.persist(false);
+    scope = null;
   });
 
   describe('happy path', function () {

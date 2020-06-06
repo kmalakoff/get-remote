@@ -21,17 +21,13 @@ describe('get', function () {
   if (!Object.assign) Object.assign = require('object-assign');
   if (!require('timers').setImmediate) require('timers').setImmediate = require('next-tick');
   var nock = require('nock');
+  var scope1 = null;
+  var scope2 = null;
 
-  beforeEach(function (done) {
-    rimraf(TMP_DIR, function () {
-      mkpath(TMP_DIR, done);
-    });
-  });
-
-  before(function () {
+  before(function (done) {
     var fixturePath = path.join(__dirname, '..', 'data', 'fixture.tar');
 
-    nock('http://foo.bar')
+    scope1 = nock('http://foo.bar')
       .persist()
       .get('/404')
       .reply(404)
@@ -57,7 +53,20 @@ describe('get', function () {
       .get('/filetype')
       .replyWithFile(200, fixturePath);
 
-    nock('https://foo.bar').persist().get('/foo-https.tar').replyWithFile(200, fixturePath);
+    scope2 = nock('https://foo.bar').persist().get('/foo-https.tar').replyWithFile(200, fixturePath);
+  });
+
+  beforeEach(function (done) {
+    rimraf(TMP_DIR, function () {
+      mkpath(TMP_DIR, done);
+    });
+  });
+
+  after(function () {
+    scope1.persist(false);
+    scope1 = null;
+    scope2.persist(false);
+    scope2 = null;
   });
 
   it('get as stream', function (done) {
