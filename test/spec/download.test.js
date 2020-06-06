@@ -91,7 +91,7 @@ describe('get', function () {
   });
 
   it('get and rename file', function (done) {
-    get('http://foo.bar/foo.tar', { filename: 'bar.tar' }).file(TMP_DIR, function (err) {
+    get('http://foo.bar/foo.tar').file(TMP_DIR, { filename: 'bar.tar' }, function (err) {
       assert.ok(!err);
       fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);

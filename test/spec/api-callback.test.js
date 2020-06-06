@@ -30,7 +30,10 @@ describe('api-callback', function () {
 
     fs.readdir(DATA_DIR, function (err, names) {
       if (err) return done(err);
-      for (var index = 0; index < names.length; index++) endpoint.get('/' + names[index]).replyWithFile(200, path.join(DATA_DIR, names[index]));
+      for (var index = 0; index < names.length; index++) {
+        endpoint.get('/' + names[index]).replyWithFile(200, path.join(DATA_DIR, names[index]));
+        endpoint.head('/' + names[index]).reply(200);
+      }
       done();
     });
   });
