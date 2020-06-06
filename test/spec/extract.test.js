@@ -28,8 +28,8 @@ function addTests(extractType) {
       });
     });
 
-    it('extract file without extension', function (done) {
-      get('http://extractors.com/foo-' + extractType).extract(TMP_DIR, { strip: 1, extension: extractType }, function (err) {
+    it('extract file without type', function (done) {
+      get('http://extractors.com/foo-' + extractType).extract(TMP_DIR, { strip: 1, type: extractType }, function (err) {
         assert.ok(!err);
 
         fs.readdir(TMP_DIR, function (err, files) {
