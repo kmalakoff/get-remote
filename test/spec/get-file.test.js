@@ -10,7 +10,8 @@ var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 
 describe('get-file', function () {
   beforeEach(function (done) {
-    rimraf(TMP_DIR, function () {
+    rimraf(TMP_DIR, function (err) {
+      if (err && err.code !== 'EEXIST') return callback(err);
       mkpath(TMP_DIR, done);
     });
   });

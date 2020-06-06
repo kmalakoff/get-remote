@@ -11,7 +11,7 @@ var streamToBuffer = require('../lib/streamToBuffer');
 var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
 
-describe.only('api-promise', function () {
+describe('api-promise', function () {
   if (typeof Promise === 'undefined') return;
   if (semver.lt(process.versions.node, 'v0.10.0')) return;
 
@@ -35,7 +35,8 @@ describe.only('api-promise', function () {
   });
 
   beforeEach(function (done) {
-    rimraf(TMP_DIR, function () {
+    rimraf(TMP_DIR, function (err) {
+      if (err && err.code !== 'EEXIST') return callback(err);
       mkpath(TMP_DIR, done);
     });
   });
@@ -52,7 +53,7 @@ describe.only('api-promise', function () {
         .then(function (stream) {
           streamToBuffer(stream, function (err, buffer) {
             assert.ok(!err);
-            assert.ok(buffer.toString(), require(path.join(DATA_DIR, 'fixture.json')));
+            assert.equal(buffer.toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')));
             done();
           });
         })
@@ -80,7 +81,7 @@ describe.only('api-promise', function () {
           fs.readdir(TMP_DIR, function (err, files) {
             assert.ok(!err);
             assert.deepEqual(files.sort(), ['fixture.json']);
-            assert.ok(require(path.join(TMP_DIR, 'fixture.json')), require(path.join(DATA_DIR, 'fixture.json')));
+            assert.equal(fs.readFileSync(path.join(TMP_DIR, 'fixture.json')).toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')).toString());
             done();
           });
         })
@@ -103,7 +104,7 @@ describe.only('api-promise', function () {
         .json()
         .then(function (res) {
           assert.equal(res.statusCode, 200);
-          assert.ok(res.body, require(path.join(DATA_DIR, 'fixture.json')));
+          assert.deepEqual(res.body, require(path.join(DATA_DIR, 'fixture.json')));
           done();
         })
         .catch(done);
@@ -113,7 +114,7 @@ describe.only('api-promise', function () {
       get('http://api.com/fixture.json')
         .pipe(fs.createWriteStream(path.join(TMP_DIR, 'fixture.json')))
         .then(function () {
-          assert.ok(require(path.join(TMP_DIR, 'fixture.json')), require(path.join(DATA_DIR, 'fixture.json')));
+          assert.equal(fs.readFileSync(path.join(TMP_DIR, 'fixture.json')).toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')).toString());
           done();
         })
         .catch(done);
@@ -124,7 +125,7 @@ describe.only('api-promise', function () {
         .text()
         .then(function (res) {
           assert.equal(res.statusCode, 200);
-          assert.ok(res.body, fs.readFileSync(path.join(DATA_DIR, 'fixture.text')));
+          assert.equal(res.body, fs.readFileSync(path.join(DATA_DIR, 'fixture.text')));
           done();
         })
         .catch(done);
