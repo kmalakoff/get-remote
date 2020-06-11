@@ -1,1 +1,1 @@
-ignores: ["depcheck", "fast-extract"]
+ignores: ["depcheck", "fast-extract", "supports-color"]
