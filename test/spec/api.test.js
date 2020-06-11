@@ -13,7 +13,7 @@ var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
 var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
 
 describe('api', function () {
-  if (semver.lt(process.versions.node, 'v0.10.0')) return;
+  if (semver.lt(process.versions.node, 'v0.10.0')) return; // TODO: fix nock compatability
 
   // nock patch
   if (!Object.assign) Object.assign = require('object-assign');
@@ -104,18 +104,14 @@ describe('api', function () {
     });
 
     it('should provide a file method', function (done) {
-      mkpath(TARGET, function (err) {
+      get('http://api.com/fixture.json').file(TARGET, function (err) {
         assert.ok(!err);
 
-        get('http://api.com/fixture.json').file(TARGET, function (err) {
+        fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
-
-          fs.readdir(TARGET, function (err, files) {
-            assert.ok(!err);
-            assert.deepEqual(files.sort(), ['fixture.json']);
-            assert.equal(fs.readFileSync(path.join(TARGET, 'fixture.json')).toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')).toString());
-            done();
-          });
+          assert.deepEqual(files.sort(), ['fixture.json']);
+          assert.equal(fs.readFileSync(path.join(TARGET, 'fixture.json')).toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')).toString());
+          done();
         });
       });
     });
@@ -123,21 +119,17 @@ describe('api', function () {
     it('should provide a file method - promise', function (done) {
       if (typeof Promise === 'undefined') return done();
 
-      mkpath(TARGET, function (err) {
-        assert.ok(!err);
-
-        get('http://api.com/fixture.json')
-          .file(TARGET)
-          .then(function () {
-            fs.readdir(TARGET, function (err, files) {
-              assert.ok(!err);
-              assert.deepEqual(files.sort(), ['fixture.json']);
-              assert.equal(fs.readFileSync(path.join(TARGET, 'fixture.json')).toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')).toString());
-              done();
-            });
-          })
-          .catch(done);
-      });
+      get('http://api.com/fixture.json')
+        .file(TARGET)
+        .then(function () {
+          fs.readdir(TARGET, function (err, files) {
+            assert.ok(!err);
+            assert.deepEqual(files.sort(), ['fixture.json']);
+            assert.equal(fs.readFileSync(path.join(TARGET, 'fixture.json')).toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')).toString());
+            done();
+          });
+        })
+        .catch(done);
     });
 
     it('should provide a head method', function (done) {
