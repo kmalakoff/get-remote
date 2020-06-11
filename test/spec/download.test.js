@@ -16,7 +16,7 @@ var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
 
 describe('download', function () {
-  if (semver.lt(process.versions.node, 'v0.10.0')) return;
+  if (semver.lt(process.versions.node, 'v0.10.0')) return; // TODO: fix nock compatability
 
   // nock patch
   if (!Object.assign) Object.assign = require('object-assign');
@@ -102,31 +102,23 @@ describe('download', function () {
   });
 
   it('get and rename file', function (done) {
-    mkpath(TARGET, function (err) {
+    get('http://foo.bar/foo.tar').file(TARGET, { filename: 'bar.tar' }, function (err) {
       assert.ok(!err);
-
-      get('http://foo.bar/foo.tar').file(TARGET, { filename: 'bar.tar' }, function (err) {
+      fs.readdir(TARGET, function (err, files) {
         assert.ok(!err);
-        fs.readdir(TARGET, function (err, files) {
-          assert.ok(!err);
-          assert.deepEqual(files.sort(), ['bar.tar']);
-          done();
-        });
+        assert.deepEqual(files.sort(), ['bar.tar']);
+        done();
       });
     });
   });
 
   it('save file', function (done) {
-    mkpath(TARGET, function (err) {
+    get('http://foo.bar/foo.tar').file(TARGET, function (err) {
       assert.ok(!err);
-
-      get('http://foo.bar/foo.tar').file(TARGET, function (err) {
+      fs.readdir(TARGET, function (err, files) {
         assert.ok(!err);
-        fs.readdir(TARGET, function (err, files) {
-          assert.ok(!err);
-          assert.deepEqual(files.sort(), ['foo.tar']);
-          done();
-        });
+        assert.deepEqual(files.sort(), ['foo.tar']);
+        done();
       });
     });
   });
@@ -165,16 +157,12 @@ describe('download', function () {
   });
 
   it('rename to valid filename', function (done) {
-    mkpath(TARGET, function (err) {
+    get('http://foo.bar/foo*bar.tar').file(TARGET, function (err) {
       assert.ok(!err);
-
-      get('http://foo.bar/foo*bar.tar').file(TARGET, function (err) {
+      fs.readdir(TARGET, function (err, files) {
         assert.ok(!err);
-        fs.readdir(TARGET, function (err, files) {
-          assert.ok(!err);
-          assert.deepEqual(files.sort(), ['foo!bar.tar']);
-          done();
-        });
+        assert.deepEqual(files.sort(), ['foo!bar.tar']);
+        done();
       });
     });
   });
@@ -202,31 +190,23 @@ describe('download', function () {
   });
 
   it('handle query string', function (done) {
-    mkpath(TARGET, function (err) {
+    get('http://foo.bar/querystring.tar?param=value').file(TARGET, function (err) {
       assert.ok(!err);
-
-      get('http://foo.bar/querystring.tar?param=value').file(TARGET, function (err) {
+      fs.readdir(TARGET, function (err, files) {
         assert.ok(!err);
-        fs.readdir(TARGET, function (err, files) {
-          assert.ok(!err);
-          assert.deepEqual(files.sort(), ['querystring.tar']);
-          done();
-        });
+        assert.deepEqual(files.sort(), ['querystring.tar']);
+        done();
       });
     });
   });
 
   it('handle content dispositon', function (done) {
-    mkpath(TARGET, function (err) {
+    get('http://foo.bar/dispo').file(TARGET, function (err) {
       assert.ok(!err);
-
-      get('http://foo.bar/dispo').file(TARGET, function (err) {
+      fs.readdir(TARGET, function (err, files) {
         assert.ok(!err);
-        fs.readdir(TARGET, function (err, files) {
-          assert.ok(!err);
-          assert.deepEqual(files.sort(), ['dispo.tar']);
-          done();
-        });
+        assert.deepEqual(files.sort(), ['dispo.tar']);
+        done();
       });
     });
   });

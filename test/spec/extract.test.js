@@ -80,7 +80,7 @@ var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
 var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
 
 describe('extract', function () {
-  if (semver.lt(process.versions.node, 'v0.10.0')) return;
+  if (semver.lt(process.versions.node, 'v0.10.0')) return; // TODO: fix nock compatability
 
   // nock patch
   if (!Object.assign) Object.assign = require('object-assign');
