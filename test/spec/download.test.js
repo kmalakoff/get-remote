@@ -8,12 +8,13 @@ var isTar = require('is-tar');
 var randomBuffer = require('random-buffer');
 var semver = require('semver');
 
-var streamToBuffer = require('../lib/streamToBuffer');
-
 var get = require('../..');
 
-var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
-var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
+var streamToBuffer = require('../lib/streamToBuffer');
+var validateFiles = require('../lib/validateFiles');
+var constants = require('../lib/constants');
+var TMP_DIR = constants.TMP_DIR;
+var TARGET = constants.TARGET;
 
 describe('download', function () {
   if (semver.lt(process.versions.node, 'v0.10.0')) return; // TODO: fix nock compatability
@@ -124,13 +125,12 @@ describe('download', function () {
   });
 
   it('extract file', function (done) {
-    get('http://foo.bar/foo.tar').extract(TARGET, { strip: 1 }, function (err) {
+    var options = { strip: 1 };
+    get('http://foo.bar/foo.tar').extract(TARGET, options, function (err) {
       assert.ok(!err);
 
-      fs.readdir(TARGET, function (err, files) {
+      validateFiles(options, 'tar.gz', function (err) {
         assert.ok(!err);
-        assert.deepEqual(files.sort(), ['file.txt', 'link']);
-        assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'file.txt'));
         done();
       });
     });

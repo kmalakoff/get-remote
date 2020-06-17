@@ -6,11 +6,13 @@ var mkpath = require('mkpath');
 var semver = require('semver');
 
 var get = require('../..');
-var streamToBuffer = require('../lib/streamToBuffer');
 
-var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
-var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
-var DATA_DIR = path.resolve(path.join(__dirname, '..', 'data'));
+var streamToBuffer = require('../lib/streamToBuffer');
+var validateFiles = require('../lib/validateFiles');
+var constants = require('../lib/constants');
+var TMP_DIR = constants.TMP_DIR;
+var TARGET = constants.TARGET;
+var DATA_DIR = constants.DATA_DIR;
 
 describe('api', function () {
   if (semver.lt(process.versions.node, 'v0.10.0')) return; // TODO: fix nock compatability
@@ -75,13 +77,12 @@ describe('api', function () {
     });
 
     it('should provide a extract method', function (done) {
-      get('http://api.com/fixture.tar.gz').extract(TARGET, { strip: 1 }, function (err) {
+      var options = { strip: 1 };
+      get('http://api.com/fixture.tar.gz').extract(TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, 'tar.gz', function (err) {
           assert.ok(!err);
-          assert.deepEqual(files.sort(), ['file.txt', 'link']);
-          assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'file.txt'));
           done();
         });
       });
@@ -90,13 +91,12 @@ describe('api', function () {
     it('should provide a extract method - promise', function (done) {
       if (typeof Promise === 'undefined') return done();
 
+      var options = { strip: 1 };
       get('http://api.com/fixture.tar.gz')
-        .extract(TMP_DIR, { strip: 1 })
+        .extract(TARGET, options)
         .then(function () {
-          fs.readdir(TMP_DIR, function (err, files) {
+          validateFiles(options, 'tar.gz', function (err) {
             assert.ok(!err);
-            assert.deepEqual(files.sort(), ['file.txt', 'link']);
-            assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
             done();
           });
         })
