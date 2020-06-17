@@ -1,13 +1,13 @@
 var assert = require('assert');
-var path = require('path');
 var fs = require('fs');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
 
 var get = require('../..');
 
-var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
-var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
+var constants = require('../lib/constants');
+var TMP_DIR = constants.TMP_DIR;
+var TARGET = constants.TARGET;
 
 describe('get-file', function () {
   beforeEach(function (callback) {
