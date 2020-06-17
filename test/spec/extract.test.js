@@ -1,5 +1,4 @@
 var assert = require('assert');
-var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
@@ -8,6 +7,11 @@ var extract = require('fast-extract');
 var eos = require('end-of-stream');
 
 var get = require('../..');
+
+var validateFiles = require('../lib/validateFiles');
+var constants = require('../lib/constants');
+var TMP_DIR = constants.TMP_DIR;
+var TARGET = constants.TARGET;
 
 var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip'];
 try {
@@ -18,26 +22,24 @@ try {
 function addTests(type) {
   describe(type, function () {
     it('extract file', function (done) {
-      get('http://extractors.com/foo.' + type).extract(TARGET, { strip: 1 }, function (err) {
+      var options = { strip: 1 };
+      get('http://extractors.com/foo.' + type).extract(TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, type, function (err) {
           assert.ok(!err);
-          assert.deepEqual(files.sort(), ['file.txt', 'link']);
-          assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'file.txt'));
           done();
         });
       });
     });
 
     it('extract file without type', function (done) {
-      get('http://extractors.com/foo-' + type).extract(TARGET, { strip: 1, type: type }, function (err) {
+      var options = { strip: 1, type: type };
+      get('http://extractors.com/foo-' + type).extract(TARGET, options, function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, type, function (err) {
           assert.ok(!err);
-          assert.deepEqual(files.sort(), ['file.txt', 'link']);
-          assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'file.txt'));
           done();
         });
       });
@@ -47,14 +49,13 @@ function addTests(type) {
       get('http://extractors.com/foo-' + type).stream(function (err, stream) {
         assert.ok(!err);
 
-        var res = stream.pipe(extract.createWriteStream(TARGET, { strip: 1, type: type }));
+        var options = { strip: 1, type: type };
+        var res = stream.pipe(extract.createWriteStream(TARGET, options));
         eos(res, function (err) {
           assert.ok(!err);
 
-          fs.readdir(TARGET, function (err, files) {
+          validateFiles(options, type, function (err) {
             assert.ok(!err);
-            assert.deepEqual(files.sort(), ['file.txt', 'link']);
-            assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'file.txt'));
             done();
           });
         });
@@ -62,22 +63,18 @@ function addTests(type) {
     });
 
     it('extract file using pipe', function (done) {
-      get('http://extractors.com/foo-' + type).pipe(extract.createWriteStream(TARGET, { strip: 1, type: type }), function (err) {
+      var options = { strip: 1, type: type };
+      get('http://extractors.com/foo-' + type).pipe(extract.createWriteStream(TARGET, options), function (err) {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        validateFiles(options, type, function (err) {
           assert.ok(!err);
-          assert.deepEqual(files.sort(), ['file.txt', 'link']);
-          assert.equal(fs.realpathSync(path.join(TARGET, 'link')), path.join(TARGET, 'file.txt'));
           done();
         });
       });
     });
   });
 }
-
-var TMP_DIR = path.resolve(path.join(__dirname, '..', '..', '.tmp'));
-var TARGET = path.resolve(path.join(TMP_DIR, 'target'));
 
 describe('extract', function () {
   if (semver.lt(process.versions.node, 'v0.10.0')) return; // TODO: fix nock compatability
