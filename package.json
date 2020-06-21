@@ -44,7 +44,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "fast-extract": "^0.2.6",
-    "fs-iterator": "^4.0.0",
+    "fs-iterator": "^4.0.1",
     "fs-stats-spys": "^1.0.1",
     "graceful-fs": "^4.2.4",
     "is-tar": "^1.0.0",
