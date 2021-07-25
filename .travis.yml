@@ -1,37 +1,20 @@
+os: linux
+dist: xenial
 language: node_js
 node_js: lts/*
 jobs:
   include:
-    - stage: Tests
-      name: Unit Tests on OSX
-      os: osx
-      osx_image: xcode7.2
-      script:
-        - npm uninstall node-version-use -g
-        - npm install node-version-use -g
-        - nvu engines npm test
+    # - stage: Tests
+    #   name: Unit Tests on OSX
+    #   os: osx
     - stage: Tests
       name: Unit Tests on Linux
-      dist: xenial
-      script:
-        - npm uninstall node-version-use -g
-        - npm install node-version-use -g
-        - nvu engines npm test
+      os: linux
     - stage: Tests
       name: Unit Tests on Windows
       os: windows
-      script:
-        - npm uninstall node-version-use -g
-        - npm install node-version-use -g
-        - nvu engines npm test
-    - stage: Deploy
-      name: Deploy To NPM
-      script: echo ""
-      deploy:
-        provider: npm
-        email: kmalakoff@gmail.com
-        api_key:
-          secure: Vk+4g+KmoIj6AtGDZUlUMKRpVKjATv0juY7D1SOjEr/j0xNDcMDFBIX74PAwM6TKnpligGKs9hZOXWS9GDYfy9Tl8cNowR+Vw1Znw2sa64e+NzpgXpTylhxm4aipbrTBedyK6fo9NElt1YlTjpG3a20WuIjiU7r9x5MeqgMFEwk4bxYymnXO4l4/zIKjNAoWTz6Rra+2uMwhB6Rk/132iifNlAL4Noi+LBNu9+Uu/K4ciPV3kDZ9B8QaTQBM0WnxAf7F6UW/JKyLqbfNGtptDhl161WnfQ8l/Rzi5dfqubHfUae/9y4Z6azg2z6dAeNmi7IsHcesh6XXyq8UhlYu+0ktcFZUdeSYE8Q0FVK2ZzYf/NSPAW1O/poegUFdWyipVj/gMfTdLtI9QU3Ke4EUZBYhOGe8r41xwlVUrK/ej9fSWopttsRbubGww7wOMGGvz5ePtEbnAfI3RWAnHviBYKjt0kLDylFjMudax3WW7/eNL5EL/FDl33U9GJBXHbjeqeAz13J3/hxpNRA/myW6JpoumJHnI4SYG5Rk+eLNXCV2oWYW+5o3yoW5V+PbZwYJCN6+WN/3wgV/Ge81fZu1uTmIbwNQE0DTgspQubisB+evWXxds0EhK8qyGjmdlg0DJFTOQ5sxvmcGLCOMN0g0HI8DfSpX4lnAnN+UhmTZi+Q=
-        on:
-          tags: true
-        skip_cleanup: 'true'
+before_install:
+  - npm uninstall node-version-use -g
+script:
+  - npm install node-version-use -g
+  - nvu engines npm test
