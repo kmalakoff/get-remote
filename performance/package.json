@@ -1,5 +1,5 @@
 {
-  "name": "async-compat-benchmark",
+  "name": "get-remote-performance",
   "version": "0.0.0",
   "private": true,
   "description": "Tests",
@@ -18,5 +18,8 @@
     "benchmark-suite": "^0.1.6",
     "get-remote-cb-0.4.7": "npm:get-remote@0.6.0",
     "rimraf": "^2.7.1"
+  },
+  "engines": {
+    "node": "lts"
   }
 }
