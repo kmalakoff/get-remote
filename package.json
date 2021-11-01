@@ -51,6 +51,7 @@
     "mocha-compat": "^3.5.5",
     "next-tick": "^1.1.0",
     "nock": "^9.6.1",
+    "node-version-use": "^0.2.0",
     "prettier": "^2.4.1",
     "random-buffer": "^0.1.0",
     "rimraf": "^2.7.1",
