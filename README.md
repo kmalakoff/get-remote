@@ -58,7 +58,7 @@ get('http://api.com/fixture.text').text(function (err, res) {
 
 
 // get and extract - callbacks
-get('https://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md').extract(fullPath, { strip: 1 }, function(err) {
+get('https://cdn.jsdelivr.net/gh/nodejs/Release@main/schedule.json').extract(fullPath, { strip: 1 }, function(err) {
   assert.ok(!err)
   // do something
 })
