@@ -1,6 +1,6 @@
 {
   "name": "get-remote",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Download a text, json, a file with optional extract, get a stream, or head an endpoint",
   "keywords": [
     "download",
@@ -19,7 +19,8 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "prepublishOnly": "dtd \"npm run lint\" \"depcheck\"",
-    "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
+    "test": "mocha-compat test/spec/**/*.test.js --no-timeouts",
+    "test:engines": "nvu engines npm test"
   },
   "dependencies": {
     "content-disposition": "^0.5.3",
@@ -43,21 +44,20 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "fast-extract": "^0.3.0",
+    "fast-extract": "^0.3.1",
     "fs-iterator": "^4.1.0",
     "fs-stats-spys": "^1.0.1",
-    "graceful-fs": "^4.2.6",
     "is-tar": "^1.0.0",
     "mocha-compat": "^3.5.5",
     "next-tick": "^1.1.0",
     "nock": "^9.6.1",
-    "prettier": "^2.3.2",
+    "prettier": "^2.4.1",
     "random-buffer": "^0.1.0",
     "rimraf": "^2.7.1",
     "semver": "^5.7.1",
     "supports-color": "^3.2.3"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">=0.8"
   }
 }

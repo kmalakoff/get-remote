@@ -18,7 +18,7 @@ describe('get-file', function () {
   });
 
   it('should get file over https', function (done) {
-    get('https://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md').file(TARGET, function (err) {
+    get('https://cdn.jsdelivr.net/gh/nodejs/Release@main/schedule.json').file(TARGET, function (err) {
       assert.ok(!err);
       var files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
@@ -27,7 +27,7 @@ describe('get-file', function () {
   });
 
   it('should get file over http', function (done) {
-    get('http://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md').file(TARGET, function (err) {
+    get('https://cdn.jsdelivr.net/gh/nodejs/Release@main/schedule.json').file(TARGET, function (err) {
       assert.ok(!err);
       var files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
@@ -38,7 +38,7 @@ describe('get-file', function () {
   it('should support promises', function (done) {
     if (typeof Promise === 'undefined') return done(); // no promise support
 
-    get('https://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md')
+    get('https://cdn.jsdelivr.net/gh/nodejs/Release@main/schedule.json')
       .file(TARGET)
       .then(function (stream) {
         var files = fs.readdirSync(TARGET);
@@ -54,7 +54,7 @@ describe('get-file', function () {
       progressUpdates.push(update);
     }
 
-    get('http://raw.githubusercontent.com/kmalakoff/get-remote/0.2.1/README.md', { progress: progress }).file(TARGET, function (err) {
+    get('https://cdn.jsdelivr.net/gh/nodejs/Release@main/schedule.json', { progress: progress }).file(TARGET, function (err) {
       assert.ok(!err);
       var files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
