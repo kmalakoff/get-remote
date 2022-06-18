@@ -15,8 +15,8 @@
     "test": "npm run ops && npm run mem"
   },
   "dependencies": {
-    "benchmark-suite": "^0.1.6",
-    "get-remote-cb-0.4.7": "npm:get-remote@0.6.1",
+    "benchmark-suite": "^0.1.7",
+    "get-remote-cb-0.4.7": "npm:get-remote@0.6.2",
     "rimraf": "^2.7.1"
   },
   "engines": {
