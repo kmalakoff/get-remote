@@ -3,7 +3,7 @@ var path = require('path');
 var fs = require('fs');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
-var semver = require('semver');
+var nock = require('../lib/nock');
 
 var get = require('../..');
 
@@ -15,13 +15,8 @@ var TARGET = constants.TARGET;
 var DATA_DIR = constants.DATA_DIR;
 
 describe('api', function () {
-  if (semver.lt(process.versions.node, 'v0.10.0')) return; // TODO: fix nock compatability
-
-  // nock patch
-  if (!Object.assign) Object.assign = require('object-assign');
-  if (!require('timers').setImmediate) require('timers').setImmediate = require('next-tick');
-  var nock = require('nock');
-  var endpoint = null;
+  if (typeof nock !== 'function') return; // TODO: fix
+  var endpoint = null;  
 
   before(function (callback) {
     endpoint = nock('http://api.com').persist();

@@ -6,7 +6,7 @@ var mkpath = require('mkpath');
 var contentDisposition = require('content-disposition');
 var isTar = require('is-tar');
 var randomBuffer = require('random-buffer');
-var semver = require('semver');
+var nock = require('../lib/nock');
 
 var get = require('../..');
 
@@ -17,12 +17,7 @@ var TMP_DIR = constants.TMP_DIR;
 var TARGET = constants.TARGET;
 
 describe('download', function () {
-  if (semver.lt(process.versions.node, 'v0.10.0')) return; // TODO: fix nock compatability
-
-  // nock patch
-  if (!Object.assign) Object.assign = require('object-assign');
-  if (!require('timers').setImmediate) require('timers').setImmediate = require('next-tick');
-  var nock = require('nock');
+  if (typeof nock !== 'function') return; // TODO: fix
   var scope1 = null;
   var scope2 = null;
 

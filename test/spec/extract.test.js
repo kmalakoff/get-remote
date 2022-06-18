@@ -2,7 +2,7 @@ var assert = require('assert');
 var path = require('path');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
-var semver = require('semver');
+var nock = require('../lib/nock');
 var extract = require('fast-extract');
 var eos = require('end-of-stream');
 
@@ -77,12 +77,7 @@ function addTests(type) {
 }
 
 describe('extract', function () {
-  if (semver.lt(process.versions.node, 'v0.10.0')) return; // TODO: fix nock compatability
-
-  // nock patch
-  if (!Object.assign) Object.assign = require('object-assign');
-  if (!require('timers').setImmediate) require('timers').setImmediate = require('next-tick');
-  var nock = require('nock');
+  if (typeof nock !== 'function') return; // TODO: fix
 
   beforeEach(function (callback) {
     rimraf(TMP_DIR, function (err) {
