@@ -16,7 +16,7 @@ var DATA_DIR = constants.DATA_DIR;
 
 describe('api', function () {
   if (typeof nock !== 'function') return; // TODO: fix
-  var endpoint = null;  
+  var endpoint = null;
 
   before(function (callback) {
     endpoint = nock('http://api.com').persist();
