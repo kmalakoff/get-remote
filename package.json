@@ -32,7 +32,7 @@
     "mkpath": "^1.0.0",
     "progress-stream": "^2.0.0",
     "pump": "^3.0.0",
-    "readable-stream": "^2.3.7",
+    "readable-stream": "^4.1.0",
     "require_optional": "^1.0.1"
   },
   "devDependencies": {
