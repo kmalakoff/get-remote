@@ -4,6 +4,11 @@ updates:
     directory: '/'
     schedule:
       interval: daily
+    ignore:
+      - dependency-name: 'mkdirp'
+      - dependency-name: 'readable-stream'
+      - dependency-name: 'rimraf'
+      - dependency-name: 'supports-color'
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
