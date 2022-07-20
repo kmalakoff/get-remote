@@ -1,6 +1,6 @@
 {
   "name": "get-remote",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "description": "Download a text, json, a file with optional extract, get a stream, or head an endpoint",
   "keywords": [
     "download",
