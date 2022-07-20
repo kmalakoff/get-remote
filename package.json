@@ -21,44 +21,39 @@
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint .",
-    "prepublishOnly": "dtd \"npm run lint\" \"depcheck\"",
+    "prepublishOnly": "npm run lint && depcheck",
     "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
   },
   "dependencies": {
     "content-disposition": "^0.5.4",
     "end-of-stream": "^1.4.4",
-    "eslint-plugin-n": "^15.2.3",
+    "es6-promise": "^4.2.8",
+    "eslint-plugin-n": "^15.2.4",
     "just-extend": "^6.0.1",
     "mkpath": "^1.0.0",
+    "node-version-call": "^0.2.3",
     "progress-stream": "^2.0.0",
     "pump": "^3.0.0",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1"
   },
   "devDependencies": {
-    "@typescript-eslint/parser": "^5.30.0",
+    "@typescript-eslint/parser": "^5.30.7",
     "cr": "^0.1.0",
     "depcheck": "^1.4.3",
-    "dis-dat": "^0.1.6",
-    "eslint": "^8.18.0",
+    "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-promise": "^6.0.0",
-    "fast-extract": "^0.3.2",
+    "fast-extract": "^0.3.3",
     "fs-iterator": "^4.1.1",
     "fs-stats-spys": "^1.0.1",
     "is-tar": "^1.0.0",
     "mocha-compat": "^3.5.5",
-    "next-tick": "^1.1.0",
-    "nock": "^13.2.7",
-    "nock-4": "npm:nock@^4",
     "prettier": "^2.7.1",
-    "random-buffer": "^0.1.0",
     "rimraf": "^2.7.1",
-    "semver": "^5.7.1",
-    "supports-color": "^3.2.3",
-    "weakmap-shim": "^1.1.1"
+    "supports-color": "^3.2.3"
   },
   "engines": {
     "node": ">=0.8"
