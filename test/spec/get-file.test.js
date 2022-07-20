@@ -8,6 +8,7 @@ var get = require('../..');
 var constants = require('../lib/constants');
 var TMP_DIR = constants.TMP_DIR;
 var TARGET = constants.TARGET;
+var URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 describe('get-file', function () {
   beforeEach(function (callback) {
@@ -18,7 +19,7 @@ describe('get-file', function () {
   });
 
   it('should get file over https', function (done) {
-    get('https://cdn.jsdelivr.net/gh/nodejs/Release@main/schedule.json').file(TARGET, function (err) {
+    get(URL + '/package.json').file(TARGET, function (err) {
       assert.ok(!err);
       var files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
@@ -27,7 +28,7 @@ describe('get-file', function () {
   });
 
   it('should get file over http', function (done) {
-    get('https://cdn.jsdelivr.net/gh/nodejs/Release@main/schedule.json').file(TARGET, function (err) {
+    get(URL + '/package.json').file(TARGET, function (err) {
       assert.ok(!err);
       var files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
@@ -36,9 +37,7 @@ describe('get-file', function () {
   });
 
   it('should support promises', function (done) {
-    if (typeof Promise === 'undefined') return done(); // no promise support
-
-    get('https://cdn.jsdelivr.net/gh/nodejs/Release@main/schedule.json')
+    get(URL + '/package.json')
       .file(TARGET)
       .then(function (stream) {
         var files = fs.readdirSync(TARGET);
@@ -54,7 +53,7 @@ describe('get-file', function () {
       progressUpdates.push(update);
     }
 
-    get('https://cdn.jsdelivr.net/gh/nodejs/Release@main/schedule.json', { progress: progress }).file(TARGET, function (err) {
+    get(URL + '/package.json', { progress: progress }).file(TARGET, function (err) {
       assert.ok(!err);
       var files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
