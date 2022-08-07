@@ -3,6 +3,7 @@ var path = require('path');
 var fs = require('fs');
 var rimraf = require('rimraf');
 var mkpath = require('mkpath');
+var cr = require('cr');
 
 var get = require('../..');
 
@@ -29,7 +30,7 @@ describe('api', function () {
 
         streamToBuffer(stream, function (err, buffer) {
           assert.ok(!err);
-          assert.equal(buffer.toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')));
+          assert.equal(cr(buffer.toString()), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
           done();
         });
       });
@@ -41,7 +42,7 @@ describe('api', function () {
         .then(function (stream) {
           streamToBuffer(stream, function (err, buffer) {
             assert.ok(!err);
-            assert.equal(buffer.toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')));
+            assert.equal(cr(buffer.toString()), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
             done();
           });
         })
@@ -80,7 +81,7 @@ describe('api', function () {
         fs.readdir(TARGET, function (err, files) {
           assert.ok(!err);
           assert.deepEqual(files.sort(), ['fixture.json']);
-          assert.equal(fs.readFileSync(path.join(TARGET, 'fixture.json')).toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')).toString());
+          assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
           done();
         });
       });
@@ -93,7 +94,7 @@ describe('api', function () {
           fs.readdir(TARGET, function (err, files) {
             assert.ok(!err);
             assert.deepEqual(files.sort(), ['fixture.json']);
-            assert.equal(fs.readFileSync(path.join(TARGET, 'fixture.json')).toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')).toString());
+            assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
             done();
           });
         })
@@ -146,7 +147,7 @@ describe('api', function () {
 
         get(URL + '/test/data/fixture.json').pipe(fs.createWriteStream(path.join(TARGET, 'fixture.json')), function (err) {
           assert.ok(!err);
-          assert.equal(fs.readFileSync(path.join(TARGET, 'fixture.json')).toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')).toString());
+          assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
           done();
         });
       });
@@ -159,7 +160,7 @@ describe('api', function () {
         get(URL + '/test/data/fixture.json')
           .pipe(fs.createWriteStream(path.join(TMP_DIR, 'fixture.json')))
           .then(function () {
-            assert.equal(fs.readFileSync(path.join(TMP_DIR, 'fixture.json')).toString(), fs.readFileSync(path.join(DATA_DIR, 'fixture.json')).toString());
+            assert.equal(cr(fs.readFileSync(path.join(TMP_DIR, 'fixture.json'), 'utf8')), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
             done();
           })
           .catch(done);
@@ -170,7 +171,7 @@ describe('api', function () {
       get(URL + '/test/data/fixture.text').text(function (err, res) {
         assert.ok(!err);
         assert.equal(res.statusCode, 200);
-        assert.equal(res.body, fs.readFileSync(path.join(DATA_DIR, 'fixture.text')));
+        assert.equal(cr(res.body), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.text'), 'utf8')));
         done();
       });
     });
@@ -180,7 +181,7 @@ describe('api', function () {
         .text()
         .then(function (res) {
           assert.equal(res.statusCode, 200);
-          assert.equal(res.body, fs.readFileSync(path.join(DATA_DIR, 'fixture.text')));
+          assert.equal(cr(res.body), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.text'), 'utf8')));
           done();
         })
         .catch(done);
