@@ -26,7 +26,7 @@ module.exports = function validateFiles(options, _type, callback) {
         assert.ok(!err);
         assert.equal(files.length, 1);
         assert.deepEqual(files.sort(), ['target']);
-        assert.equal(cr(fs.readFileSync(path.join(dataPath, files[0])).toString()), CONTENTS);
+        assert.equal(cr(fs.readFileSync(path.join(dataPath, files[0]), 'utf8')), CONTENTS);
         callback();
       });
     } else if (type === 'js' || type === '.js') {
@@ -36,7 +36,7 @@ module.exports = function validateFiles(options, _type, callback) {
         assert.ok(!err);
         assert.equal(files.length, 1);
         assert.ok(~['fixture.js', 'fixture-js'].indexOf(files[0]));
-        assert.equal(cr(fs.readFileSync(path.join(dataPath, files[0])).toString()), CONTENTS);
+        assert.equal(cr(fs.readFileSync(path.join(dataPath, files[0]), 'utf8')), CONTENTS);
         callback();
       });
     } else if (type === 'js.gz' || type === '.js.gz') {
@@ -57,9 +57,9 @@ module.exports = function validateFiles(options, _type, callback) {
         function (entry) {
           spys(entry.stats);
           if (entry.stats.isFile()) {
-            assert.equal(cr(fs.readFileSync(entry.fullPath).toString()), CONTENTS);
+            assert.equal(cr(fs.readFileSync(entry.fullPath, 'utf8')), CONTENTS);
           } else if (entry.stats.isSymbolicLink()) {
-            assert.equal(cr(fs.readFileSync(fs.realpathSync(entry.fullPath)).toString()), CONTENTS);
+            assert.equal(cr(fs.readFileSync(fs.realpathSync(entry.fullPath), 'utf8')), CONTENTS);
           }
         },
         function (err) {
