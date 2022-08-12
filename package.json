@@ -52,10 +52,11 @@
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-promise": "^6.0.0",
-    "fast-extract": "^0.3.4",
+    "fast-extract": "^0.4.1",
     "fs-iterator": "^4.1.1",
     "fs-stats-spys": "^1.0.2",
     "is-tar": "^1.0.0",
+    "lzma-native": "^8.0.6",
     "mocha-compat": "^3.5.5",
     "prettier": "^2.7.1",
     "supports-color": "^3.2.3"

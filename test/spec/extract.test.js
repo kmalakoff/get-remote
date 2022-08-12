@@ -12,10 +12,7 @@ var TMP_DIR = constants.TMP_DIR;
 var TARGET = constants.TARGET;
 var URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
-var major = +process.versions.node.split('.')[0];
-var minor = +process.versions.node.split('.')[1];
 var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip'];
-if (major === 0 && minor <= 8) EXTRACT_TYPES.pop(); //  TODO: yauzl does not read the master record properly on Node 0.8
 try {
   var lzmaNative = require('require_optional')('lzma-native');
   if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
@@ -80,8 +77,7 @@ function addTests(type) {
 
 describe('extract', function () {
   beforeEach(function (callback) {
-    rimraf(TMP_DIR, function (err) {
-      if (err && err.code !== 'EEXIST') return callback(err);
+    rimraf(TMP_DIR, function () {
       mkpath(TMP_DIR, callback);
     });
   });

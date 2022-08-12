@@ -12,8 +12,7 @@ var URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 describe('get-file', function () {
   beforeEach(function (callback) {
-    rimraf(TMP_DIR, function (err) {
-      if (err && err.code !== 'EEXIST') return callback(err);
+    rimraf(TMP_DIR, function () {
       mkpath(TMP_DIR, callback);
     });
   });
