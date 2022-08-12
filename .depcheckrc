@@ -1,1 +1,1 @@
-ignores: ["depcheck", "fast-extract", "supports-color"]
+ignores: ["depcheck", "lzma-native", "supports-color"]
