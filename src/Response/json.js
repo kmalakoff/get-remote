@@ -1,6 +1,6 @@
 module.exports = function json(callback) {
   if (typeof callback === 'function') {
-    return this.text(function (err, res) {
+    return this.text((err, res) => {
       if (err) return callback(err);
 
       try {
@@ -11,10 +11,8 @@ module.exports = function json(callback) {
       }
     });
   }
-
-  var self = this;
-  return new Promise(function (resolve, reject) {
-    self.json(function (err, res) {
+  return new Promise((resolve, reject) => {
+    this.json((err, res) => {
       err ? reject(err) : resolve(res);
     });
   });
