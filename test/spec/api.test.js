@@ -1,33 +1,33 @@
-var assert = require('assert');
-var path = require('path');
-var fs = require('fs');
-var rimraf = require('rimraf');
-var mkpath = require('mkpath');
-var cr = require('cr');
+const assert = require('assert');
+const path = require('path');
+const fs = require('fs');
+const rimraf = require('rimraf');
+const mkpath = require('mkpath');
+const cr = require('cr');
 
-var get = require('../..');
+const get = require('get-remote');
 
-var streamToBuffer = require('../lib/streamToBuffer');
-var validateFiles = require('../lib/validateFiles');
-var constants = require('../lib/constants');
-var TMP_DIR = constants.TMP_DIR;
-var TARGET = constants.TARGET;
-var DATA_DIR = constants.DATA_DIR;
-var URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
+const streamToBuffer = require('../lib/streamToBuffer');
+const validateFiles = require('../lib/validateFiles');
+const constants = require('../lib/constants');
+const TMP_DIR = constants.TMP_DIR;
+const TARGET = constants.TARGET;
+const DATA_DIR = constants.DATA_DIR;
+const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
-describe('api', function () {
-  beforeEach(function (callback) {
-    rimraf(TMP_DIR, function () {
+describe('api', () => {
+  beforeEach((callback) => {
+    rimraf(TMP_DIR, () => {
       mkpath(TMP_DIR, callback);
     });
   });
 
-  describe('happy path', function () {
-    it('should provide a stream method', function (done) {
-      get(URL + '/test/data/fixture.json').stream(function (err, stream) {
+  describe('happy path', () => {
+    it('should provide a stream method', (done) => {
+      get(`${URL}/test/data/fixture.json`).stream((err, stream) => {
         assert.ok(!err);
 
-        streamToBuffer(stream, function (err, buffer) {
+        streamToBuffer(stream, (err, buffer) => {
           assert.ok(!err);
           assert.equal(cr(buffer.toString()), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
           done();
@@ -35,11 +35,11 @@ describe('api', function () {
       });
     });
 
-    it('should provide a stream method - promise', function (done) {
-      get(URL + '/test/data/fixture.json')
+    it('should provide a stream method - promise', (done) => {
+      get(`${URL}/test/data/fixture.json`)
         .stream()
-        .then(function (stream) {
-          streamToBuffer(stream, function (err, buffer) {
+        .then((stream) => {
+          streamToBuffer(stream, (err, buffer) => {
             assert.ok(!err);
             assert.equal(cr(buffer.toString()), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
             done();
@@ -48,24 +48,24 @@ describe('api', function () {
         .catch(done);
     });
 
-    it('should provide a extract method', function (done) {
-      var options = { strip: 1 };
-      get(URL + '/test/data/fixture.tar.gz').extract(TARGET, options, function (err) {
+    it('should provide a extract method', (done) => {
+      const options = { strip: 1 };
+      get(`${URL}/test/data/fixture.tar.gz`).extract(TARGET, options, (err) => {
         assert.ok(!err);
 
-        validateFiles(options, 'tar.gz', function (err) {
+        validateFiles(options, 'tar.gz', (err) => {
           assert.ok(!err);
           done();
         });
       });
     });
 
-    it('should provide a extract method - promise', function (done) {
-      var options = { strip: 1 };
-      get(URL + '/test/data/fixture.tar.gz')
+    it('should provide a extract method - promise', (done) => {
+      const options = { strip: 1 };
+      get(`${URL}/test/data/fixture.tar.gz`)
         .extract(TARGET, options)
-        .then(function () {
-          validateFiles(options, 'tar.gz', function (err) {
+        .then(() => {
+          validateFiles(options, 'tar.gz', (err) => {
             assert.ok(!err);
             done();
           });
@@ -73,11 +73,11 @@ describe('api', function () {
         .catch(done);
     });
 
-    it('should provide a file method', function (done) {
-      get(URL + '/test/data/fixture.json').file(TARGET, function (err) {
+    it('should provide a file method', (done) => {
+      get(`${URL}/test/data/fixture.json`).file(TARGET, (err) => {
         assert.ok(!err);
 
-        fs.readdir(TARGET, function (err, files) {
+        fs.readdir(TARGET, (err, files) => {
           assert.ok(!err);
           assert.deepEqual(files.sort(), ['fixture.json']);
           assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
@@ -86,11 +86,11 @@ describe('api', function () {
       });
     });
 
-    it('should provide a file method - promise', function (done) {
-      get(URL + '/test/data/fixture.json')
+    it('should provide a file method - promise', (done) => {
+      get(`${URL}/test/data/fixture.json`)
         .file(TARGET)
-        .then(function () {
-          fs.readdir(TARGET, function (err, files) {
+        .then(() => {
+          fs.readdir(TARGET, (err, files) => {
             assert.ok(!err);
             assert.deepEqual(files.sort(), ['fixture.json']);
             assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
@@ -100,8 +100,8 @@ describe('api', function () {
         .catch(done);
     });
 
-    it('should provide a head method', function (done) {
-      get(URL + '/test/data/fixture.json').head(function (err, res) {
+    it('should provide a head method', (done) => {
+      get(`${URL}/test/data/fixture.json`).head((err, res) => {
         assert.ok(!err);
         assert.equal(res.statusCode, 200);
         assert.ok(!!res.headers);
@@ -109,10 +109,10 @@ describe('api', function () {
       });
     });
 
-    it('should provide a head method - promise', function (done) {
-      get(URL + '/test/data/fixture.json')
+    it('should provide a head method - promise', (done) => {
+      get(`${URL}/test/data/fixture.json`)
         .head()
-        .then(function (res) {
+        .then((res) => {
           assert.equal(res.statusCode, 200);
           assert.ok(!!res.headers);
           done();
@@ -120,8 +120,8 @@ describe('api', function () {
         .catch(done);
     });
 
-    it('should provide a json method', function (done) {
-      get(URL + '/test/data/fixture.json').json(function (err, res) {
+    it('should provide a json method', (done) => {
+      get(`${URL}/test/data/fixture.json`).json((err, res) => {
         assert.ok(!err);
         assert.equal(res.statusCode, 200);
         assert.deepEqual(res.body, require(path.join(DATA_DIR, 'fixture.json')));
@@ -129,10 +129,10 @@ describe('api', function () {
       });
     });
 
-    it('should provide a json method - promise', function (done) {
-      get(URL + '/test/data/fixture.json')
+    it('should provide a json method - promise', (done) => {
+      get(`${URL}/test/data/fixture.json`)
         .json()
-        .then(function (res) {
+        .then((res) => {
           assert.equal(res.statusCode, 200);
           assert.deepEqual(res.body, require(path.join(DATA_DIR, 'fixture.json')));
           done();
@@ -140,11 +140,11 @@ describe('api', function () {
         .catch(done);
     });
 
-    it('should provide a pipe method', function (done) {
-      mkpath(TARGET, function (err) {
+    it('should provide a pipe method', (done) => {
+      mkpath(TARGET, (err) => {
         assert.ok(!err);
 
-        get(URL + '/test/data/fixture.json').pipe(fs.createWriteStream(path.join(TARGET, 'fixture.json')), function (err) {
+        get(`${URL}/test/data/fixture.json`).pipe(fs.createWriteStream(path.join(TARGET, 'fixture.json')), (err) => {
           assert.ok(!err);
           assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
           done();
@@ -152,13 +152,13 @@ describe('api', function () {
       });
     });
 
-    it('should provide a pipe method - promise', function (done) {
-      mkpath(TARGET, function (err) {
+    it('should provide a pipe method - promise', (done) => {
+      mkpath(TARGET, (err) => {
         assert.ok(!err);
 
-        get(URL + '/test/data/fixture.json')
+        get(`${URL}/test/data/fixture.json`)
           .pipe(fs.createWriteStream(path.join(TMP_DIR, 'fixture.json')))
-          .then(function () {
+          .then(() => {
             assert.equal(cr(fs.readFileSync(path.join(TMP_DIR, 'fixture.json'), 'utf8')), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
             done();
           })
@@ -166,8 +166,8 @@ describe('api', function () {
       });
     });
 
-    it('should provide a text method', function (done) {
-      get(URL + '/test/data/fixture.text').text(function (err, res) {
+    it('should provide a text method', (done) => {
+      get(`${URL}/test/data/fixture.text`).text((err, res) => {
         assert.ok(!err);
         assert.equal(res.statusCode, 200);
         assert.equal(cr(res.body), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.text'), 'utf8')));
@@ -175,10 +175,10 @@ describe('api', function () {
       });
     });
 
-    it('should provide a text method - promise', function (done) {
-      get(URL + '/test/data/fixture.text')
+    it('should provide a text method - promise', (done) => {
+      get(`${URL}/test/data/fixture.text`)
         .text()
-        .then(function (res) {
+        .then((res) => {
           assert.equal(res.statusCode, 200);
           assert.equal(cr(res.body), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.text'), 'utf8')));
           done();
@@ -187,135 +187,135 @@ describe('api', function () {
     });
   });
 
-  describe('unhappy path', function () {
-    it('should fail to stream a missing endpoint', function (done) {
-      get(URL + '/test/data/fixture.json-junk').stream(function (err) {
+  describe('unhappy path', () => {
+    it('should fail to stream a missing endpoint', (done) => {
+      get(`${URL}/test/data/fixture.json-junk`).stream((err) => {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail to stream  a missing endpoint - promise', function (done) {
-      get(URL + '/test/data/fixture.json-junk')
+    it('should fail to stream  a missing endpoint - promise', (done) => {
+      get(`${URL}/test/data/fixture.json-junk`)
         .stream()
-        .then(function () {
+        .then(() => {
           assert.ok(false);
         })
-        .catch(function (err) {
+        .catch((err) => {
           assert.ok(!!err);
           done();
         });
     });
 
-    it('should fail to extract a missing endpoint', function (done) {
-      get(URL + '/test/data/fixture.tar.gz-junk').extract(TARGET, { strip: 1 }, function (err) {
+    it('should fail to extract a missing endpoint', (done) => {
+      get(`${URL}/test/data/fixture.tar.gz-junk`).extract(TARGET, { strip: 1 }, (err) => {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail to extract a missing endpoint - promise', function (done) {
-      get(URL + '/test/data/fixture.tar.gz-junk')
+    it('should fail to extract a missing endpoint - promise', (done) => {
+      get(`${URL}/test/data/fixture.tar.gz-junk`)
         .extract(TMP_DIR, { strip: 1 })
-        .then(function () {
+        .then(() => {
           assert.ok(false);
         })
-        .catch(function (err) {
+        .catch((err) => {
           assert.ok(!!err);
           done();
         });
     });
 
-    it('should fail to download file for a missing endpoint', function (done) {
-      get(URL + '/test/data/fixture.json-junk').file(TARGET, function (err) {
+    it('should fail to download file for a missing endpoint', (done) => {
+      get(`${URL}/test/data/fixture.json-junk`).file(TARGET, (err) => {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail to download file for a missing endpoint - promise', function (done) {
-      get(URL + '/test/data/fixture.json-junk')
+    it('should fail to download file for a missing endpoint - promise', (done) => {
+      get(`${URL}/test/data/fixture.json-junk`)
         .file(TMP_DIR)
-        .then(function () {
+        .then(() => {
           assert.ok(false);
         })
-        .catch(function (err) {
+        .catch((err) => {
           assert.ok(!!err);
           done();
         });
     });
 
-    it('should fail to head a missing endpoint', function (done) {
-      get(URL + '/test/data/fixture.json-junk').head(function (err) {
+    it('should fail to head a missing endpoint', (done) => {
+      get(`${URL}/test/data/fixture.json-junk`).head((err) => {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail to head a missing endpoint - promise', function (done) {
-      get(URL + '/test/data/fixture.json-junk')
+    it('should fail to head a missing endpoint - promise', (done) => {
+      get(`${URL}/test/data/fixture.json-junk`)
         .head()
-        .then(function () {
+        .then(() => {
           assert.ok(false);
         })
-        .catch(function (err) {
+        .catch((err) => {
           assert.ok(!!err);
           done();
         });
     });
 
-    it('should fail to get json for a missing endpoint', function (done) {
-      get(URL + '/test/data/fixture.json-junk').json(function (err) {
+    it('should fail to get json for a missing endpoint', (done) => {
+      get(`${URL}/test/data/fixture.json-junk`).json((err) => {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail to get json for a missing endpoint - promise', function (done) {
-      get(URL + '/test/data/fixture.json-junk')
+    it('should fail to get json for a missing endpoint - promise', (done) => {
+      get(`${URL}/test/data/fixture.json-junk`)
         .json()
-        .then(function () {
+        .then(() => {
           assert.ok(false);
         })
-        .catch(function (err) {
+        .catch((err) => {
           assert.ok(!!err);
           done();
         });
     });
 
-    it('should fail to pipe a missing endpoint', function (done) {
-      get(URL + '/test/data/fixture.json-junk').pipe(fs.createWriteStream(path.join(TMP_DIR, 'fixture.json')), function (err) {
+    it('should fail to pipe a missing endpoint', (done) => {
+      get(`${URL}/test/data/fixture.json-junk`).pipe(fs.createWriteStream(path.join(TMP_DIR, 'fixture.json')), (err) => {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail to pipe a missing endpoint - promise', function (done) {
-      get(URL + '/test/data/fixture.json-junk')
+    it('should fail to pipe a missing endpoint - promise', (done) => {
+      get(`${URL}/test/data/fixture.json-junk`)
         .pipe(fs.createWriteStream(path.join(TMP_DIR, 'fixture.json')))
-        .then(function () {
+        .then(() => {
           assert.ok(false);
         })
-        .catch(function (err) {
+        .catch((err) => {
           assert.ok(!!err);
           done();
         });
     });
 
-    it('should fail to get text for a missing endpoint', function (done) {
-      get(URL + '/test/data/fixture.text-junk').text(function (err) {
+    it('should fail to get text for a missing endpoint', (done) => {
+      get(`${URL}/test/data/fixture.text-junk`).text((err) => {
         assert.ok(!!err);
         done();
       });
     });
 
-    it('should fail to get text for a missing endpoint - promise', function (done) {
-      get(URL + '/test/data/fixture.text-junk')
+    it('should fail to get text for a missing endpoint - promise', (done) => {
+      get(`${URL}/test/data/fixture.text-junk`)
         .text()
-        .then(function () {
+        .then(() => {
           assert.ok(false);
         })
-        .catch(function (err) {
+        .catch((err) => {
           assert.ok(!!err);
           done();
         });

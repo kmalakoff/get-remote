@@ -1,16 +1,16 @@
-var fs = require('fs');
-var path = require('path');
-var tmpdir = require('os').tmpdir || require('os-shim').tmpdir;
-var suffix = require('temp-suffix');
-var mkdirp = require('mkdirp');
+const fs = require('fs');
+const path = require('path');
+const tmpdir = require('os').tmpdir || require('os-shim').tmpdir;
+const suffix = require('temp-suffix');
+const mkdirp = require('mkdirp');
 
-var Response = require('../Response');
+const Response = require('../Response');
 
 module.exports = function streamCompat(args, options, callback) {
-  delete args[1].progress;
+  args[1].progress = undefined;
 
   if (options.method === 'HEAD') {
-    new Response(args[0], args[1]).stream(options, function (err, res) {
+    new Response(args[0], args[1]).stream(options, (err, res) => {
       if (err) return callback(err);
 
       res.resume(); // Discard response
@@ -20,9 +20,9 @@ module.exports = function streamCompat(args, options, callback) {
     const name = 'get-remote';
     const filename = path.join(tmpdir(), name, suffix('compat'));
     mkdirp.sync(path.dirname(filename));
-    var res = fs.createWriteStream(filename);
+    const res = fs.createWriteStream(filename);
 
-    new Response(args[0], args[1]).pipe(res, function (err) {
+    new Response(args[0], args[1]).pipe(res, (err) => {
       if (err) return callback(err);
 
       err ? callback(err) : callback(null, { statusCode: res.statusCode, headers: res.headers, filename: filename });

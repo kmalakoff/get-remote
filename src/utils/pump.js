@@ -1,4 +1,4 @@
-var pump = require('pump');
+const pump = require('pump');
 
 module.exports = function pipe(from, to) {
   if (from.headers) to.headers = to.headers === undefined ? from.headers : Object.assign({}, from.headers, to.headers || {});
