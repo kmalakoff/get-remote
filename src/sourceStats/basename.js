@@ -1,21 +1,21 @@
-var path = require('path');
-var contentDisposition = require('content-disposition');
+const path = require('path');
+const contentDisposition = require('content-disposition');
 
-// eslint-disable-next-line no-control-regex
-var POSIX = /[<>:"\\/\\|?*\x00-\x1F]/g;
-var WINDOWS = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])$/i;
+// biome-ignore lint/suspicious/noControlCharactersInRegex: <explanation>
+const POSIX = /[<>:"\\/\\|?*\x00-\x1F]/g;
+const WINDOWS = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])$/i;
 
 module.exports = function getBasename(source, options, endpoint) {
   // options
-  var basename = options.basename || options.filename;
+  let basename = options.basename || options.filename;
   if (basename !== undefined) return basename;
 
   // path
   if (typeof source === 'string') return path.basename(source);
   // stream
-  else if (source) {
+  if (source) {
     if (source.headers && source.headers['content-disposition']) {
-      var information = contentDisposition.parse(source.headers['content-disposition']);
+      const information = contentDisposition.parse(source.headers['content-disposition']);
       return information.parameters.filename;
     }
     basename = source.basename || source.filename;
