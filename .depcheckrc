@@ -1,1 +1,1 @@
-ignores: ["depcheck", "lzma-native", "supports-color"]
+ignores: ["get-remote", "depcheck", "ts-dev-stack", "@types/*", "lzma-native", "supports-color"]
