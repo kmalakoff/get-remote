@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "content-disposition": "^0.5.4",
-    "core-js": "^3.36.0",
+    "core-js": "^3.37.0",
     "end-of-stream": "^1.4.4",
     "function-exec-sync": "^0.2.11",
     "mkdirp": "^0.5.6",
@@ -44,18 +44,18 @@
     "temp-suffix": "^0.1.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.5.3",
+    "@biomejs/biome": "^1.7.1",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.11.19",
+    "@types/node": "^20.12.7",
     "cr": "^0.1.0",
     "depcheck": "^1.4.7",
-    "fast-extract": "^1.0.1",
+    "fast-extract": "^1.1.0",
     "fs-iterator": "^5.0.1",
     "fs-stats-spys": "^1.0.2",
     "is-tar": "^1.0.0",
     "lzma-native": "^8.0.6",
     "supports-color": "^3.2.3",
-    "ts-dev-stack": "^0.14.9"
+    "ts-dev-stack": "^0.15.8"
   },
   "engines": {
     "node": ">=0.8"
