@@ -1,9 +1,9 @@
 "use strict";
-var eos = require("end-of-stream");
-var pump = require("../utils/pump");
+var eos = require('end-of-stream');
+var pump = require('../utils/pump');
 module.exports = function pipe(dest, callback) {
     var _this = this;
-    if (typeof callback === "function") {
+    if (typeof callback === 'function') {
         return this.stream(function(err, res) {
             if (err) {
                 !dest.end || dest.end(); // cancel streaming to dest

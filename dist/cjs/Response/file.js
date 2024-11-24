@@ -1,17 +1,17 @@
 "use strict";
-var path = require("path");
-var fs = require("fs");
-var eos = require("end-of-stream");
-var mkpath = require("mkpath");
-var statsBasename = require("../sourceStats/basename");
-var pump = require("../utils/pump");
+var path = require('path');
+var fs = require('fs');
+var eos = require('end-of-stream');
+var mkpath = require('mkpath');
+var statsBasename = require('../sourceStats/basename');
+var pump = require('../utils/pump');
 module.exports = function file(dest, options, callback) {
     var _this = this;
-    if (typeof options === "function") {
+    if (typeof options === 'function') {
         callback = options;
         options = null;
     }
-    if (typeof callback === "function") {
+    if (typeof callback === 'function') {
         options = Object.assign({}, this.options, options || {});
         return this.stream(options, function(err, res) {
             if (err) return callback(err);
