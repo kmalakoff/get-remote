@@ -3,11 +3,10 @@ updates:
   - package-ecosystem: npm
     directory: '/'
     schedule:
-      interval: daily
+      interval: weekly
     ignore:
       - dependency-name: 'mkdirp'
       - dependency-name: 'readable-stream'
-      - dependency-name: 'rimraf'
       - dependency-name: 'supports-color'
   - package-ecosystem: 'github-actions'
     directory: '/'
