@@ -1,5 +1,5 @@
 const assert = require('assert');
-const rimraf = require('rimraf');
+const rimraf2 = require('rimraf2');
 const mkpath = require('mkpath');
 const extract = require('fast-extract');
 const eos = require('end-of-stream');
@@ -77,7 +77,7 @@ function addTests(type) {
 
 describe('extract', () => {
   beforeEach((callback) => {
-    rimraf(TMP_DIR, () => {
+    rimraf2(TMP_DIR, { disableGlob: true }, () => {
       mkpath(TMP_DIR, callback);
     });
   });
