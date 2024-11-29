@@ -1,9 +1,9 @@
 "use strict";
 module.exports = function head(callback) {
     var _this = this;
-    if (typeof callback === "function") {
+    if (typeof callback === 'function') {
         return this.stream({
-            method: "HEAD"
+            method: 'HEAD'
         }, function(err, res) {
             if (err) return callback(err);
             res.resume(); // Discard response

@@ -1,13 +1,13 @@
 "use strict";
-var eos = require("end-of-stream");
+var eos = require('end-of-stream');
 module.exports = function text(callback) {
     var _this = this;
-    if (typeof callback === "function") {
+    if (typeof callback === 'function') {
         return this.stream(function(err, res) {
             if (err) return callback(err);
             // collect text
-            var result = "";
-            res.on("data", function(chunk) {
+            var result = '';
+            res.on('data', function(chunk) {
                 result += chunk.toString();
             });
             eos(res, function(err) {

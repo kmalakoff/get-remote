@@ -1,17 +1,17 @@
 "use strict";
-var fastExtract = require("../utils/optionalRequire")("fast-extract");
-var extname = require("../utils/extname");
+var fastExtract = require('../utils/optionalRequire')('fast-extract');
+var extname = require('../utils/extname');
 module.exports = function extract(dest, options, callback) {
     var _this = this;
-    if (typeof options === "function") {
+    if (typeof options === 'function') {
         callback = options;
         options = null;
     }
     if (!fastExtract) {
-        console.log("Warning fast-extract not found so compressed file downloaded only without extraction. Require fast-extract for built-in extraction");
+        console.log('Warning fast-extract not found so compressed file downloaded only without extraction. Require fast-extract for built-in extraction');
         return this.file(dest, callback);
     }
-    if (typeof callback === "function") {
+    if (typeof callback === 'function') {
         options = Object.assign({}, this.options, options || {});
         return this.stream(options, function(err, res) {
             if (err) return callback(err);

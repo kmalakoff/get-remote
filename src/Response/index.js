@@ -4,13 +4,13 @@ const url = require('url');
 const fs = require('fs');
 const path = require('path');
 const eos = require('end-of-stream');
-const rimraf = require('rimraf');
+const rimraf2 = require('rimraf2');
 const wrapResponse = require('../utils/wrapResponse');
 
-// node 0.8 does not support https
+// node <= 0.8 does not support https and node 0.12 certs cannot be trusted
 const major = +process.versions.node.split('.')[0];
 const minor = +process.versions.node.split('.')[1];
-const noHTTPS = major === 0 && minor <= 8;
+const noHTTPS = major === 0 && (minor <= 8 || minor === 12);
 
 const streamCompat = path.resolve(__dirname, '..', 'utils', 'streamCompat.js');
 let execPath = null;
@@ -34,7 +34,7 @@ Response.prototype.stream = function stream(options, callback) {
       if (!functionExec) functionExec = require('function-exec-sync'); // break dependencies
       if (!execPath) {
         const satisfiesSemverSync = require('node-exec-path').satisfiesSemverSync;
-        execPath = satisfiesSemverSync('>=0.10.0'); // must be more than node 0.8
+        execPath = satisfiesSemverSync('>0.12'); // must be more than node 0.12
         if (!execPath) return callback(new Error('get-remote on node versions without https need a version of node >=0.10.0 to call using https'));
       }
 
@@ -48,7 +48,7 @@ Response.prototype.stream = function stream(options, callback) {
           res.headers = streamInfo.headers;
           res.statusCode = streamInfo.statusCode;
           eos(res, () => {
-            rimraf.sync(streamInfo.filename); // clean up
+            rimraf2.sync(streamInfo.filename, { disableGlob: true }); // clean up
           });
           wrapResponse(res, this, options, callback);
         }

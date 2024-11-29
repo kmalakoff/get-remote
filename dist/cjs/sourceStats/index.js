@@ -1,8 +1,8 @@
 "use strict";
-var getBasename = require("./basename");
-var getSize = require("./size");
+var getBasename = require('./basename');
+var getSize = require('./size');
 module.exports = function sourceStats(source, options, endpoint, callback) {
-    if (typeof endpoint === "function") {
+    if (typeof endpoint === 'function') {
         callback = endpoint;
         endpoint = null;
     }

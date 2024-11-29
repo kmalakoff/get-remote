@@ -1,4 +1,4 @@
 {
   "upgrade": true,
-  "reject": ["mkdirp", "readable-stream", "rimraf", "supports-color"]
+  "reject": ["mkdirp", "readable-stream", "supports-color"]
 }

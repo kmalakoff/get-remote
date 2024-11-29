@@ -1,6 +1,6 @@
 const assert = require('assert');
 const fs = require('fs');
-const rimraf = require('rimraf');
+const rimraf2 = require('rimraf2');
 const mkpath = require('mkpath');
 
 const get = require('get-remote');
@@ -12,7 +12,7 @@ const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 describe('get-file', () => {
   beforeEach((callback) => {
-    rimraf(TMP_DIR, () => {
+    rimraf2(TMP_DIR, { disableGlob: true }, () => {
       mkpath(TMP_DIR, callback);
     });
   });

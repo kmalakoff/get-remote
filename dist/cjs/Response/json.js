@@ -1,7 +1,7 @@
 "use strict";
 module.exports = function json(callback) {
     var _this = this;
-    if (typeof callback === "function") {
+    if (typeof callback === 'function') {
         return this.text(function(err, res) {
             if (err) return callback(err);
             try {
