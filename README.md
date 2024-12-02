@@ -10,32 +10,32 @@ var get = require('get-remote'))
 
 // get stream
 get('http://api.com/fixture.json').stream(function (err, stream) {
-  assert.ok(!err);
+  assert.ok(!err, err ? err.message : '');
   // do something
 });
 
 // get and extract
 get('http://api.com/fixture.tar.gz').extract(process.cwd(), { strip: 1 }, function (err) {
-  assert.ok(!err);
+  assert.ok(!err, err ? err.message : '');
   // do something
 });
 
 // get to file with inferred name of 'fixture.json'
 get('http://api.com/fixture.json').file(process.cwd(), function (err) {
-  assert.ok(!err);
+  assert.ok(!err, err ? err.message : '');
   // do something
 });
 
 // head the endpoint
 get('http://api.com/fixture.json').head(function (err, res) {
-  assert.ok(!err);
+  assert.ok(!err, err ? err.message : '');
   assert.equal(res.statusCode, 200);
   assert.ok(!!res.headers);
 });
 
 // get json
 get('http://api.com/fixture.json').json(function (err, res) {
-  assert.ok(!err);
+  assert.ok(!err, err ? err.message : '');
   assert.ok(!!res.headers);
   assert.ok(!!res.statusCode);
   assert.ok(!!res.body);
@@ -44,7 +44,7 @@ get('http://api.com/fixture.json').json(function (err, res) {
 
 // pipe to write stream
 get('http://api.com/fixture.json').pipe(fs.createWriteStream(path.join(process.cwd(), 'fixture.json')), function (err) {
-  assert.ok(!err);
+  assert.ok(!err, err ? err.message : '');
   // do someting
 });
 
@@ -59,7 +59,7 @@ get('http://api.com/fixture.text').text(function (err, res) {
 
 // get and extract - callbacks
 get('https://cdn.jsdelivr.net/gh/nodejs/Release@main/schedule.json').extract(fullPath, { strip: 1 }, function(err) {
-  assert.ok(!err)
+  assert.ok(!err, err ? err.message : '')
   // do something
 })
 ```
