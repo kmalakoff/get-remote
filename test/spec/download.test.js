@@ -24,9 +24,9 @@ describe('download', () => {
 
   it('get as stream', (done) => {
     get(`${URL}/test/data/fixture.tar`).stream((err, stream) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       streamToBuffer(stream, (err, buffer) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
         assert.ok(isTar(buffer));
         done();
       });
@@ -35,7 +35,7 @@ describe('download', () => {
 
   it.skip('get as promise', (done) => {
     get(`${URL}/test/data/fixture.tar`).stream((err, stream) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       assert.ok(isTar(stream));
       done();
     });
@@ -43,9 +43,9 @@ describe('download', () => {
 
   it('get a very large file', (done) => {
     get('https://github.com/kmalakoff/get-remote/archive/refs/tags/v0.6.3.zip').stream((err, stream) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       streamToBuffer(stream, (err, buffer) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
         assert.equal(buffer.length, 123087);
         done();
       });
@@ -54,9 +54,9 @@ describe('download', () => {
 
   it('get and rename file', (done) => {
     get(`${URL}/test/data/fixture.tar`).file(TARGET, { filename: 'bar.tar' }, (err) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       fs.readdir(TARGET, (err, files) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
         assert.deepEqual(files.sort(), ['bar.tar']);
         done();
       });
@@ -65,9 +65,9 @@ describe('download', () => {
 
   it('save file', (done) => {
     get(`${URL}/test/data/fixture.tar`).file(TARGET, (err) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       fs.readdir(TARGET, (err, files) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
         assert.deepEqual(files.sort(), ['fixture.tar']);
         done();
       });
@@ -77,10 +77,10 @@ describe('download', () => {
   it('extract file', (done) => {
     const options = { strip: 1 };
     get(`${URL}/test/data/fixture.tar`).extract(TARGET, options, (err) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
 
       validateFiles(options, 'tar.gz', (err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
         done();
       });
     });
@@ -88,10 +88,10 @@ describe('download', () => {
 
   it('extract file that is not compressed', (done) => {
     get(`${URL}/test/data/fixture.js`).extract(TARGET, (err) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
 
       fs.readdir(TARGET, (err, files) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
         assert.deepEqual(files.sort(), ['fixture.js']);
         done();
       });
@@ -108,9 +108,9 @@ describe('download', () => {
 
   it.skip('rename to valid filename', (done) => {
     get(`${URL}/test/data/fix*ture.tar`).file(TARGET, (err) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       fs.readdir(TARGET, (err, files) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
         assert.deepEqual(files.sort(), ['fix!ture.tar']);
         done();
       });
@@ -119,9 +119,9 @@ describe('download', () => {
 
   it('follow redirects', (done) => {
     get(`${URL.replace('https', 'http')}/test/data/fixture.tar`).stream((err, stream) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       streamToBuffer(stream, (err, buffer) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
         assert.ok(isTar(buffer));
         done();
       });
@@ -130,9 +130,9 @@ describe('download', () => {
 
   it('follow redirect to https', (done) => {
     get(`${URL.replace('https', 'http')}/test/data/fixture.tar`).stream((err, stream) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       streamToBuffer(stream, (err, buffer) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
         assert.ok(isTar(buffer));
         done();
       });
@@ -141,9 +141,9 @@ describe('download', () => {
 
   it('handle query string', (done) => {
     get(`${URL}/test/data/fixture.tar?param=value`).file(TARGET, (err) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       fs.readdir(TARGET, (err, files) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
         assert.deepEqual(files.sort(), ['fixture.tar']);
         done();
       });
@@ -152,9 +152,9 @@ describe('download', () => {
 
   it.skip('handle content dispositon', (done) => {
     get(`${URL}/test/data/fixture-tar`).file(TARGET, (err) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       fs.readdir(TARGET, (err, files) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
         assert.deepEqual(files.sort(), ['fixture-tar.tar']);
         done();
       });
@@ -163,9 +163,9 @@ describe('download', () => {
 
   it.skip('handle filename from file type', (done) => {
     get('http://foo.bar/filetype').file(TARGET, (err) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       fs.readdir(TARGET, (err, files) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
         assert.deepEqual(files.sort(), ['filetype.tar']);
         done();
       });

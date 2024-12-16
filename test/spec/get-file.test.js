@@ -19,7 +19,7 @@ describe('get-file', () => {
 
   it('should get file over https', (done) => {
     get(`${URL}/package.json`).file(TARGET, (err) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       const files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
       done();
@@ -28,7 +28,7 @@ describe('get-file', () => {
 
   it('should get file over http', (done) => {
     get(`${URL}/package.json`).file(TARGET, (err) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       const files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
       done();
@@ -53,7 +53,7 @@ describe('get-file', () => {
     }
 
     get(`${URL}/package.json`, { progress: progress }).file(TARGET, (err) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       const files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
       assert.ok(progressUpdates.length > 1);
