@@ -21,9 +21,10 @@
   ],
   "scripts": {
     "build": "tsds build",
+    "depcheck": "depcheck",
     "deploy": "tsds deploy",
     "format": "biome check --write --unsafe src/ test/",
-    "test": "tsds test:node --timeout=10000",
+    "test": "tsds test:node --no-timeouts",
     "test:engines": "nvu engines npm test",
     "version": "tsds version"
   },
@@ -31,7 +32,7 @@
     "content-disposition": "^0.5.4",
     "core-js": "^3.39.0",
     "end-of-stream": "^1.4.4",
-    "function-exec-sync": "^1.0.0",
+    "function-exec-sync": "^1.0.1",
     "mkdirp": "^0.5.6",
     "mkpath": "^1.0.0",
     "node-exec-path": "^1.0.0",
@@ -40,22 +41,22 @@
     "pump": "^3.0.2",
     "readable-stream": "^2.3.7",
     "require_optional": "^1.0.1",
-    "rimraf2": "^2.7.1",
+    "rimraf2": "^2.8.2",
     "temp-suffix": "^0.1.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.10.1",
+    "@types/node": "^22.10.2",
     "cr": "^0.1.0",
     "depcheck": "^1.4.7",
-    "fast-extract": "^1.2.1",
-    "fs-iterator": "^5.1.0",
-    "fs-stats-spys": "^1.0.2",
+    "fast-extract": "^1.2.5",
+    "fs-iterator": "^5.1.1",
+    "fs-stats-spys": "^1.1.0",
     "is-tar": "^1.0.0",
     "lzma-native": "^8.0.6",
     "supports-color": "^3.2.3",
-    "ts-dev-stack": "^0.16.3"
+    "ts-dev-stack": "^1.2.1"
   },
   "engines": {
     "node": ">=0.8"
