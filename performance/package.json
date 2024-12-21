@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "benchmark-suite": "^1.1.0",
-    "get-remote-cb-0.4.7": "npm:get-remote@0.8.4",
-    "rimraf2": "^2.7.1"
+    "get-remote-cb-0.4.7": "npm:get-remote@1.0.2",
+    "rimraf2": "^2.8.2"
   },
   "engines": {
     "node": ">=8"

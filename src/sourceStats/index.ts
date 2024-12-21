@@ -1,7 +1,12 @@
-const getBasename = require('./basename');
-const getSize = require('./size');
+import getBasename from './basename.js';
+import getSize from './size.js';
 
-module.exports = function sourceStats(source, options, endpoint, callback) {
+export interface Stats {
+  size?: number;
+  basename?: string;
+}
+
+export default function sourceStats(source, options, endpoint, callback) {
   if (typeof endpoint === 'function') {
     callback = endpoint;
     endpoint = null;
@@ -9,10 +14,10 @@ module.exports = function sourceStats(source, options, endpoint, callback) {
 
   getSize(source, options, (err, size) => {
     if (err) return callback(err);
-    const stats = {};
+    const stats: Stats = {};
     const basename = getBasename(source, options, endpoint);
     if (basename !== undefined) stats.basename = basename;
     if (size !== undefined) stats.size = size;
     callback(null, stats);
   });
-};
+}

@@ -1,12 +1,12 @@
-const path = require('path');
-const fs = require('fs');
-const eos = require('end-of-stream');
-const mkpath = require('mkpath');
+import fs from 'fs';
+import path from 'path';
+import eos from 'end-of-stream';
+import mkpath from 'mkpath';
 
-const statsBasename = require('../sourceStats/basename');
-const pump = require('../utils/pump');
+import statsBasename from '../sourceStats/basename.js';
+import pump from '../utils/pump.js';
 
-module.exports = function file(dest, options, callback) {
+export default function file(dest, options, callback) {
   if (typeof options === 'function') {
     callback = options;
     options = null;
@@ -36,4 +36,4 @@ module.exports = function file(dest, options, callback) {
       err ? reject(err) : resolve(res);
     });
   });
-};
+}

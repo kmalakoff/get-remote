@@ -1,6 +1,6 @@
-const eos = require('end-of-stream');
+import eos from 'end-of-stream';
 
-module.exports = function streamToBuffer(stream, callback) {
+export default function streamToBuffer(stream, callback) {
   const chunks = [];
   stream.on('data', (chunk) => {
     chunks.push(chunk);
@@ -8,4 +8,4 @@ module.exports = function streamToBuffer(stream, callback) {
   eos(stream, (err) => {
     err ? callback(err) : callback(null, Buffer.concat(chunks));
   });
-};
+}
