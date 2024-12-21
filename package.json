@@ -42,7 +42,7 @@
     "content-disposition": "^0.5.4",
     "core-js": "^3.39.0",
     "end-of-stream": "^1.4.4",
-    "function-exec-sync": "^1.0.2",
+    "function-exec-sync": "^1.0.3",
     "lazy-cache": "^2.0.2",
     "mkdirp-classic": "^0.5.3",
     "node-exec-path": "^1.0.0",
