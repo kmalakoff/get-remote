@@ -2,7 +2,7 @@ import assert from 'assert';
 import fs from 'fs';
 import path from 'path';
 import cr from 'cr';
-import mkpath from 'mkpath';
+import mkdirp from 'mkdirp-classic';
 import rimraf2 from 'rimraf2';
 
 // @ts-ignore
@@ -17,7 +17,7 @@ const FIXTURE_JSON = fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8'
 describe('api', () => {
   beforeEach((callback) => {
     rimraf2(TMP_DIR, { disableGlob: true }, () => {
-      mkpath(TMP_DIR, callback);
+      mkdirp(TMP_DIR, callback);
     });
   });
 
@@ -140,7 +140,7 @@ describe('api', () => {
     });
 
     it('should provide a pipe method', (done) => {
-      mkpath(TARGET, (err) => {
+      mkdirp(TARGET, (err) => {
         assert.ok(!err, err ? err.message : '');
 
         get(`${URL}/test/data/fixture.json`).pipe(fs.createWriteStream(path.join(TARGET, 'fixture.json')), (err) => {
@@ -152,7 +152,7 @@ describe('api', () => {
     });
 
     it('should provide a pipe method - promise', (done) => {
-      mkpath(TARGET, (err) => {
+      mkdirp(TARGET, (err) => {
         assert.ok(!err, err ? err.message : '');
 
         get(`${URL}/test/data/fixture.json`)

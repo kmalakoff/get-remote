@@ -1,7 +1,6 @@
-import type { JSONCallback, JSONStream } from '../types.js';
-export type JSONMethod = (callback?: JSONCallback) => undefined | Promise<JSONStream>;
+import type { JSONCallback, JSONResponse } from '../types.js';
 
-export default function json(callback?: JSONCallback): undefined | Promise<JSONStream> {
+export default function json(callback?: JSONCallback): undefined | Promise<JSONResponse> {
   if (typeof callback === 'function') {
     return this.text((err, res) => {
       if (err) return callback(err);
@@ -18,5 +17,5 @@ export default function json(callback?: JSONCallback): undefined | Promise<JSONS
     this.json((err, res) => {
       err ? reject(err) : resolve(res);
     });
-  }) as Promise<JSONStream>;
+  });
 }
