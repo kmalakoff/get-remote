@@ -1,7 +1,7 @@
 import assert from 'assert';
 import eos from 'end-of-stream';
 import { createWriteStream } from 'fast-extract';
-import mkpath from 'mkpath';
+import mkdirp from 'mkdirp-classic';
 import rimraf2 from 'rimraf2';
 
 // @ts-ignore
@@ -78,7 +78,7 @@ function addTests(type) {
 describe('extract', () => {
   beforeEach((callback) => {
     rimraf2(TMP_DIR, { disableGlob: true }, () => {
-      mkpath(TMP_DIR, callback);
+      mkdirp(TMP_DIR, callback);
     });
   });
 
