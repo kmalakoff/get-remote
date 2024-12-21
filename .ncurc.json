@@ -1,4 +1,4 @@
 {
   "upgrade": true,
-  "reject": ["mkdirp", "readable-stream", "supports-color"]
+  "reject": ["@types/node","readable-stream", "supports-color"]
 }
