@@ -1,19 +1,18 @@
-const assert = require('assert');
-const path = require('path');
-const fs = require('fs');
-const rimraf2 = require('rimraf2');
-const mkpath = require('mkpath');
-const cr = require('cr');
+import assert from 'assert';
+import fs from 'fs';
+import path from 'path';
+import cr from 'cr';
+import mkpath from 'mkpath';
+import rimraf2 from 'rimraf2';
 
-const get = require('get-remote');
+// @ts-ignore
+import get from 'get-remote';
 
-const streamToBuffer = require('../lib/streamToBuffer');
-const validateFiles = require('../lib/validateFiles');
-const constants = require('../lib/constants');
-const TMP_DIR = constants.TMP_DIR;
-const TARGET = constants.TARGET;
-const DATA_DIR = constants.DATA_DIR;
+import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants';
+import streamToBuffer from '../lib/streamToBuffer';
+import validateFiles from '../lib/validateFiles';
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
+const FIXTURE_JSON = fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8');
 
 describe('api', () => {
   beforeEach((callback) => {
@@ -29,7 +28,7 @@ describe('api', () => {
 
         streamToBuffer(stream, (err, buffer) => {
           assert.ok(!err, err ? err.message : '');
-          assert.equal(cr(buffer.toString()), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
+          assert.equal(cr(buffer.toString()), cr(FIXTURE_JSON));
           done();
         });
       });
@@ -41,7 +40,7 @@ describe('api', () => {
         .then((stream) => {
           streamToBuffer(stream, (err, buffer) => {
             assert.ok(!err, err ? err.message : '');
-            assert.equal(cr(buffer.toString()), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
+            assert.equal(cr(buffer.toString()), cr(FIXTURE_JSON));
             done();
           });
         })
@@ -80,7 +79,7 @@ describe('api', () => {
         fs.readdir(TARGET, (err, files) => {
           assert.ok(!err, err ? err.message : '');
           assert.deepEqual(files.sort(), ['fixture.json']);
-          assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
+          assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(FIXTURE_JSON));
           done();
         });
       });
@@ -93,7 +92,7 @@ describe('api', () => {
           fs.readdir(TARGET, (err, files) => {
             assert.ok(!err, err ? err.message : '');
             assert.deepEqual(files.sort(), ['fixture.json']);
-            assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
+            assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(FIXTURE_JSON));
             done();
           });
         })
@@ -124,7 +123,7 @@ describe('api', () => {
       get(`${URL}/test/data/fixture.json`).json((err, res) => {
         assert.ok(!err, err ? err.message : '');
         assert.equal(res.statusCode, 200);
-        assert.deepEqual(res.body, require(path.join(DATA_DIR, 'fixture.json')));
+        assert.deepEqual(res.body, JSON.parse(FIXTURE_JSON));
         done();
       });
     });
@@ -134,7 +133,7 @@ describe('api', () => {
         .json()
         .then((res) => {
           assert.equal(res.statusCode, 200);
-          assert.deepEqual(res.body, require(path.join(DATA_DIR, 'fixture.json')));
+          assert.deepEqual(res.body, JSON.parse(FIXTURE_JSON));
           done();
         })
         .catch(done);
@@ -146,7 +145,7 @@ describe('api', () => {
 
         get(`${URL}/test/data/fixture.json`).pipe(fs.createWriteStream(path.join(TARGET, 'fixture.json')), (err) => {
           assert.ok(!err, err ? err.message : '');
-          assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
+          assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(FIXTURE_JSON));
           done();
         });
       });
@@ -159,7 +158,7 @@ describe('api', () => {
         get(`${URL}/test/data/fixture.json`)
           .pipe(fs.createWriteStream(path.join(TMP_DIR, 'fixture.json')))
           .then(() => {
-            assert.equal(cr(fs.readFileSync(path.join(TMP_DIR, 'fixture.json'), 'utf8')), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8')));
+            assert.equal(cr(fs.readFileSync(path.join(TMP_DIR, 'fixture.json'), 'utf8')), cr(FIXTURE_JSON));
             done();
           })
           .catch(done);

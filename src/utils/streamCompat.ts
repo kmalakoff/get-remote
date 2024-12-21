@@ -1,12 +1,17 @@
-const fs = require('fs');
-const path = require('path');
-const tmpdir = require('os').tmpdir || require('os-shim').tmpdir;
-const suffix = require('temp-suffix');
-const mkdirp = require('mkdirp');
+import fs from 'fs';
+import path from 'path';
+import mkdirp from 'mkdirp';
+import { tmpdir } from 'os-shim';
+import suffix from 'temp-suffix';
 
-const Response = require('../Response');
+import Response from '../Response/index.js';
 
-module.exports = function streamCompat(args, options, callback) {
+export interface WriteStream extends fs.WriteStream {
+  statusCode: number;
+  headers: object;
+}
+
+export default function streamCompat(args, options, callback) {
   args[1].progress = undefined;
 
   if (options.method === 'HEAD') {
@@ -20,7 +25,7 @@ module.exports = function streamCompat(args, options, callback) {
     const name = 'get-remote';
     const filename = path.join(tmpdir(), name, suffix('compat'));
     mkdirp.sync(path.dirname(filename));
-    const res = fs.createWriteStream(filename);
+    const res = fs.createWriteStream(filename) as WriteStream;
 
     new Response(args[0], args[1]).pipe(res, (err) => {
       if (err) return callback(err);
@@ -28,4 +33,4 @@ module.exports = function streamCompat(args, options, callback) {
       err ? callback(err) : callback(null, { statusCode: res.statusCode, headers: res.headers, filename: filename });
     });
   }
-};
+}
