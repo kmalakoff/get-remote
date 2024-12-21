@@ -1,10 +1,12 @@
-const progressStream = require('progress-stream');
-const PassThrough = require('stream').PassThrough || require('readable-stream').PassThrough;
+import progressStream from 'progress-stream';
+import sourceStats from '../sourceStats/index.js';
+import pump from './pump.js';
 
-const pump = require('./pump');
-const sourceStats = require('../sourceStats');
+import { PassThrough as PassThroughStream } from 'stream';
+import { PassThrough as PassThroughReadableStream } from 'readable-stream';
+const PassThrough = PassThroughStream || PassThroughReadableStream;
 
-module.exports = function wrapResponse(res, self, options, callback) {
+export default function wrapResponse(res, self, options, callback) {
   // add a pausable PassThrough stream to workaround streams 1 not starting streams paused
   if (!res.unpipe) res = pump(res, new PassThrough());
 
@@ -29,4 +31,4 @@ module.exports = function wrapResponse(res, self, options, callback) {
     res = Object.assign(res, stats);
     return callback(null, res);
   });
-};
+}

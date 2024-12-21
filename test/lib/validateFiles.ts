@@ -1,16 +1,13 @@
-const assert = require('assert');
-const fs = require('fs');
-const path = require('path');
-const cr = require('cr');
-const Iterator = require('fs-iterator');
-const statsSpys = require('fs-stats-spys');
+import assert from 'assert';
+import fs from 'fs';
+import path from 'path';
+import cr from 'cr';
+import Iterator from 'fs-iterator';
+import statsSpys from 'fs-stats-spys';
 
-const constants = require('./constants');
-const TMP_DIR = constants.TMP_DIR;
-const TARGET = constants.TARGET;
-const CONTENTS = constants.CONTENTS;
+import { CONTENTS, TARGET, TMP_DIR } from './constants';
 
-module.exports = function validateFiles(options, _type, callback) {
+export default function validateFiles(options, _type, callback) {
   if (typeof _type === 'function') {
     callback = _type;
     _type = undefined;
@@ -71,8 +68,8 @@ module.exports = function validateFiles(options, _type, callback) {
   } else {
     return new Promise(function validatePromise(resolve, reject) {
       validateFiles(options, _type, function validateCallback(err) {
-        err ? reject(err) : resolve();
+        err ? reject(err) : resolve(null);
       });
     });
   }
-};
+}

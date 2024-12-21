@@ -1,8 +1,8 @@
-const eos = require('end-of-stream');
+import eos from 'end-of-stream';
 
-const pump = require('../utils/pump');
+import pump from '../utils/pump.js';
 
-module.exports = function pipe(dest, callback) {
+export default function pipe(dest, callback) {
   if (typeof callback === 'function') {
     return this.stream((err, res) => {
       if (err) {
@@ -19,4 +19,4 @@ module.exports = function pipe(dest, callback) {
       err ? reject(err) : resolve(res);
     });
   });
-};
+}

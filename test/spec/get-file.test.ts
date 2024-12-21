@@ -1,13 +1,12 @@
-const assert = require('assert');
-const fs = require('fs');
-const rimraf2 = require('rimraf2');
-const mkpath = require('mkpath');
+import assert from 'assert';
+import fs from 'fs';
+import mkpath from 'mkpath';
+import rimraf2 from 'rimraf2';
 
-const get = require('get-remote');
+// @ts-ignore
+import get from 'get-remote';
 
-const constants = require('../lib/constants');
-const TMP_DIR = constants.TMP_DIR;
-const TARGET = constants.TARGET;
+import { TARGET, TMP_DIR } from '../lib/constants';
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 describe('get-file', () => {

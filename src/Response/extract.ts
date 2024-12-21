@@ -1,8 +1,9 @@
-const fastExtract = require('../utils/optionalRequire')('fast-extract');
+import extname from '../utils/extname.js';
+// @ts-ignore
+import optionalRequire from '../utils/optionalRequire.cjs';
+const fastExtract = optionalRequire('fast-extract');
 
-const extname = require('../utils/extname');
-
-module.exports = function extract(dest, options, callback) {
+export default function extract(dest, options, callback) {
   if (typeof options === 'function') {
     callback = options;
     options = null;
@@ -28,4 +29,4 @@ module.exports = function extract(dest, options, callback) {
       err ? reject(err) : resolve(res);
     });
   });
-};
+}
