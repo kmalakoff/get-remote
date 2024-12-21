@@ -2,12 +2,16 @@ import extname from '../utils/extname.js';
 // @ts-ignore
 import optionalRequire from '../utils/optionalRequire.cjs';
 const fastExtract = optionalRequire('fast-extract');
+import type { ExtractCallback } from '../types.js';
 
-export default function extract(dest, options, callback) {
+export type ExtractMethod = (dest: string, options: object | ExtractCallback, callback?: ExtractCallback) => undefined | Promise<undefined>;
+
+export default function extract(dest: string, options: object | ExtractCallback, callback?: ExtractCallback): undefined | Promise<undefined> {
   if (typeof options === 'function') {
-    callback = options;
+    callback = options as ExtractCallback;
     options = null;
   }
+  options = options || {};
 
   if (!fastExtract) {
     console.log('Warning fast-extract not found so compressed file downloaded only without extraction. Require fast-extract for built-in extraction');
@@ -15,7 +19,7 @@ export default function extract(dest, options, callback) {
   }
 
   if (typeof callback === 'function') {
-    options = Object.assign({}, this.options, options || {});
+    options = { ...this.options, ...options };
     return this.stream(options, (err, res) => {
       if (err) return callback(err);
 
@@ -25,8 +29,8 @@ export default function extract(dest, options, callback) {
     });
   }
   return new Promise((resolve, reject) => {
-    this.extract(dest, options, (err, res) => {
-      err ? reject(err) : resolve(res);
+    this.extract(dest, options, (err) => {
+      err ? reject(err) : resolve(undefined);
     });
-  });
+  }) as Promise<undefined>;
 }

@@ -4,15 +4,20 @@ import eos from 'end-of-stream';
 import mkpath from 'mkpath';
 
 import statsBasename from '../sourceStats/basename.js';
+import type { FileCallback } from '../types.js';
 import pump from '../utils/pump.js';
 
-export default function file(dest, options, callback) {
+export type FileMethod = (dest: string, options: object | FileCallback, callback?: FileCallback | undefined) => undefined | Promise<string>;
+
+export default function file(dest: string, options: object | FileCallback, callback?: FileCallback | undefined): undefined | Promise<string> {
   if (typeof options === 'function') {
-    callback = options;
+    callback = options as FileCallback;
     options = null;
   }
+  options = options || {};
+
   if (typeof callback === 'function') {
-    options = Object.assign({}, this.options, options || {});
+    options = { ...this.options, ...options };
     return this.stream(options, (err, res) => {
       if (err) return callback(err);
 
@@ -35,5 +40,5 @@ export default function file(dest, options, callback) {
     this.file(dest, options, (err, res) => {
       err ? reject(err) : resolve(res);
     });
-  });
+  }) as Promise<string>;
 }
