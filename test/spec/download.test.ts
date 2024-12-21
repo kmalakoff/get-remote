@@ -1,7 +1,7 @@
 import assert from 'assert';
 import fs from 'fs';
 import isTar from 'is-tar';
-import mkpath from 'mkpath';
+import mkdirp from 'mkdirp-classic';
 import rimraf2 from 'rimraf2';
 
 // var contentDisposition = require('content-disposition');
@@ -17,7 +17,7 @@ const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 describe('download', () => {
   beforeEach((callback) => {
     rimraf2(TMP_DIR, { disableGlob: true }, () => {
-      mkpath(TMP_DIR, callback);
+      mkdirp(TMP_DIR, callback);
     });
   });
 

@@ -1,15 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import eos from 'end-of-stream';
-import mkpath from 'mkpath';
+import mkdirp from 'mkdirp-classic';
 
 import statsBasename from '../sourceStats/basename.js';
 import type { FileCallback } from '../types.js';
 import pump from '../utils/pump.js';
 
-export type FileMethod = (dest: string, options: object | FileCallback, callback?: FileCallback | undefined) => undefined | Promise<string>;
-
-export default function file(dest: string, options: object | FileCallback, callback?: FileCallback | undefined): undefined | Promise<string> {
+export default function file(dest: string, options?: object | FileCallback, callback?: FileCallback | undefined): undefined | Promise<string> {
   if (typeof options === 'function') {
     callback = options as FileCallback;
     options = null;
@@ -24,7 +22,7 @@ export default function file(dest: string, options: object | FileCallback, callb
       const basename = statsBasename(options, res, this.endpoint);
       const fullPath = basename === undefined ? dest : path.join(dest, basename);
 
-      mkpath(path.dirname(fullPath), (err) => {
+      mkdirp(path.dirname(fullPath), (err) => {
         if (err) return callback(err);
 
         // write to file
@@ -40,5 +38,5 @@ export default function file(dest: string, options: object | FileCallback, callb
     this.file(dest, options, (err, res) => {
       err ? reject(err) : resolve(res);
     });
-  }) as Promise<string>;
+  });
 }

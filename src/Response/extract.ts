@@ -4,8 +4,6 @@ import optionalRequire from '../utils/optionalRequire.cjs';
 const fastExtract = optionalRequire('fast-extract');
 import type { ExtractCallback } from '../types.js';
 
-export type ExtractMethod = (dest: string, options: object | ExtractCallback, callback?: ExtractCallback) => undefined | Promise<undefined>;
-
 export default function extract(dest: string, options: object | ExtractCallback, callback?: ExtractCallback): undefined | Promise<undefined> {
   if (typeof options === 'function') {
     callback = options as ExtractCallback;
@@ -32,5 +30,5 @@ export default function extract(dest: string, options: object | ExtractCallback,
     this.extract(dest, options, (err) => {
       err ? reject(err) : resolve(undefined);
     });
-  }) as Promise<undefined>;
+  });
 }
