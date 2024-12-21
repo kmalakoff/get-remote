@@ -1,18 +1,17 @@
-const assert = require('assert');
-const fs = require('fs');
-const rimraf2 = require('rimraf2');
-const mkpath = require('mkpath');
-const isTar = require('is-tar');
+import assert from 'assert';
+import fs from 'fs';
+import isTar from 'is-tar';
+import mkpath from 'mkpath';
+import rimraf2 from 'rimraf2';
 
 // var contentDisposition = require('content-disposition');
 
-const get = require('get-remote');
+// @ts-ignore
+import get from 'get-remote';
 
-const streamToBuffer = require('../lib/streamToBuffer');
-const validateFiles = require('../lib/validateFiles');
-const constants = require('../lib/constants');
-const TMP_DIR = constants.TMP_DIR;
-const TARGET = constants.TARGET;
+import { TARGET, TMP_DIR } from '../lib/constants';
+import streamToBuffer from '../lib/streamToBuffer';
+import validateFiles from '../lib/validateFiles';
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 describe('download', () => {
@@ -42,11 +41,11 @@ describe('download', () => {
   });
 
   it('get a very large file', (done) => {
-    get('https://github.com/kmalakoff/get-remote/archive/refs/tags/v0.6.3.zip').stream((err, stream) => {
+    get('https://nodejs.org/dist/v22.12.0/node-v22.12.0-darwin-arm64.tar.gz').stream((err, stream) => {
       assert.ok(!err, err ? err.message : '');
       streamToBuffer(stream, (err, buffer) => {
         assert.ok(!err, err ? err.message : '');
-        assert.equal(buffer.length, 123087);
+        assert.equal(buffer.length, 48568612);
         done();
       });
     });

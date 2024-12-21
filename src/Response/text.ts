@@ -1,6 +1,6 @@
-const eos = require('end-of-stream');
+import eos from 'end-of-stream';
 
-module.exports = function text(callback) {
+export default function text(callback) {
   if (typeof callback === 'function') {
     return this.stream((err, res) => {
       if (err) return callback(err);
@@ -20,4 +20,4 @@ module.exports = function text(callback) {
       err ? reject(err) : resolve(res);
     });
   });
-};
+}

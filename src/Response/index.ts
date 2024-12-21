@@ -1,11 +1,18 @@
-const http = require('http');
-const https = require('https');
-const url = require('url');
-const fs = require('fs');
-const path = require('path');
-const eos = require('end-of-stream');
-const rimraf2 = require('rimraf2');
-const wrapResponse = require('../utils/wrapResponse');
+import fs from 'fs';
+import http from 'http';
+import https from 'https';
+import path from 'path';
+import url from 'url';
+import eos from 'end-of-stream';
+import rimraf2 from 'rimraf2';
+import wrapResponse from '../utils/wrapResponse.js';
+
+// @ts-ignore
+import lazy from '../lib/lazy.cjs';
+const functionExec = lazy('function-exec-sync');
+const nodeExecPath = lazy('node-exec-path');
+
+const __dirname = path.dirname(typeof __filename !== 'undefined' ? __filename : url.fileURLToPath(import.meta.url));
 
 // node <= 0.8 does not support https and node 0.12 certs cannot be trusted
 const major = +process.versions.node.split('.')[0];
@@ -15,12 +22,16 @@ const noHTTPS = major === 0 && (minor <= 8 || minor === 12);
 const streamCompat = path.resolve(__dirname, '..', 'utils', 'streamCompat.js');
 let execPath = null;
 
+export interface ReadStream extends fs.ReadStream {
+  statusCode: number;
+  headers: object;
+}
+
 function Response(endpoint, options) {
   this.endpoint = endpoint;
   this.options = options || {};
 }
 
-let functionExec = null; // break dependencies
 Response.prototype.stream = function stream(options, callback) {
   if (typeof options === 'function') {
     callback = options;
@@ -31,20 +42,19 @@ Response.prototype.stream = function stream(options, callback) {
 
     // node <=0.8 does not support https
     if (noHTTPS) {
-      if (!functionExec) functionExec = require('function-exec-sync'); // break dependencies
       if (!execPath) {
-        const satisfiesSemverSync = require('node-exec-path').satisfiesSemverSync;
+        const satisfiesSemverSync = nodeExecPath().satisfiesSemverSync;
         execPath = satisfiesSemverSync('>0.12'); // must be more than node 0.12
         if (!execPath) return callback(new Error('get-remote on node versions without https need a version of node >=0.10.0 to call using https'));
       }
 
       try {
-        const streamInfo = functionExec({ execPath: execPath, callbacks: true }, streamCompat, [this.endpoint, this.options], options);
+        const streamInfo = functionExec()({ execPath: execPath, callbacks: true }, streamCompat, [this.endpoint, this.options], options);
         if (options.method === 'HEAD') {
           streamInfo.resume = () => {};
           callback(null, streamInfo);
         } else {
-          const res = fs.createReadStream(streamInfo.filename);
+          const res = fs.createReadStream(streamInfo.filename) as ReadStream;
           res.headers = streamInfo.headers;
           res.statusCode = streamInfo.statusCode;
           eos(res, () => {
@@ -88,12 +98,18 @@ Response.prototype.stream = function stream(options, callback) {
     });
   });
 };
+import extract from './extract.js';
+import file from './file.js';
+import head from './head.js';
+import json from './json.js';
+import pipe from './pipe.js';
+import text from './text.js';
 
-Response.prototype.extract = require('./extract');
-Response.prototype.file = require('./file');
-Response.prototype.head = require('./head');
-Response.prototype.json = require('./json');
-Response.prototype.pipe = require('./pipe');
-Response.prototype.text = require('./text');
+Response.prototype.extract = extract;
+Response.prototype.file = file;
+Response.prototype.head = head;
+Response.prototype.json = json;
+Response.prototype.pipe = pipe;
+Response.prototype.text = text;
 
-module.exports = Response;
+export default Response;

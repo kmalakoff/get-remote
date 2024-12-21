@@ -8,7 +8,7 @@ module.exports = function optionalRequire(name) {
 
   try {
     const mod2 = requireOptional(name);
-    if (mod2) return mod;
+    if (mod2) return mod2;
   } catch (_err) {}
   return null;
 };

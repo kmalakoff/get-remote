@@ -1,4 +1,4 @@
-module.exports = function head(callback) {
+export default function head(callback) {
   if (typeof callback === 'function') {
     return this.stream({ method: 'HEAD' }, (err, res) => {
       if (err) return callback(err);
@@ -12,4 +12,4 @@ module.exports = function head(callback) {
       err ? reject(err) : resolve(res);
     });
   });
-};
+}

@@ -1,20 +1,20 @@
-const assert = require('assert');
-const rimraf2 = require('rimraf2');
-const mkpath = require('mkpath');
-const extract = require('fast-extract');
-const eos = require('end-of-stream');
+import assert from 'assert';
+import eos from 'end-of-stream';
+import { createWriteStream } from 'fast-extract';
+import mkpath from 'mkpath';
+import rimraf2 from 'rimraf2';
 
-const get = require('get-remote');
+// @ts-ignore
+import get from 'get-remote';
+import requireOptional from 'require_optional';
 
-const validateFiles = require('../lib/validateFiles');
-const constants = require('../lib/constants');
-const TMP_DIR = constants.TMP_DIR;
-const TARGET = constants.TARGET;
+import { TARGET, TMP_DIR } from '../lib/constants';
+import validateFiles from '../lib/validateFiles';
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 const EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip'];
 try {
-  const lzmaNative = require('require_optional')('lzma-native');
+  const lzmaNative = requireOptional('lzma-native');
   if (lzmaNative) EXTRACT_TYPES.push('tar.xz');
 } catch (_err) {}
 
@@ -49,7 +49,7 @@ function addTests(type) {
         assert.ok(!err, err ? err.message : '');
 
         const options = { strip: 1, type: type };
-        const res = stream.pipe(extract.createWriteStream(TARGET, options));
+        const res = stream.pipe(createWriteStream(TARGET, options));
         eos(res, (err) => {
           assert.ok(!err, err ? err.message : '');
 
@@ -63,7 +63,7 @@ function addTests(type) {
 
     it('extract file using pipe', (done) => {
       const options = { strip: 1, type: type };
-      get(`${URL}/test/data/fixture-${type}`).pipe(extract.createWriteStream(TARGET, options), (err) => {
+      get(`${URL}/test/data/fixture-${type}`).pipe(createWriteStream(TARGET, options), (err) => {
         assert.ok(!err, err ? err.message : '');
 
         validateFiles(options, type, (err) => {
