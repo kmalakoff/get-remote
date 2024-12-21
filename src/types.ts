@@ -9,10 +9,12 @@ export interface HeadResponse {
 }
 export type HeadCallback = (error?: Error, res?: HeadResponse) => void;
 
-export interface JSONStream extends ReadStream {
+export interface JSONResponse {
+  statusCode: number;
+  headers: object;
   body: object;
 }
-export type JSONCallback = (error?: Error, stream?: JSONStream) => void;
+export type JSONCallback = (error?: Error, stream?: JSONResponse) => void;
 
 export type PipeCallback = (error?: Error) => void;
 

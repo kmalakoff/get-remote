@@ -1,7 +1,5 @@
 import type { HeadCallback, HeadResponse } from '../types.js';
 
-export type HeadMethod = (callback?: HeadCallback) => undefined | Promise<HeadResponse>;
-
 export default function head(callback?: HeadCallback): undefined | Promise<HeadResponse> {
   if (typeof callback === 'function') {
     return this.stream({ method: 'HEAD' }, (err, res) => {
@@ -15,5 +13,5 @@ export default function head(callback?: HeadCallback): undefined | Promise<HeadR
     this.head((err, res) => {
       err ? reject(err) : resolve(res);
     });
-  }) as Promise<HeadResponse>;
+  });
 }

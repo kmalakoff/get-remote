@@ -1,6 +1,6 @@
 import assert from 'assert';
 import fs from 'fs';
-import mkpath from 'mkpath';
+import mkdirp from 'mkdirp-classic';
 import rimraf2 from 'rimraf2';
 
 // @ts-ignore
@@ -12,7 +12,7 @@ const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 describe('get-file', () => {
   beforeEach((callback) => {
     rimraf2(TMP_DIR, { disableGlob: true }, () => {
-      mkpath(TMP_DIR, callback);
+      mkdirp(TMP_DIR, callback);
     });
   });
 

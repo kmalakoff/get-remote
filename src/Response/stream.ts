@@ -25,9 +25,8 @@ const streamCompat = path.resolve(__dirname, '..', 'utils', 'streamCompat.js');
 let execPath = null;
 
 import type { StreamCallback, StreamOption, StreamResponse } from '../types.js';
-export type StreamMethod = (callback?: StreamCallback) => undefined | Promise<StreamResponse>;
 
-export default function stream(options: StreamOption | StreamCallback, callback?: StreamCallback): undefined | Promise<StreamResponse> {
+export default function stream(options?: StreamOption | StreamCallback, callback?: StreamCallback): undefined | Promise<StreamResponse> {
   if (typeof options === 'function') {
     callback = options as StreamCallback;
     options = null;
@@ -85,7 +84,6 @@ export default function stream(options: StreamOption | StreamCallback, callback?
         res.resume(); // Discard response
         return callback(new Error(`Response code ${res.statusCode} (${http.STATUS_CODES[res.statusCode]})`));
       }
-
       wrapResponse(res, this, options, callback);
     });
     req.on('error', callback);
@@ -97,5 +95,5 @@ export default function stream(options: StreamOption | StreamCallback, callback?
     this.stream(options, (err, res) => {
       err ? reject(err) : resolve(res);
     });
-  }) as Promise<StreamResponse>;
+  });
 }
