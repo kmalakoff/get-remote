@@ -1,4 +1,4 @@
-module.exports = function json(callback) {
+export default function json(callback) {
   if (typeof callback === 'function') {
     return this.text((err, res) => {
       if (err) return callback(err);
@@ -16,4 +16,4 @@ module.exports = function json(callback) {
       err ? reject(err) : resolve(res);
     });
   });
-};
+}
