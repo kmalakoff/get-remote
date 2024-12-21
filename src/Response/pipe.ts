@@ -1,8 +1,11 @@
+import type { WriteStream } from 'fs';
 import eos from 'end-of-stream';
-
+import type { PipeCallback } from '../types.js';
 import pump from '../utils/pump.js';
 
-export default function pipe(dest, callback) {
+export type PipeMethod = (dest: WriteStream, callback?: PipeCallback) => undefined | Promise<undefined>;
+
+export default function pipe(dest: WriteStream, callback?: PipeCallback): undefined | Promise<undefined> {
   if (typeof callback === 'function') {
     return this.stream((err, res) => {
       if (err) {
@@ -18,5 +21,5 @@ export default function pipe(dest, callback) {
     this.pipe(dest, (err, res) => {
       err ? reject(err) : resolve(res);
     });
-  });
+  }) as Promise<undefined>;
 }

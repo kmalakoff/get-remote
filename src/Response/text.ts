@@ -1,6 +1,9 @@
 import eos from 'end-of-stream';
 
-export default function text(callback) {
+import type { TextCallback, TextResponse } from '../types.js';
+export type TextMethod = (callback?: TextCallback) => undefined | Promise<TextResponse>;
+
+export default function text(callback?: TextCallback): undefined | Promise<TextResponse> {
   if (typeof callback === 'function') {
     return this.stream((err, res) => {
       if (err) return callback(err);
@@ -19,5 +22,5 @@ export default function text(callback) {
     this.text((err, res) => {
       err ? reject(err) : resolve(res);
     });
-  });
+  }) as Promise<TextResponse>;
 }
