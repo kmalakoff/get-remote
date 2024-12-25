@@ -1,3 +1,5 @@
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+import Promise from 'pinkie-promise';
 import type { JSONCallback, JSONResponse } from '../types.js';
 
 export default function json(callback?: JSONCallback): undefined | Promise<JSONResponse> {

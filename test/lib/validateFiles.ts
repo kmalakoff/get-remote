@@ -4,6 +4,8 @@ import path from 'path';
 import cr from 'cr';
 import Iterator from 'fs-iterator';
 import statsSpys from 'fs-stats-spys';
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+import Promise from 'pinkie-promise';
 
 import { CONTENTS, TARGET, TMP_DIR } from './constants';
 

@@ -1,3 +1,5 @@
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+import Promise from 'pinkie-promise';
 import extname from '../utils/extname.js';
 // @ts-ignore
 import optionalRequire from '../utils/optionalRequire.cjs';
@@ -23,7 +25,7 @@ export default function extract(dest: string, options: object | ExtractCallback,
 
       const type = extname(res.basename, options);
       if (!type) return callback(new Error(`Cannot determine extract type for ${res.basename}`));
-      fastExtract(res, dest, Object.assign({}, options, { type: type }), callback);
+      fastExtract(res, dest, { ...options, type }, callback);
     });
   }
   return new Promise((resolve, reject) => {
