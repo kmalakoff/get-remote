@@ -1,3 +1,4 @@
+import objectAssign from 'object-assign';
 import progressStream from 'progress-stream';
 import sourceStats from '../sourceStats/index.js';
 import pump from './pump.js';
@@ -21,14 +22,13 @@ export default function wrapResponse(res, self, options, callback) {
           time: options.time,
         },
         (update) => {
-          options.progress(Object.assign({ progress: 'download' }, update, stats));
+          options.progress({ progress: 'download', ...update, ...stats });
         }
       );
       res = pump(res, progress);
     }
 
     // store stats on the source
-    res = Object.assign(res, stats);
-    return callback(null, res);
+    return callback(null, objectAssign(res, stats));
   });
 }
