@@ -1,1 +1,1 @@
-ignores: ["get-remote", "depcheck", "ts-dev-stack", "@types/*", "@biomejs/*", "lzma-native", "supports-color", "function-exec-sync", "node-exec-path"]
+ignores: ["get-remote", "depcheck", "@types/*", "@biomejs/*", "lzma-native", "supports-color", "function-exec-sync", "node-exec-path"]
