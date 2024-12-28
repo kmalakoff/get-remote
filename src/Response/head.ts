@@ -1,5 +1,3 @@
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
 import type { HeadCallback, HeadResponse } from '../types.js';
 
 export default function head(callback?: HeadCallback): undefined | Promise<HeadResponse> {

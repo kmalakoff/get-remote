@@ -1,5 +1,3 @@
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
 import extname from '../utils/extname.js';
 // @ts-ignore
 import optionalRequire from '../utils/optionalRequire.cjs';

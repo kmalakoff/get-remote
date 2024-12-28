@@ -4,8 +4,6 @@ import https from 'https';
 import path from 'path';
 import url from 'url';
 import eos from 'end-of-stream';
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
 import rimraf2 from 'rimraf2';
 
 import wrapResponse from '../utils/wrapResponse.js';

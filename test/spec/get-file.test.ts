@@ -1,3 +1,6 @@
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+import Promise from 'pinkie-promise';
+
 import assert from 'assert';
 import fs from 'fs';
 import mkdirp from 'mkdirp-classic';
@@ -10,6 +13,19 @@ import { TARGET, TMP_DIR } from '../lib/constants';
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 describe('get-file', () => {
+  (() => {
+    // patch and restore promise
+    const root = typeof global !== 'undefined' ? global : window;
+    let rootPromise: Promise;
+    before(() => {
+      rootPromise = root.Promise;
+      root.Promise = Promise;
+    });
+    after(() => {
+      root.Promise = rootPromise;
+    });
+  })();
+
   beforeEach((callback) => {
     rimraf2(TMP_DIR, { disableGlob: true }, () => {
       mkdirp(TMP_DIR, callback);
@@ -34,15 +50,10 @@ describe('get-file', () => {
     });
   });
 
-  it('should support promises', (done) => {
-    get(`${URL}/package.json`)
-      .file(TARGET)
-      .then((_stream) => {
-        const files = fs.readdirSync(TARGET);
-        assert.ok(files.length === 1);
-        done();
-      })
-      .catch(done);
+  it('should support promises', async () => {
+    await get(`${URL}/package.json`).file(TARGET);
+    const files = fs.readdirSync(TARGET);
+    assert.ok(files.length === 1);
   });
 
   it('should get with progress', (done) => {
