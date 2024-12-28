@@ -1,6 +1,4 @@
 import eos from 'end-of-stream';
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
 
 import type { TextCallback, TextResponse } from '../types.js';
 

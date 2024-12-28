@@ -2,8 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import eos from 'end-of-stream';
 import mkdirp from 'mkdirp-classic';
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
 
 import statsBasename from '../sourceStats/basename.js';
 import type { FileCallback } from '../types.js';
