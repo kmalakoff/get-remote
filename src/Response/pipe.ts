@@ -1,7 +1,5 @@
 import type { WriteStream } from 'fs';
 import eos from 'end-of-stream';
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
 
 import type { PipeCallback } from '../types.js';
 import pump from '../utils/pump.js';

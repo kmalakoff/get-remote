@@ -12,7 +12,7 @@ export interface WriteStream extends fs.WriteStream {
 }
 
 export default function streamCompat(args, options, callback) {
-  args[1].progress = undefined;
+  delete args[1].progress;
 
   if (options.method === 'HEAD') {
     new Response(args[0], args[1]).stream(options, (err, res) => {
