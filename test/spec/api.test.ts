@@ -1,3 +1,6 @@
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+import Promise from 'pinkie-promise';
+
 import assert from 'assert';
 import fs from 'fs';
 import path from 'path';
@@ -15,6 +18,19 @@ const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 const FIXTURE_JSON = fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8');
 
 describe('api', () => {
+  (() => {
+    // patch and restore promise
+    const root = typeof global !== 'undefined' ? global : window;
+    let rootPromise: Promise;
+    before(() => {
+      rootPromise = root.Promise;
+      root.Promise = Promise;
+    });
+    after(() => {
+      root.Promise = rootPromise;
+    });
+  })();
+
   beforeEach((callback) => {
     rimraf2(TMP_DIR, { disableGlob: true }, () => {
       mkdirp(TMP_DIR, callback);
@@ -34,17 +50,10 @@ describe('api', () => {
       });
     });
 
-    it('should provide a stream method - promise', (done) => {
-      get(`${URL}/test/data/fixture.json`)
-        .stream()
-        .then((stream) => {
-          streamToBuffer(stream, (err, buffer) => {
-            assert.ok(!err, err ? err.message : '');
-            assert.equal(cr(buffer.toString()), cr(FIXTURE_JSON));
-            done();
-          });
-        })
-        .catch(done);
+    it('should provide a stream method - promise', async () => {
+      const stream = await get(`${URL}/test/data/fixture.json`).stream();
+      const buffer = await streamToBuffer(stream);
+      assert.equal(cr(buffer.toString()), cr(FIXTURE_JSON));
     });
 
     it('should provide a extract method', (done) => {

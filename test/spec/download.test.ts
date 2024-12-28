@@ -1,3 +1,6 @@
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+import Promise from 'pinkie-promise';
+
 import assert from 'assert';
 import fs from 'fs';
 import isTar from 'is-tar';
@@ -32,12 +35,11 @@ describe('download', () => {
     });
   });
 
-  it.skip('get as promise', (done) => {
-    get(`${URL}/test/data/fixture.tar`).stream((err, stream) => {
-      assert.ok(!err, err ? err.message : '');
-      assert.ok(isTar(stream));
-      done();
-    });
+  // TODO: debug on node 0.8
+  it.skip('get as promise', async () => {
+    const stream = await get(`${URL}/test/data/fixture.tar`).stream();
+    const buffer = await streamToBuffer(stream);
+    assert.ok(isTar(buffer));
   });
 
   it('get a very large file', (done) => {
