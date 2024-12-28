@@ -5,6 +5,6 @@ module.exports = [
   },
   {
     version: '0.4.7',
-    download: require('get-remote-cb-0.4.7'),
+    download: require('get-remote-0.4.7'),
   },
 ];
