@@ -1,9 +1,7 @@
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
-
 import assert from 'assert';
 import fs from 'fs';
 import mkdirp from 'mkdirp-classic';
+import Pinkie from 'pinkie-promise';
 import rimraf2 from 'rimraf2';
 
 // @ts-ignore
@@ -15,14 +13,15 @@ const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 describe('get-file', () => {
   (() => {
     // patch and restore promise
-    const root = typeof global !== 'undefined' ? global : window;
+    // @ts-ignore
     let rootPromise: Promise;
     before(() => {
-      rootPromise = root.Promise;
-      root.Promise = Promise;
+      rootPromise = global.Promise;
+      // @ts-ignore
+      global.Promise = Pinkie;
     });
     after(() => {
-      root.Promise = rootPromise;
+      global.Promise = rootPromise;
     });
   })();
 

@@ -1,25 +1,23 @@
 import eos from 'end-of-stream';
 
-import type { TextCallback, TextResponse } from '../types.js';
+import type { TextCallback, TextResponse } from '../types';
 
-export default function text(callback?: TextCallback): undefined | Promise<TextResponse> {
-  if (typeof callback === 'function') {
-    return this.stream((err, res) => {
-      if (err) return callback(err);
+function worker(callback) {
+  return this.stream((err, res) => {
+    if (err) return callback(err);
 
-      // collect text
-      let result = '';
-      res.on('data', (chunk) => {
-        result += chunk.toString();
-      });
-      eos(res, (err) => {
-        err ? callback(err) : callback(null, { statusCode: res.statusCode, headers: res.headers, body: result });
-      });
+    // collect text
+    let result = '';
+    res.on('data', (chunk) => {
+      result += chunk.toString();
     });
-  }
-  return new Promise((resolve, reject) => {
-    this.text((err, res) => {
-      err ? reject(err) : resolve(res);
+    eos(res, (err) => {
+      err ? callback(err) : callback(null, { statusCode: res.statusCode, headers: res.headers, body: result });
     });
   });
+}
+
+export default function text(callback?: TextCallback): undefined | Promise<TextResponse> {
+  if (typeof callback === 'function') return worker.call(this, callback) as undefined;
+  return new Promise((resolve, reject) => worker.call(this, (err, res) => (err ? reject(err) : resolve(res))));
 }
