@@ -12,9 +12,5 @@ function worker(stream, callback) {
 
 export default function streamToBuffer(stream, callback?) {
   if (typeof callback === 'function') return worker(stream, callback);
-  return new Promise(function validatePromise(resolve, reject) {
-    worker(stream, function validateCallback(err, buffer) {
-      err ? reject(err) : resolve(buffer);
-    });
-  });
+  return new Promise((resolve, reject) => worker(stream, (err, buffer) => (err ? reject(err) : resolve(buffer))));
 }

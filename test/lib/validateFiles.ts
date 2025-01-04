@@ -4,9 +4,7 @@ import path from 'path';
 import cr from 'cr';
 import Iterator from 'fs-iterator';
 import statsSpys from 'fs-stats-spys';
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
-
+import Pinkie from 'pinkie-promise';
 import { CONTENTS, TARGET, TMP_DIR } from './constants';
 
 export default function validateFiles(options, _type, callback) {
@@ -68,10 +66,6 @@ export default function validateFiles(options, _type, callback) {
       );
     }
   } else {
-    return new Promise(function validatePromise(resolve, reject) {
-      validateFiles(options, _type, function validateCallback(err) {
-        err ? reject(err) : resolve(null);
-      });
-    });
+    return new Promise((resolve, reject) => validateFiles(options, _type, (err) => (err ? reject(err) : resolve(null))));
   }
 }
