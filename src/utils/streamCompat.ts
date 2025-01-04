@@ -4,7 +4,7 @@ import mkdirp from 'mkdirp-classic';
 import { tmpdir } from 'os-shim';
 import suffix from 'temp-suffix';
 
-import Response from '../Response/index.js';
+import Response from '../Response/index';
 
 export interface WriteStream extends fs.WriteStream {
   statusCode: number;
