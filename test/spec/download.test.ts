@@ -1,10 +1,8 @@
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from 'pinkie-promise';
-
 import assert from 'assert';
 import fs from 'fs';
 import isTar from 'is-tar';
 import mkdirp from 'mkdirp-classic';
+import Pinkie from 'pinkie-promise';
 import rimraf2 from 'rimraf2';
 
 // var contentDisposition = require('content-disposition');
@@ -18,6 +16,20 @@ import validateFiles from '../lib/validateFiles';
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 describe('download', () => {
+  (() => {
+    // patch and restore promise
+    // @ts-ignore
+    let rootPromise: Promise;
+    before(() => {
+      rootPromise = global.Promise;
+      // @ts-ignore
+      global.Promise = Pinkie;
+    });
+    after(() => {
+      global.Promise = rootPromise;
+    });
+  })();
+
   beforeEach((callback) => {
     rimraf2(TMP_DIR, { disableGlob: true }, () => {
       mkdirp(TMP_DIR, callback);
