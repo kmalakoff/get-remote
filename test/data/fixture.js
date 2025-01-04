@@ -1,1 +1,1 @@
-var _thing = true;
+const _thing = true;
