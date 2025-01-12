@@ -5,16 +5,12 @@ import Module from 'module';
 import path from 'path';
 import url from 'url';
 import eos from 'end-of-stream';
-import lazy from 'lazy-cache';
 import rimraf2 from 'rimraf2';
 
 import wrapResponse from '../utils/wrapResponse';
 import Response from './index';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
-const functionExec = lazy(_require)('function-exec-sync');
-const nodeExecPath = lazy(_require)('node-exec-path');
-
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
 
 // node <= 0.8 does not support https and node 0.12 certs cannot be trusted
@@ -22,7 +18,7 @@ const major = +process.versions.node.split('.')[0];
 const minor = +process.versions.node.split('.')[1];
 const noHTTPS = major === 0 && (minor <= 8 || minor === 12);
 
-const streamCompat = path.join(__dirname, '..', 'utils', 'streamCompat.cjs');
+const workerPath = path.join(__dirname, '..', 'workers', 'stream.cjs');
 let execPath = null;
 
 import type { StreamCallback, StreamOption, StreamResponse } from '../types';
@@ -33,7 +29,7 @@ function worker(options, callback) {
   // node <=0.8 does not support https
   if (noHTTPS) {
     if (!execPath) {
-      const satisfiesSemverSync = nodeExecPath().satisfiesSemverSync;
+      const satisfiesSemverSync = _require('node-exec-path').satisfiesSemverSync;
       execPath = satisfiesSemverSync('>0.12'); // must be more than node 0.12
       if (!execPath) {
         callback(new Error('get-remote on node versions without https need a version of node >=0.10.0 to call using https'));
@@ -42,7 +38,7 @@ function worker(options, callback) {
     }
 
     try {
-      const streamInfo = functionExec()({ execPath: execPath, callbacks: true }, streamCompat, [this.endpoint, this.options], options);
+      const streamInfo = _require('function-exec-sync')({ execPath: execPath, callbacks: true }, workerPath, [this.endpoint, this.options], options);
       if ((options as StreamOption).method === 'HEAD') {
         streamInfo.resume = () => {};
         callback(null, streamInfo);
