@@ -38,10 +38,10 @@ function addTests(type) {
     it('extract file', (done) => {
       const options = { strip: 1 };
       get(`${URL}/test/data/fixture.${type}`).extract(TARGET, options, (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
 
         validateFiles(options, type, (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
           done();
         });
       });
@@ -50,10 +50,10 @@ function addTests(type) {
     it('extract file without type', (done) => {
       const options = { strip: 1, type: type };
       get(`${URL}/test/data/fixture-${type}`).extract(TARGET, options, (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
 
         validateFiles(options, type, (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
           done();
         });
       });
@@ -61,15 +61,15 @@ function addTests(type) {
 
     it('extract file using stream', (done) => {
       get(`${URL}/test/data/fixture-${type}`).stream((err, stream) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
 
         const options = { strip: 1, type: type };
         const res = stream.pipe(createWriteStream(TARGET, options));
         eos(res, (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
 
           validateFiles(options, type, (err) => {
-            if (err) return done(err);
+            if (err) return done(err.message);
             done();
           });
         });
@@ -79,10 +79,10 @@ function addTests(type) {
     it('extract file using pipe', (done) => {
       const options = { strip: 1, type: type };
       get(`${URL}/test/data/fixture-${type}`).pipe(createWriteStream(TARGET, options), (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
 
         validateFiles(options, type, (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
           done();
         });
       });

@@ -1,1 +1,1 @@
-ignores: ["@types/*", "get-remote", "@biomejs/*", "lzma-native", "supports-color", "function-exec-sync", "node-exec-path"]
+ignores: ["get-remote", "lzma-native", "supports-color", "function-exec-sync", "node-exec-path"]

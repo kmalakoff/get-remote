@@ -39,10 +39,10 @@ describe('api', () => {
   describe('happy path', () => {
     it('should provide a stream method', (done) => {
       get(`${URL}/test/data/fixture.json`).stream((err, stream) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
 
         streamToBuffer(stream, (err, buffer) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
           assert.equal(cr(buffer.toString()), cr(FIXTURE_JSON));
           done();
         });
@@ -58,10 +58,10 @@ describe('api', () => {
     it('should provide a extract method', (done) => {
       const options = { strip: 1 };
       get(`${URL}/test/data/fixture.tar.gz`).extract(TARGET, options, (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
 
         validateFiles(options, 'tar.gz', (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
           done();
         });
       });
@@ -73,7 +73,7 @@ describe('api', () => {
         .extract(TARGET, options)
         .then(() => {
           validateFiles(options, 'tar.gz', (err) => {
-            if (err) return done(err);
+            if (err) return done(err.message);
             done();
           });
         })
@@ -82,10 +82,10 @@ describe('api', () => {
 
     it('should provide a file method', (done) => {
       get(`${URL}/test/data/fixture.json`).file(TARGET, (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
 
         fs.readdir(TARGET, (err, files) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
           assert.deepEqual(files.sort(), ['fixture.json']);
           assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(FIXTURE_JSON));
           done();
@@ -98,7 +98,7 @@ describe('api', () => {
         .file(TARGET)
         .then(() => {
           fs.readdir(TARGET, (err, files) => {
-            if (err) return done(err);
+            if (err) return done(err.message);
             assert.deepEqual(files.sort(), ['fixture.json']);
             assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(FIXTURE_JSON));
             done();
@@ -109,7 +109,7 @@ describe('api', () => {
 
     it('should provide a head method', (done) => {
       get(`${URL}/test/data/fixture.json`).head((err, res) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
         assert.equal(res.statusCode, 200);
         assert.ok(!!res.headers);
         done();
@@ -129,7 +129,7 @@ describe('api', () => {
 
     it('should provide a json method', (done) => {
       get(`${URL}/test/data/fixture.json`).json((err, res) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
         assert.equal(res.statusCode, 200);
         assert.deepEqual(res.body, JSON.parse(FIXTURE_JSON));
         done();
@@ -149,10 +149,10 @@ describe('api', () => {
 
     it('should provide a pipe method', (done) => {
       mkdirp(TARGET, (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
 
         get(`${URL}/test/data/fixture.json`).pipe(fs.createWriteStream(path.join(TARGET, 'fixture.json')), (err) => {
-          if (err) return done(err);
+          if (err) return done(err.message);
           assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(FIXTURE_JSON));
           done();
         });
@@ -161,7 +161,7 @@ describe('api', () => {
 
     it('should provide a pipe method - promise', (done) => {
       mkdirp(TARGET, (err) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
 
         get(`${URL}/test/data/fixture.json`)
           .pipe(fs.createWriteStream(path.join(TMP_DIR, 'fixture.json')))
@@ -175,7 +175,7 @@ describe('api', () => {
 
     it('should provide a text method', (done) => {
       get(`${URL}/test/data/fixture.text`).text((err, res) => {
-        if (err) return done(err);
+        if (err) return done(err.message);
         assert.equal(res.statusCode, 200);
         assert.equal(cr(res.body), cr(fs.readFileSync(path.join(DATA_DIR, 'fixture.text'), 'utf8')));
         done();
