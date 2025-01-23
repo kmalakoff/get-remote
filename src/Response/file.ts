@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import eos from 'end-of-stream';
+import once from 'call-once-fn';
 import mkdirp from 'mkdirp-classic';
 
 import statsBasename from '../sourceStats/basename';
@@ -20,9 +20,11 @@ function worker(dest, options, callback) {
 
       // write to file
       res = pump(res, fs.createWriteStream(fullPath));
-      eos(res, (err) => {
-        err ? callback(err) : callback(null, fullPath);
-      });
+      const end = once((err) => (err ? callback(err) : callback(null, fullPath)));
+      res.on('error', end);
+      res.on('end', end);
+      res.on('close', end);
+      res.on('finish', end);
     });
   });
 }
