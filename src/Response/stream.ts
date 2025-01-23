@@ -31,15 +31,12 @@ function worker(options, callback) {
   if (noHTTPS) {
     if (!execPath) {
       const satisfiesSemverSync = _require('node-exec-path').satisfiesSemverSync;
-      execPath = satisfiesSemverSync('>0.12'); // must be more than node 0.12
-      if (!execPath) {
-        callback(new Error('get-remote on node versions without https need a version of node >=0.10.0 to call using https'));
-        return;
-      }
+      execPath = satisfiesSemverSync('>0'); // must be more than node 0.12
+      if (!execPath) return callback(new Error('get-remote needs a version of node >0 to use https'));
     }
 
     try {
-      const streamInfo = _require('function-exec-sync')({ execPath: execPath, callbacks: true }, workerPath, [this.endpoint, this.options], options);
+      const streamInfo = _require('function-exec-sync')({ execPath, callbacks: true }, workerPath, [this.endpoint, this.options], options);
       if ((options as StreamOption).method === 'HEAD') {
         streamInfo.resume = () => {};
         callback(null, streamInfo);
