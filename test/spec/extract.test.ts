@@ -1,7 +1,6 @@
-import assert from 'assert';
-import once from 'call-once-fn';
 import { createWriteStream } from 'fast-extract';
 import mkdirp from 'mkdirp-classic';
+import oo from 'on-one';
 import Pinkie from 'pinkie-promise';
 import rimraf2 from 'rimraf2';
 
@@ -65,7 +64,7 @@ function addTests(type) {
 
         const options = { strip: 1, type: type };
         const res = stream.pipe(createWriteStream(TARGET, options));
-        const end = once((err) => {
+        oo(res, ['error', 'end', 'close', 'finish'], (err) => {
           if (err) return done(err.message);
 
           validateFiles(options, type, (err) => {
@@ -73,10 +72,6 @@ function addTests(type) {
             done();
           });
         });
-        res.on('error', end);
-        res.on('end', end);
-        res.on('close', end);
-        res.on('finish', end);
       });
     });
 
