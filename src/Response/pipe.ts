@@ -1,5 +1,5 @@
 import type { WriteStream } from 'fs';
-import once from 'call-once-fn';
+import oo from 'on-one';
 
 import type { PipeCallback } from '../types';
 import pump from '../utils/pump';
@@ -12,11 +12,7 @@ function worker(dest, callback) {
     }
 
     res = pump(res, dest);
-    const end = once(callback);
-    res.on('error', end);
-    res.on('end', end);
-    res.on('close', end);
-    res.on('finish', end);
+    oo(res, ['error', 'end', 'close', 'finish'], callback);
   });
 }
 
