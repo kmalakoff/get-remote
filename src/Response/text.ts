@@ -1,4 +1,4 @@
-import eos from 'end-of-stream';
+import once from 'call-once-fn';
 
 import type { TextCallback, TextResponse } from '../types';
 
@@ -11,9 +11,11 @@ function worker(callback) {
     res.on('data', (chunk) => {
       result += chunk.toString();
     });
-    eos(res, (err) => {
-      err ? callback(err) : callback(null, { statusCode: res.statusCode, headers: res.headers, body: result });
-    });
+    const end = once((err) => (err ? callback(err) : callback(null, { statusCode: res.statusCode, headers: res.headers, body: result })));
+    res.on('error', end);
+    res.on('end', end);
+    res.on('close', end);
+    res.on('finish', end);
   });
 }
 
