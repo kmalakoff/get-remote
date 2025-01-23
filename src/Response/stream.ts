@@ -5,6 +5,7 @@ import Module from 'module';
 import path from 'path';
 import url from 'url';
 import once from 'call-once-fn';
+import oo from 'on-one';
 import rimraf2 from 'rimraf2';
 
 import wrapResponse from '../utils/wrapResponse';
@@ -46,13 +47,9 @@ function worker(options, callback) {
         const res = fs.createReadStream(streamInfo.filename) as StreamResponse;
         res.headers = streamInfo.headers;
         res.statusCode = streamInfo.statusCode;
-        const end = once(() => {
-          rimraf2.sync(streamInfo.filename, { disableGlob: true });
-        }); // clean up
-        res.on('error', end);
-        res.on('end', end);
-        res.on('close', end);
-        res.on('finish', end);
+        oo(res, ['error', 'end', 'close', 'finish'], () => {
+          rimraf2.sync(streamInfo.filename, { disableGlob: true }); // clean up
+        });
         wrapResponse(res, this, options, callback);
       }
     } catch (err) {
