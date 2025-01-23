@@ -1,4 +1,4 @@
-import once from 'call-once-fn';
+import oo from 'on-one';
 
 import type { TextCallback, TextResponse } from '../types';
 
@@ -11,11 +11,9 @@ function worker(callback) {
     res.on('data', (chunk) => {
       result += chunk.toString();
     });
-    const end = once((err) => (err ? callback(err) : callback(null, { statusCode: res.statusCode, headers: res.headers, body: result })));
-    res.on('error', end);
-    res.on('end', end);
-    res.on('close', end);
-    res.on('finish', end);
+    oo(res, ['error', 'end', 'close', 'finish'], (err) => {
+      err ? callback(err) : callback(null, { statusCode: res.statusCode, headers: res.headers, body: result });
+    });
   });
 }
 
