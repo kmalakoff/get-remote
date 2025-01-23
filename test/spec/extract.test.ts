@@ -1,5 +1,5 @@
 import assert from 'assert';
-import eos from 'end-of-stream';
+import once from 'call-once-fn';
 import { createWriteStream } from 'fast-extract';
 import mkdirp from 'mkdirp-classic';
 import Pinkie from 'pinkie-promise';
@@ -65,7 +65,7 @@ function addTests(type) {
 
         const options = { strip: 1, type: type };
         const res = stream.pipe(createWriteStream(TARGET, options));
-        eos(res, (err) => {
+        const end = once((err) => {
           if (err) return done(err.message);
 
           validateFiles(options, type, (err) => {
@@ -73,6 +73,10 @@ function addTests(type) {
             done();
           });
         });
+        res.on('error', end);
+        res.on('end', end);
+        res.on('close', end);
+        res.on('finish', end);
       });
     });
 

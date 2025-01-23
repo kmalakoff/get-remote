@@ -4,7 +4,7 @@ import https from 'https';
 import Module from 'module';
 import path from 'path';
 import url from 'url';
-import eos from 'end-of-stream';
+import once from 'call-once-fn';
 import rimraf2 from 'rimraf2';
 
 import wrapResponse from '../utils/wrapResponse';
@@ -46,9 +46,13 @@ function worker(options, callback) {
         const res = fs.createReadStream(streamInfo.filename) as StreamResponse;
         res.headers = streamInfo.headers;
         res.statusCode = streamInfo.statusCode;
-        eos(res, () => {
-          rimraf2.sync(streamInfo.filename, { disableGlob: true }); // clean up
-        });
+        const end = once(() => {
+          rimraf2.sync(streamInfo.filename, { disableGlob: true });
+        }); // clean up
+        res.on('error', end);
+        res.on('end', end);
+        res.on('close', end);
+        res.on('finish', end);
         wrapResponse(res, this, options, callback);
       }
     } catch (err) {
@@ -61,22 +65,23 @@ function worker(options, callback) {
   const secure = parsed.protocol === 'https:';
   const requestOptions = { host: parsed.host, path: parsed.path, port: secure ? 443 : 80, method: 'GET', ...options };
   const req = secure ? https.request(requestOptions) : http.request(requestOptions);
+  const end = once(callback);
   req.on('response', (res) => {
     // Follow 3xx redirects
     if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
       res.resume(); // Discard response
 
-      return new Response(res.headers.location, options).stream(callback);
+      return new Response(res.headers.location, options).stream(end);
     }
 
     // Not successful
     if (res.statusCode < 200 || res.statusCode >= 300) {
       res.resume(); // Discard response
-      return callback(new Error(`Response code ${res.statusCode} (${http.STATUS_CODES[res.statusCode]})`));
+      return end(new Error(`Response code ${res.statusCode} (${http.STATUS_CODES[res.statusCode]})`));
     }
-    wrapResponse(res, this, options, callback);
+    wrapResponse(res, this, options, end);
   });
-  req.on('error', callback);
+  req.on('error', end);
   req.end();
 }
 
