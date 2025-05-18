@@ -39,7 +39,7 @@
     "content-disposition": "^0.5.4",
     "function-exec-sync": "^1.2.22",
     "mkdirp-classic": "^0.5.3",
-    "node-exec-path": "^1.0.30",
+    "node-exec-path": "^1.0.31",
     "object-assign": "^4.1.1",
     "on-one": "^0.1.5",
     "os-shim": "^0.1.3",
