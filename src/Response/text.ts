@@ -1,6 +1,6 @@
 import oo from 'on-one';
 
-import type { TextCallback, TextResponse } from '../types';
+import type { TextCallback, TextResponse } from '../types.js';
 
 function worker(callback) {
   return this.stream((err, res) => {

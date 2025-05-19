@@ -1,10 +1,10 @@
-import extract from './extract';
-import file from './file';
-import head from './head';
-import json from './json';
-import pipe from './pipe';
-import stream from './stream';
-import text from './text';
+import extract from './extract.js';
+import file from './file.js';
+import head from './head.js';
+import json from './json.js';
+import pipe from './pipe.js';
+import stream from './stream.js';
+import text from './text.js';
 
 export default class Response {
   public extract = extract;

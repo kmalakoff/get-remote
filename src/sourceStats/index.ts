@@ -1,5 +1,5 @@
-import getBasename from './basename';
-import getSize from './size';
+import getBasename from './basename.js';
+import getSize from './size.js';
 
 export interface Stats {
   size?: number;
