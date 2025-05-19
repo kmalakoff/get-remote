@@ -8,8 +8,8 @@ import once from 'call-once-fn';
 import oo from 'on-one';
 import rimraf2 from 'rimraf2';
 
-import wrapResponse from '../utils/wrapResponse';
-import Response from './index';
+import wrapResponse from '../utils/wrapResponse.js';
+import Response from './index.js';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
@@ -19,10 +19,10 @@ const major = +process.versions.node.split('.')[0];
 const minor = +process.versions.node.split('.')[1];
 const noHTTPS = major === 0 && (minor <= 8 || minor === 12);
 
-const workerPath = path.join(__dirname, '..', 'workers', 'stream.cjs');
+const workerPath = path.join(__dirname, '..', 'workers', 'stream.js');
 let execPath = null;
 
-import type { StreamCallback, StreamOption, StreamResponse } from '../types';
+import type { StreamCallback, StreamOption, StreamResponse } from '../types.js';
 
 function worker(options, callback) {
   options = { ...this.options, ...options };

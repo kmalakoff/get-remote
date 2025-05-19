@@ -1,7 +1,7 @@
 import objectAssign from 'object-assign';
 import progressStream from 'progress-stream';
-import sourceStats from '../sourceStats/index';
-import pump from './pump';
+import sourceStats from '../sourceStats/index.js';
+import pump from './pump.js';
 
 import { PassThrough as PassThroughStream } from 'stream';
 import { PassThrough as PassThroughReadableStream } from 'readable-stream';
