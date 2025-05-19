@@ -1,4 +1,4 @@
-import type { JSONCallback, JSONResponse } from '../types';
+import type { JSONCallback, JSONResponse } from '../types.js';
 
 function worker(callback) {
   return this.text((err, res) => {

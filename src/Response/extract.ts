@@ -1,8 +1,8 @@
-import extname from '../utils/extname';
+import extname from '../utils/extname.js';
 // @ts-ignore
 import optionalRequire from '../utils/optionalRequire.cjs';
 const fastExtract = optionalRequire('fast-extract');
-import type { ExtractCallback } from '../types';
+import type { ExtractCallback } from '../types.js';
 
 function worker(dest, options, callback) {
   if (!fastExtract) {
