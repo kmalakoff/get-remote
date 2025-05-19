@@ -3,9 +3,9 @@ import path from 'path';
 import mkdirp from 'mkdirp-classic';
 import oo from 'on-one';
 
-import statsBasename from '../sourceStats/basename';
-import type { FileCallback } from '../types';
-import pump from '../utils/pump';
+import statsBasename from '../sourceStats/basename.js';
+import type { FileCallback } from '../types.js';
+import pump from '../utils/pump.js';
 
 function worker(dest, options, callback) {
   options = { ...this.options, ...options };

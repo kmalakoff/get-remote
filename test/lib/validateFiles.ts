@@ -2,7 +2,7 @@ import assert from 'assert';
 import fs from 'fs';
 import path from 'path';
 import cr from 'cr';
-import Iterator from 'fs-iterator';
+import Iterator, { type Entry } from 'fs-iterator';
 import statsSpys from 'fs-stats-spys';
 import Pinkie from 'pinkie-promise';
 import { CONTENTS, TARGET, TMP_DIR } from './constants';
@@ -48,7 +48,7 @@ export default function validateFiles(options, _type, callback) {
       const dataPath = !options.strip ? path.join(TARGET, 'data') : TARGET;
       const spys = statsSpys();
       new Iterator(dataPath, { lstat: true }).forEach(
-        (entry) => {
+        (entry: Entry): undefined => {
           spys(entry.stats);
           if (entry.stats.isFile()) {
             assert.equal(cr(fs.readFileSync(entry.fullPath, 'utf8')), CONTENTS);
