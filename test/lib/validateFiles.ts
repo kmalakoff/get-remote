@@ -1,5 +1,5 @@
 import assert from 'assert';
-import fs from 'fs';
+import fs, { type Stats } from 'fs';
 import path from 'path';
 import cr from 'cr';
 import Iterator, { type Entry } from 'fs-iterator';
@@ -49,7 +49,7 @@ export default function validateFiles(options, _type, callback) {
       const spys = statsSpys();
       new Iterator(dataPath, { lstat: true }).forEach(
         (entry: Entry): undefined => {
-          spys(entry.stats);
+          spys(entry.stats as Stats);
           if (entry.stats.isFile()) {
             assert.equal(cr(fs.readFileSync(entry.fullPath, 'utf8')), CONTENTS);
           } else if (entry.stats.isSymbolicLink()) {
