@@ -9,7 +9,6 @@ import oo from 'on-one';
 import rimraf2 from 'rimraf2';
 
 import wrapResponse from '../utils/wrapResponse.js';
-import Response from './index.js';
 
 const URL_REGEX = /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
 
@@ -23,6 +22,7 @@ const noHTTPS = major === 0 && (minor <= 8 || minor === 12);
 
 const workerPath = path.join(__dirname, '..', 'workers', 'stream.js');
 let execPath = null;
+let Response = null;
 
 import type { StreamCallback, StreamOption, StreamResponse } from '../types.js';
 
@@ -71,6 +71,7 @@ function worker(options, callback) {
     // Follow 3xx redirects
     if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
       res.resume(); // Discard response
+      if (!Response) Response = _require('./index.js').default; // break cycle
 
       return new Response(res.headers.location, options).stream(end);
     }

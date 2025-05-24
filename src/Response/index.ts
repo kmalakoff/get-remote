@@ -7,14 +7,6 @@ import stream from './stream.js';
 import text from './text.js';
 
 export default class Response {
-  public extract = extract;
-  public file = file;
-  public head = head;
-  public json = json;
-  public pipe = pipe;
-  public stream = stream;
-  public text = text;
-
   endpoint: string;
   options: object;
 
@@ -22,4 +14,12 @@ export default class Response {
     this.endpoint = endpoint;
     this.options = options;
   }
+
+  public extract = extract;
+  public file = file;
+  public head = head;
+  public json = json;
+  public pipe = pipe;
+  public stream = stream;
+  public text = text;
 }
