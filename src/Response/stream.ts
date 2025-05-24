@@ -22,6 +22,8 @@ const noHTTPS = major === 0 && (minor <= 8 || minor === 12);
 
 const workerPath = path.join(__dirname, '..', 'workers', 'stream.js');
 let execPath = null;
+
+const responsePath = path.join(__dirname, '..', '..', 'cjs', 'Response', 'index.js');
 let Response = null;
 
 import type { StreamCallback, StreamOption, StreamResponse } from '../types.js';
@@ -71,7 +73,7 @@ function worker(options, callback) {
     // Follow 3xx redirects
     if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
       res.resume(); // Discard response
-      if (!Response) Response = _require('./index.js').default; // break cycle
+      if (!Response) Response = _require(responsePath).default; // break cycle
 
       return new Response(res.headers.location, options).stream(end);
     }
