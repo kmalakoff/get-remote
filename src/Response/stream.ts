@@ -11,6 +11,8 @@ import rimraf2 from 'rimraf2';
 import wrapResponse from '../utils/wrapResponse.js';
 import Response from './index.js';
 
+const URL_REGEX = /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
+
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
 
@@ -55,9 +57,14 @@ function worker(options, callback) {
     return;
   }
 
-  const parsed = url.parse(this.endpoint);
-  const secure = parsed.protocol === 'https:';
-  const requestOptions = { host: parsed.host, path: parsed.path, port: secure ? 443 : 80, method: 'GET', ...options };
+  // url.parse replacement
+  const parsed = URL_REGEX.exec(this.endpoint);
+  const protocol = parsed[1];
+  const host = parsed[4];
+  const path = parsed[5];
+
+  const secure = protocol === 'https:';
+  const requestOptions = { host, path, port: secure ? 443 : 80, method: 'GET', ...options };
   const req = secure ? https.request(requestOptions) : http.request(requestOptions);
   const end = once(callback);
   req.on('response', (res) => {
