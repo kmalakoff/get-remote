@@ -15,12 +15,12 @@ function worker(dest, options, callback) {
     const basename = statsBasename(options, res, this.endpoint);
     const fullPath = basename === undefined ? dest : path.join(dest, basename);
 
-    mkdirp(path.dirname(fullPath), (err) => {
+    mkdirp(path.dirname(fullPath), (err?: Error) => {
       if (err) return callback(err);
 
       // write to file
       res = pump(res, fs.createWriteStream(fullPath));
-      oo(res, ['error', 'end', 'close', 'finish'], (err) => {
+      oo(res, ['error', 'end', 'close', 'finish'], (err?: Error) => {
         err ? callback(err) : callback(null, fullPath);
       });
     });

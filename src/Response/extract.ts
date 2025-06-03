@@ -27,5 +27,5 @@ export default function extract(dest: string, options: object | ExtractCallback,
   options = options || {};
 
   if (typeof callback === 'function') return worker.call(this, dest, options, callback);
-  return new Promise((resolve, reject) => worker.call(this, dest, options, (err) => (err ? reject(err) : resolve(undefined))));
+  return new Promise((resolve, reject) => worker.call(this, dest, options, (err?: Error) => (err ? reject(err) : resolve(undefined))));
 }

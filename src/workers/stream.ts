@@ -30,7 +30,7 @@ export default function streamCompat(args, options, callback) {
     mkdirp.sync(path.dirname(filename));
     const res = fs.createWriteStream(filename) as WriteStream;
 
-    new Response(args[0], args[1]).pipe(res, (err) => {
+    new Response(args[0], args[1]).pipe(res, (err?: Error) => {
       if (err) return callback(err);
 
       err ? callback(err) : callback(null, { statusCode: res.statusCode, headers: res.headers, filename: filename });
