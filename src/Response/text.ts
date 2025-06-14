@@ -11,7 +11,7 @@ function worker(callback) {
     res.on('data', (chunk) => {
       result += chunk.toString();
     });
-    oo(res, ['error', 'end', 'close', 'finish'], (err) => {
+    oo(res, ['error', 'end', 'close', 'finish'], (err?: Error) => {
       err ? callback(err) : callback(null, { statusCode: res.statusCode, headers: res.headers, body: result });
     });
   });
