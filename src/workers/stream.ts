@@ -8,13 +8,11 @@ import osShim from 'os-shim';
 const tmpdir = os.tmpdir || osShim.tmpdir;
 
 import Response from '../Response/index.js';
+import type { Options, ReadStream, StreamOptions, WriteStream } from '../types.js';
 
-export interface WriteStream extends fs.WriteStream {
-  statusCode: number;
-  headers: object;
-}
+export type Callback = (error?: Error, res?: ReadStream) => undefined;
 
-export default function streamCompat(args, options, callback) {
+export default function streamCompat(args: [endpoint: string, options: Options], options: StreamOptions, callback: Callback): undefined {
   delete args[1].progress;
 
   if (options.method === 'HEAD') {
@@ -22,7 +20,7 @@ export default function streamCompat(args, options, callback) {
       if (err) return callback(err);
 
       res.resume(); // Discard response
-      callback(null, { statusCode: res.statusCode, headers: res.headers });
+      callback(null, { statusCode: res.statusCode, headers: res.headers } as ReadStream);
     });
   } else {
     const name = 'get-remote';
@@ -30,10 +28,10 @@ export default function streamCompat(args, options, callback) {
     mkdirp.sync(path.dirname(filename));
     const res = fs.createWriteStream(filename) as WriteStream;
 
-    new Response(args[0], args[1]).pipe(res, (err) => {
+    new Response(args[0], args[1]).pipe(res, (err?: Error) => {
       if (err) return callback(err);
 
-      err ? callback(err) : callback(null, { statusCode: res.statusCode, headers: res.headers, filename: filename });
+      err ? callback(err) : callback(null, { statusCode: res.statusCode, headers: res.headers, filename: filename } as ReadStream);
     });
   }
 }
