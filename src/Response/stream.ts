@@ -8,7 +8,7 @@ import once from 'call-once-fn';
 import oo from 'on-one';
 import rimraf2 from 'rimraf2';
 
-import wrapResponse from '../utils/wrapResponse.js';
+import wrapResponse, { type Callback } from '../utils/wrapResponse.js';
 
 const URL_REGEX = /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
 
@@ -26,7 +26,7 @@ let execPath = null;
 const responsePath = path.join(__dirname, '..', '..', 'cjs', 'Response', 'index.js');
 let Response = null;
 
-import type { StreamCallback, StreamOption, StreamResponse } from '../types.js';
+import type { ReadStream, StreamCallback, StreamOptions } from '../types.js';
 
 function worker(options, callback) {
   options = { ...this.options, ...options };
@@ -41,11 +41,11 @@ function worker(options, callback) {
 
     try {
       const streamInfo = _require('function-exec-sync')({ execPath, callbacks: true }, workerPath, [this.endpoint, this.options], options);
-      if ((options as StreamOption).method === 'HEAD') {
+      if ((options as StreamOptions).method === 'HEAD') {
         streamInfo.resume = () => {};
         callback(null, streamInfo);
       } else {
-        const res = fs.createReadStream(streamInfo.filename) as StreamResponse;
+        const res = fs.createReadStream(streamInfo.filename) as ReadStream;
         res.headers = streamInfo.headers;
         res.statusCode = streamInfo.statusCode;
         oo(res, ['error', 'end', 'close', 'finish'], () => {
@@ -68,7 +68,7 @@ function worker(options, callback) {
   const secure = protocol === 'https:';
   const requestOptions = { host, path, port: secure ? 443 : 80, method: 'GET', ...options };
   const req = secure ? https.request(requestOptions) : http.request(requestOptions);
-  const end = once(callback);
+  const end = once(callback) as Callback;
   req.on('response', (res) => {
     // Follow 3xx redirects
     if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
@@ -83,13 +83,13 @@ function worker(options, callback) {
       res.resume(); // Discard response
       return end(new Error(`Response code ${res.statusCode} (${http.STATUS_CODES[res.statusCode]})`));
     }
-    wrapResponse(res, this, options, end);
+    wrapResponse(res as unknown as ReadStream, this, options, end);
   });
   req.on('error', end);
   req.end();
 }
 
-export default function stream(options?: StreamOption | StreamCallback, callback?: StreamCallback): undefined | Promise<StreamResponse> {
+export default function stream(options?: StreamOptions | StreamCallback, callback?: StreamCallback): undefined | Promise<ReadStream> {
   if (typeof options === 'function') {
     callback = options as StreamCallback;
     options = null;
