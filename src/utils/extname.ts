@@ -1,6 +1,8 @@
 import path from 'path';
 
-export default function extname(fullPath, options) {
+import type { Options } from '../types.js';
+
+export default function extname(fullPath: string, options: Options): string {
   if (options.type) return options.type;
   const basename = path.basename(fullPath);
   const index = basename.indexOf('.');
