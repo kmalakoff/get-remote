@@ -5,6 +5,7 @@ export type { Progress } from 'fast-extract';
 export interface Options extends OptionsBase {
   headers?: object | Headers | Headers;
   extract?: boolean;
+  time?: number;
 }
 
 export interface OptionsInternal extends Options {
