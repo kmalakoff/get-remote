@@ -66,7 +66,7 @@ describe('download', () => {
   });
 
   it('get and rename file', (done) => {
-    get(`${URL}/test/data/fixture.tar`).file(TARGET, { filename: 'bar.tar' }, (err) => {
+    get(`${URL}/test/data/fixture.tar`).file(TARGET, { filename: 'bar.tar' }, (err?: Error) => {
       if (err) return done(err.message);
       fs.readdir(TARGET, (err, files) => {
         if (err) return done(err.message);
@@ -77,7 +77,7 @@ describe('download', () => {
   });
 
   it('save file', (done) => {
-    get(`${URL}/test/data/fixture.tar`).file(TARGET, (err) => {
+    get(`${URL}/test/data/fixture.tar`).file(TARGET, (err?: Error) => {
       if (err) return done(err.message);
       fs.readdir(TARGET, (err, files) => {
         if (err) return done(err.message);
@@ -89,10 +89,10 @@ describe('download', () => {
 
   it('extract file', (done) => {
     const options = { strip: 1 };
-    get(`${URL}/test/data/fixture.tar`).extract(TARGET, options, (err) => {
+    get(`${URL}/test/data/fixture.tar`).extract(TARGET, options, (err?: Error) => {
       if (err) return done(err.message);
 
-      validateFiles(options, 'tar.gz', (err) => {
+      validateFiles(options, 'tar.gz', (err?: Error) => {
         if (err) return done(err.message);
         done();
       });
@@ -100,7 +100,7 @@ describe('download', () => {
   });
 
   it('extract file that is not compressed', (done) => {
-    get(`${URL}/test/data/fixture.js`).extract(TARGET, (err) => {
+    get(`${URL}/test/data/fixture.js`).extract(TARGET, (err?: Error) => {
       if (err) return done(err.message);
 
       fs.readdir(TARGET, (err, files) => {
@@ -112,7 +112,7 @@ describe('download', () => {
   });
 
   it('error on 404', (done) => {
-    get(`${URL}/test/data/404`).stream((err) => {
+    get(`${URL}/test/data/404`).stream((err?: Error) => {
       assert.ok(err);
       assert.equal(err.message, 'Response code 404 (Not Found)');
       done();
@@ -120,7 +120,7 @@ describe('download', () => {
   });
 
   it.skip('rename to valid filename', (done) => {
-    get(`${URL}/test/data/fix*ture.tar`).file(TARGET, (err) => {
+    get(`${URL}/test/data/fix*ture.tar`).file(TARGET, (err?: Error) => {
       if (err) return done(err.message);
       fs.readdir(TARGET, (err, files) => {
         if (err) return done(err.message);
@@ -153,7 +153,7 @@ describe('download', () => {
   });
 
   it('handle query string', (done) => {
-    get(`${URL}/test/data/fixture.tar?param=value`).file(TARGET, (err) => {
+    get(`${URL}/test/data/fixture.tar?param=value`).file(TARGET, (err?: Error) => {
       if (err) return done(err.message);
       fs.readdir(TARGET, (err, files) => {
         if (err) return done(err.message);
@@ -164,7 +164,7 @@ describe('download', () => {
   });
 
   it.skip('handle content dispositon', (done) => {
-    get(`${URL}/test/data/fixture-tar`).file(TARGET, (err) => {
+    get(`${URL}/test/data/fixture-tar`).file(TARGET, (err?: Error) => {
       if (err) return done(err.message);
       fs.readdir(TARGET, (err, files) => {
         if (err) return done(err.message);
@@ -175,7 +175,7 @@ describe('download', () => {
   });
 
   it.skip('handle filename from file type', (done) => {
-    get('http://foo.bar/filetype').file(TARGET, (err) => {
+    get('http://foo.bar/filetype').file(TARGET, (err?: Error) => {
       if (err) return done(err.message);
       fs.readdir(TARGET, (err, files) => {
         if (err) return done(err.message);

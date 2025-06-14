@@ -6,11 +6,13 @@ import pipe from './pipe.js';
 import stream from './stream.js';
 import text from './text.js';
 
+import type { Options } from '../types.js';
+
 export default class Response {
   endpoint: string;
-  options: object;
+  options: Options;
 
-  constructor(endpoint: string, options: object = {}) {
+  constructor(endpoint: string, options: Options = {}) {
     this.endpoint = endpoint;
     this.options = options;
   }

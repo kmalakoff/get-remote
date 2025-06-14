@@ -5,7 +5,7 @@ function worker(stream, callback) {
   stream.on('data', (chunk) => {
     chunks.push(chunk);
   });
-  oo(stream, ['error', 'end', 'close', 'finish'], (err) => {
+  oo(stream, ['error', 'end', 'close', 'finish'], (err?: Error) => {
     err ? callback(err) : callback(null, Buffer.concat(chunks));
   });
 }

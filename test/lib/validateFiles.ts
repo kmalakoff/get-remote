@@ -56,7 +56,7 @@ export default function validateFiles(options, _type, callback) {
             assert.equal(cr(fs.readFileSync(fs.realpathSync(entry.fullPath), 'utf8')), CONTENTS);
           }
         },
-        (err) => {
+        (err?: Error) => {
           if (err) return callback(err);
           assert.equal(spys.dir.callCount, 3);
           assert.equal(spys.file.callCount, 7);
@@ -66,6 +66,6 @@ export default function validateFiles(options, _type, callback) {
       );
     }
   } else {
-    return new Promise((resolve, reject) => validateFiles(options, _type, (err) => (err ? reject(err) : resolve(null))));
+    return new Promise((resolve, reject) => validateFiles(options, _type, (err?: Error) => (err ? reject(err) : resolve(null))));
   }
 }
