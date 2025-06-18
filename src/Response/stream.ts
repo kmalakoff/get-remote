@@ -1,16 +1,16 @@
+import once from 'call-once-fn';
 import fs from 'fs';
 import http from 'http';
 import https from 'https';
 import Module from 'module';
-import path from 'path';
-import url from 'url';
-import once from 'call-once-fn';
 import oo from 'on-one';
+import path from 'path';
 import rimraf2 from 'rimraf2';
+import url from 'url';
 
 import wrapResponse, { type Callback } from '../utils/wrapResponse.js';
 
-const URL_REGEX = /^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
+const URL_REGEX = /^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
