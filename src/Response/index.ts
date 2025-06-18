@@ -1,3 +1,4 @@
+import type { Options } from '../types.js';
 import extract from './extract.js';
 import file from './file.js';
 import head from './head.js';
@@ -5,8 +6,6 @@ import json from './json.js';
 import pipe from './pipe.js';
 import stream from './stream.js';
 import text from './text.js';
-
-import type { Options } from '../types.js';
 
 export default class Response {
   endpoint: string;

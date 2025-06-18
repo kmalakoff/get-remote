@@ -1,15 +1,15 @@
 import { createWriteStream } from 'fast-extract';
+// @ts-ignore
+import get from 'get-remote';
 import mkdirp from 'mkdirp-classic';
 import oo from 'on-one';
 import Pinkie from 'pinkie-promise';
-import rimraf2 from 'rimraf2';
-
-// @ts-ignore
-import get from 'get-remote';
 import requireOptional from 'require_optional';
+import rimraf2 from 'rimraf2';
 
 import { TARGET, TMP_DIR } from '../lib/constants';
 import validateFiles from '../lib/validateFiles';
+
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 const EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip'];
