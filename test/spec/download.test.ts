@@ -13,6 +13,7 @@ import get from 'get-remote';
 import { TARGET, TMP_DIR } from '../lib/constants';
 import streamToBuffer from '../lib/streamToBuffer';
 import validateFiles from '../lib/validateFiles';
+
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 describe('download', () => {

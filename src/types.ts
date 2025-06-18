@@ -1,5 +1,5 @@
-import type { ReadStream as ReadStreamBase, WriteStream as WriteStreamBase } from 'fs';
 import type { Options as OptionsBase } from 'fast-extract';
+import type { ReadStream as ReadStreamBase, WriteStream as WriteStreamBase } from 'fs';
 
 export type { Progress } from 'fast-extract';
 export interface Options extends OptionsBase {
