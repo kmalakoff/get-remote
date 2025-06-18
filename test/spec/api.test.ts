@@ -1,17 +1,17 @@
 import assert from 'assert';
-import fs from 'fs';
-import path from 'path';
 import cr from 'cr';
-import mkdirp from 'mkdirp-classic';
-import Pinkie from 'pinkie-promise';
-import rimraf2 from 'rimraf2';
-
+import fs from 'fs';
 // @ts-ignore
 import get from 'get-remote';
+import mkdirp from 'mkdirp-classic';
+import path from 'path';
+import Pinkie from 'pinkie-promise';
+import rimraf2 from 'rimraf2';
 
 import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants';
 import streamToBuffer from '../lib/streamToBuffer';
 import validateFiles from '../lib/validateFiles';
+
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 const FIXTURE_JSON = fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8');
 

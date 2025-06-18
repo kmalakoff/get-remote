@@ -1,10 +1,10 @@
 import fs from 'fs';
-import path from 'path';
 import mkdirp from 'mkdirp-classic';
-import suffix from 'temp-suffix';
-
 import os from 'os';
 import osShim from 'os-shim';
+import path from 'path';
+import suffix from 'temp-suffix';
+
 const tmpdir = os.tmpdir || osShim.tmpdir;
 
 import Response from '../Response/index.js';

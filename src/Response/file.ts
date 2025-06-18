@@ -1,13 +1,11 @@
 import fs from 'fs';
-import path from 'path';
 import mkdirp from 'mkdirp-classic';
 import oo from 'on-one';
+import path from 'path';
 
 import getBasename from '../sourceStats/basename.js';
-import type { FileCallback } from '../types.js';
+import type { FileCallback, Options } from '../types.js';
 import pump from '../utils/pump.js';
-
-import type { Options } from '../types.js';
 
 export type Callback = (error?: Error, fullPath?: string) => undefined;
 
