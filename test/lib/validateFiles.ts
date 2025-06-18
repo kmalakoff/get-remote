@@ -1,9 +1,9 @@
 import assert from 'assert';
-import fs, { type Stats } from 'fs';
-import path from 'path';
 import cr from 'cr';
+import fs, { type Stats } from 'fs';
 import Iterator, { type Entry } from 'fs-iterator';
 import statsSpys from 'fs-stats-spys';
+import path from 'path';
 import { CONTENTS, TARGET, TMP_DIR } from './constants';
 
 export default function validateFiles(options, _type, callback) {

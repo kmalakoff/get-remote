@@ -1,13 +1,13 @@
 import assert from 'assert';
 import fs from 'fs';
+// @ts-ignore
+import get from 'get-remote';
 import mkdirp from 'mkdirp-classic';
 import Pinkie from 'pinkie-promise';
 import rimraf2 from 'rimraf2';
 
-// @ts-ignore
-import get from 'get-remote';
-
 import { TARGET, TMP_DIR } from '../lib/constants';
+
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 describe('get-file', () => {

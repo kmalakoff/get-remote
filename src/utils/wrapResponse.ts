@@ -1,10 +1,10 @@
 import objectAssign from 'object-assign';
 import progressStream from 'progress-stream';
+import { PassThrough as PassThroughReadableStream } from 'readable-stream';
+import { PassThrough as PassThroughStream } from 'stream';
 import sourceStats from '../sourceStats/index.js';
 import pump from './pump.js';
 
-import { PassThrough as PassThroughStream } from 'stream';
-import { PassThrough as PassThroughReadableStream } from 'readable-stream';
 const PassThrough = PassThroughStream || PassThroughReadableStream;
 
 import type { default as Response } from '../Response/index.js';
