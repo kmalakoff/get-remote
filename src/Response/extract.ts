@@ -1,5 +1,5 @@
+import type fastExtractT from 'fast-extract';
 import extname from '../utils/extname.js';
-// @ts-ignore
 import optionalRequire from '../utils/optionalRequire.js';
 
 const fastExtract = optionalRequire('fast-extract');
@@ -17,8 +17,7 @@ function worker(dest: string, options: Options, callback: Callback) {
 
     const type = extname(res.basename, options);
     if (!type) return callback(new Error(`Cannot determine extract type for ${res.basename}`));
-    // @ts-ignore
-    fastExtract(res, dest, { ...options, type }, callback);
+    (fastExtract as typeof fastExtractT)(res, dest, { ...options, type }, callback);
   });
 }
 
