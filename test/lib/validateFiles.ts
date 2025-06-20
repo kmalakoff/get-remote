@@ -4,7 +4,7 @@ import fs, { type Stats } from 'fs';
 import Iterator, { type Entry } from 'fs-iterator';
 import statsSpys from 'fs-stats-spys';
 import path from 'path';
-import { CONTENTS, TARGET, TMP_DIR } from './constants';
+import { CONTENTS, TARGET, TMP_DIR } from './constants.ts';
 
 export default function validateFiles(options, _type, callback) {
   if (typeof _type === 'function') {
