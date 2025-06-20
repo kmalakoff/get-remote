@@ -8,9 +8,9 @@ import path from 'path';
 import Pinkie from 'pinkie-promise';
 import rimraf2 from 'rimraf2';
 
-import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants';
-import streamToBuffer from '../lib/streamToBuffer';
-import validateFiles from '../lib/validateFiles';
+import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants.ts';
+import streamToBuffer from '../lib/streamToBuffer.ts';
+import validateFiles from '../lib/validateFiles.ts';
 
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 const FIXTURE_JSON = fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8');
@@ -18,15 +18,13 @@ const FIXTURE_JSON = fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8'
 describe('api', () => {
   (() => {
     // patch and restore promise
-    // @ts-ignore
-    let rootPromise: Promise;
+    if (typeof global === 'undefined') return;
+    const globalPromise = global.Promise;
     before(() => {
-      rootPromise = global.Promise;
-      // @ts-ignore
       global.Promise = Pinkie;
     });
     after(() => {
-      global.Promise = rootPromise;
+      global.Promise = globalPromise;
     });
   })();
 

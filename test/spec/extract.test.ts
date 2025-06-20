@@ -7,8 +7,8 @@ import Pinkie from 'pinkie-promise';
 import requireOptional from 'require_optional';
 import rimraf2 from 'rimraf2';
 
-import { TARGET, TMP_DIR } from '../lib/constants';
-import validateFiles from '../lib/validateFiles';
+import { TARGET, TMP_DIR } from '../lib/constants.ts';
+import validateFiles from '../lib/validateFiles.ts';
 
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
@@ -21,15 +21,13 @@ try {
 function addTests(type) {
   (() => {
     // patch and restore promise
-    // @ts-ignore
-    let rootPromise: Promise;
+    if (typeof global === 'undefined') return;
+    const globalPromise = global.Promise;
     before(() => {
-      rootPromise = global.Promise;
-      // @ts-ignore
       global.Promise = Pinkie;
     });
     after(() => {
-      global.Promise = rootPromise;
+      global.Promise = globalPromise;
     });
   })();
 

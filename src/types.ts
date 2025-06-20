@@ -12,7 +12,7 @@ export interface OptionsInternal extends Options {
   time?: number;
 }
 
-export type Callback = (error?: Error) => void;
+export type Callback = (error?: Error) => undefined;
 export type FileCallback = (error?: Error, filePath?: string) => void;
 
 export interface HeadResponse {
