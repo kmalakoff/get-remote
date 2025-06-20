@@ -10,24 +10,22 @@ import rimraf2 from 'rimraf2';
 // @ts-ignore
 import get from 'get-remote';
 
-import { TARGET, TMP_DIR } from '../lib/constants';
-import streamToBuffer from '../lib/streamToBuffer';
-import validateFiles from '../lib/validateFiles';
+import { TARGET, TMP_DIR } from '../lib/constants.ts';
+import streamToBuffer from '../lib/streamToBuffer.ts';
+import validateFiles from '../lib/validateFiles.ts';
 
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 describe('download', () => {
   (() => {
     // patch and restore promise
-    // @ts-ignore
-    let rootPromise: Promise;
+    if (typeof global === 'undefined') return;
+    const globalPromise = global.Promise;
     before(() => {
-      rootPromise = global.Promise;
-      // @ts-ignore
       global.Promise = Pinkie;
     });
     after(() => {
-      global.Promise = rootPromise;
+      global.Promise = globalPromise;
     });
   })();
 

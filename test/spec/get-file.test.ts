@@ -6,22 +6,20 @@ import mkdirp from 'mkdirp-classic';
 import Pinkie from 'pinkie-promise';
 import rimraf2 from 'rimraf2';
 
-import { TARGET, TMP_DIR } from '../lib/constants';
+import { TARGET, TMP_DIR } from '../lib/constants.ts';
 
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 describe('get-file', () => {
   (() => {
     // patch and restore promise
-    // @ts-ignore
-    let rootPromise: Promise;
+    if (typeof global === 'undefined') return;
+    const globalPromise = global.Promise;
     before(() => {
-      rootPromise = global.Promise;
-      // @ts-ignore
       global.Promise = Pinkie;
     });
     after(() => {
-      global.Promise = rootPromise;
+      global.Promise = globalPromise;
     });
   })();
 
