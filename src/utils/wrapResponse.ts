@@ -5,7 +5,8 @@ import Stream from 'stream';
 import sourceStats from '../sourceStats/index.ts';
 import pump from './pump.ts';
 
-const PassThrough = Stream.PassThrough || StreamCompat.PassThrough;
+const major = +process.versions.node.split('.')[0];
+const PassThrough = major > 0 ? Stream.PassThrough : StreamCompat.PassThrough;
 
 import type { default as Response } from '../Response/index.ts';
 import type { OptionsInternal, ReadStream } from '../types.ts';
