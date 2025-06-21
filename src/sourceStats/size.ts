@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import type { Options, Source } from '../types.js';
+import type { Options, Source } from '../types.ts';
 
 type Callback = (error?: Error, size?: number) => undefined;
 

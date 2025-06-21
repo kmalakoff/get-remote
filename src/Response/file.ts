@@ -3,9 +3,9 @@ import mkdirp from 'mkdirp-classic';
 import oo from 'on-one';
 import path from 'path';
 
-import getBasename from '../sourceStats/basename.js';
-import type { FileCallback, Options } from '../types.js';
-import pump from '../utils/pump.js';
+import getBasename from '../sourceStats/basename.ts';
+import type { FileCallback, Options } from '../types.ts';
+import pump from '../utils/pump.ts';
 
 export type Callback = (error?: Error, fullPath?: string) => undefined;
 
