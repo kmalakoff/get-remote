@@ -1,11 +1,11 @@
-import type { Options } from '../types.js';
-import extract from './extract.js';
-import file from './file.js';
-import head from './head.js';
-import json from './json.js';
-import pipe from './pipe.js';
-import stream from './stream.js';
-import text from './text.js';
+import type { Options } from '../types.ts';
+import extract from './extract.ts';
+import file from './file.ts';
+import head from './head.ts';
+import json from './json.ts';
+import pipe from './pipe.ts';
+import stream from './stream.ts';
+import text from './text.ts';
 
 export default class Response {
   endpoint: string;

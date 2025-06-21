@@ -1,4 +1,4 @@
-import type { HeadCallback, HeadResponse } from '../types.js';
+import type { HeadCallback, HeadResponse } from '../types.ts';
 
 function worker(callback) {
   this.stream({ method: 'HEAD' }, (err, res) => {

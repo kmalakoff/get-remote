@@ -8,7 +8,7 @@ import path from 'path';
 import rimraf2 from 'rimraf2';
 import url from 'url';
 
-import wrapResponse, { type Callback } from '../utils/wrapResponse.js';
+import wrapResponse, { type Callback } from '../utils/wrapResponse.ts';
 
 const URL_REGEX = /^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
 
@@ -26,7 +26,7 @@ let execPath = null;
 const responsePath = path.join(__dirname, '..', '..', 'cjs', 'Response', 'index.js');
 let Response = null;
 
-import type { ReadStream, StreamCallback, StreamOptions } from '../types.js';
+import type { ReadStream, StreamCallback, StreamOptions } from '../types.ts';
 
 function worker(options, callback) {
   options = { ...this.options, ...options };
