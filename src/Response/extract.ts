@@ -1,10 +1,10 @@
 import type fastExtractT from 'fast-extract';
-import extname from '../utils/extname.js';
-import optionalRequire from '../utils/optionalRequire.js';
+import extname from '../utils/extname.ts';
+import optionalRequire from '../utils/optionalRequire.ts';
 
 const fastExtract = optionalRequire('fast-extract');
 
-import type { Callback, Options } from '../types.js';
+import type { Callback, Options } from '../types.ts';
 
 function worker(dest: string, options: Options, callback: Callback) {
   if (!fastExtract) {

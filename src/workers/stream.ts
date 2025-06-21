@@ -7,8 +7,8 @@ import suffix from 'temp-suffix';
 
 const tmpdir = os.tmpdir || osShim.tmpdir;
 
-import Response from '../Response/index.js';
-import type { Options, ReadStream, StreamOptions, WriteStream } from '../types.js';
+import Response from '../Response/index.ts';
+import type { Options, ReadStream, StreamOptions, WriteStream } from '../types.ts';
 
 export type Callback = (error?: Error, res?: ReadStream) => undefined;
 

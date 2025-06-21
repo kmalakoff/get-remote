@@ -1,6 +1,6 @@
 import path from 'path';
 
-import type { Options } from '../types.js';
+import type { Options } from '../types.ts';
 
 export default function extname(fullPath: string, options: Options): string {
   if (options.type) return options.type;
