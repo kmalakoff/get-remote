@@ -1,10 +1,10 @@
 import objectAssign from 'object-assign';
 import progressStream from 'progress-stream';
+import StreamCompat from 'readable-stream';
+import Stream from 'stream';
 import sourceStats from '../sourceStats/index.ts';
 import pump from './pump.ts';
 
-import Stream from 'stream';
-import StreamCompat from 'readable-stream';
 const PassThrough = Stream.PassThrough || StreamCompat.PassThrough;
 
 import type { default as Response } from '../Response/index.ts';
