@@ -37,7 +37,7 @@
   "dependencies": {
     "call-once-fn": "^1.0.20",
     "content-disposition": "^0.5.4",
-    "function-exec-sync": "^1.2.29",
+    "function-exec-sync": "^1.2.30",
     "mkdirp-classic": "^0.5.3",
     "node-exec-path": "^1.0.37",
     "object-assign": "^4.1.1",
