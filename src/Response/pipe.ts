@@ -1,8 +1,8 @@
 import type { WriteStream } from 'fs';
 import oo from 'on-one';
 
-import type { PipeCallback } from '../types.js';
-import pump from '../utils/pump.js';
+import type { PipeCallback } from '../types.ts';
+import pump from '../utils/pump.ts';
 
 function worker(dest, callback) {
   return this.stream((err, res) => {

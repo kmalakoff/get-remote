@@ -1,7 +1,7 @@
 import contentDisposition from 'content-disposition';
 import path from 'path';
 
-import type { Options, Source } from '../types.js';
+import type { Options, Source } from '../types.ts';
 
 // biome-ignore lint/suspicious/noControlCharactersInRegex: Platform specific characters
 const POSIX = /[<>:"\\/\\|?*\x00-\x1F]/g;
