@@ -1,4 +1,3 @@
-import type { WriteStream } from 'fs';
 import oo from 'on-one';
 
 import type { PipeCallback } from '../types.ts';
@@ -16,7 +15,7 @@ function worker(dest, callback) {
   });
 }
 
-export default function pipe(dest: WriteStream, callback?: PipeCallback): undefined | Promise<undefined> {
+export default function pipe(dest: NodeJS.WritableStream, callback?: PipeCallback): undefined | Promise<undefined> {
   if (typeof callback === 'function') return worker.call(this, dest, callback) as undefined;
   return new Promise((resolve, reject) => worker.call(this, dest, (err, res) => (err ? reject(err) : resolve(res))));
 }
