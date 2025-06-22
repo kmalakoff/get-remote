@@ -35,10 +35,16 @@ function addTests(type) {
     it('extract file', (done) => {
       const options = { strip: 1 };
       get(`${URL}/test/data/fixture.${type}`).extract(TARGET, options, (err?: Error) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
 
         validateFiles(options, type, (err?: Error) => {
-          if (err) return done(err.message);
+          if (err) {
+            done(err.message);
+            return;
+          }
           done();
         });
       });
@@ -47,10 +53,16 @@ function addTests(type) {
     it('extract file without type', (done) => {
       const options = { strip: 1, type: type };
       get(`${URL}/test/data/fixture-${type}`).extract(TARGET, options, (err?: Error) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
 
         validateFiles(options, type, (err?: Error) => {
-          if (err) return done(err.message);
+          if (err) {
+            done(err.message);
+            return;
+          }
           done();
         });
       });
@@ -58,15 +70,24 @@ function addTests(type) {
 
     it('extract file using stream', (done) => {
       get(`${URL}/test/data/fixture-${type}`).stream((err, stream) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
 
         const options = { strip: 1, type: type };
         const res = stream.pipe(createWriteStream(TARGET, options));
         oo(res, ['error', 'end', 'close', 'finish'], (err?: Error) => {
-          if (err) return done(err.message);
+          if (err) {
+            done(err.message);
+            return;
+          }
 
           validateFiles(options, type, (err?: Error) => {
-            if (err) return done(err.message);
+            if (err) {
+              done(err.message);
+              return;
+            }
             done();
           });
         });
@@ -76,10 +97,16 @@ function addTests(type) {
     it('extract file using pipe', (done) => {
       const options = { strip: 1, type: type };
       get(`${URL}/test/data/fixture-${type}`).pipe(createWriteStream(TARGET, options), (err?: Error) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
 
         validateFiles(options, type, (err?: Error) => {
-          if (err) return done(err.message);
+          if (err) {
+            done(err.message);
+            return;
+          }
           done();
         });
       });
