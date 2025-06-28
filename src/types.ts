@@ -1,5 +1,4 @@
 import type { Options as OptionsBase } from 'fast-extract';
-import type { ReadStream as ReadStreamBase, WriteStream as WriteStreamBase } from 'fs';
 
 export type { Progress } from 'fast-extract';
 export interface Options extends OptionsBase {
@@ -33,11 +32,11 @@ export type PipeCallback = (error?: Error) => void;
 export interface StreamOptions {
   method?: string;
 }
-export interface WriteStream extends WriteStreamBase {
+export interface WriteStream extends NodeJS.WritableStream {
   statusCode?: number;
   headers?: object | Headers;
 }
-export interface ReadStream extends ReadStreamBase {
+export interface ReadStream extends NodeJS.ReadableStream {
   filename?: string;
   statusCode?: number;
   headers?: object | Headers;
