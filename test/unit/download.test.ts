@@ -7,7 +7,6 @@ import rimraf2 from 'rimraf2';
 
 // var contentDisposition = require('content-disposition');
 
-// @ts-ignore
 import get from 'get-remote';
 
 import { TARGET, TMP_DIR } from '../lib/constants.ts';
