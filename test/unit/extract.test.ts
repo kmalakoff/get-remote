@@ -1,5 +1,4 @@
 import { createWriteStream } from 'fast-extract';
-// @ts-ignore
 import get from 'get-remote';
 import mkdirp from 'mkdirp-classic';
 import oo from 'on-one';

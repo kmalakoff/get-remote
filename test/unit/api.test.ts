@@ -1,7 +1,6 @@
 import assert from 'assert';
 import cr from 'cr';
 import fs from 'fs';
-// @ts-ignore
 import get from 'get-remote';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';

@@ -1,6 +1,5 @@
 import assert from 'assert';
 import fs from 'fs';
-// @ts-ignore
 import get from 'get-remote';
 import mkdirp from 'mkdirp-classic';
 import Pinkie from 'pinkie-promise';
