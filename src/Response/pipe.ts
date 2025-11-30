@@ -1,7 +1,6 @@
 import oo from 'on-one';
-
+import pump from '../lib/pump.ts';
 import type { PipeCallback } from '../types.ts';
-import pump from '../utils/pump.ts';
 
 function worker(dest, callback) {
   return this.stream((err, res) => {
