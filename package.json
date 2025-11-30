@@ -30,6 +30,7 @@
   "scripts": {
     "build": "tsds build",
     "format": "biome check --write --unsafe",
+    "prepublishOnly": "tsds validate",
     "test": "mocha --no-timeouts test/**/*.test.*",
     "test:engines": "nvu engines tsds test:node --no-timeouts",
     "version": "tsds version"
@@ -60,6 +61,7 @@
     "is-tar": "*",
     "lzma-native": "*",
     "pinkie-promise": "*",
+    "queue-cb": "^1.5.8",
     "supports-color": "*"
   },
   "engines": {
