@@ -5,7 +5,11 @@ function worker(stream, callback) {
   stream.on('data', (chunk) => {
     chunks.push(chunk);
   });
-  oo(stream, ['error', 'end', 'close', 'finish'], (err?: Error) => {
+  // NOTE: Do not listen for 'finish' - it's a writable-side event that can fire
+  // before 'data' events on the readable side (especially on Node 0.8 with
+  // readable-stream's PassThrough). Only listen for 'end' (readable complete)
+  // and 'close' (stream destroyed).
+  oo(stream, ['error', 'end', 'close'], (err?: Error) => {
     err ? callback(err) : callback(null, Buffer.concat(chunks));
   });
 }

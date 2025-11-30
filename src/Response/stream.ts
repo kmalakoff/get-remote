@@ -8,7 +8,7 @@ import path from 'path';
 import rimraf2 from 'rimraf2';
 import url from 'url';
 
-import wrapResponse, { type Callback } from '../utils/wrapResponse.ts';
+import wrapResponse, { type Callback } from '../lib/wrapResponse.ts';
 
 const URL_REGEX = /^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
 

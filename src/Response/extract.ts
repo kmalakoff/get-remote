@@ -1,6 +1,6 @@
 import type fastExtractT from 'fast-extract';
-import extname from '../utils/extname.ts';
-import optionalRequire from '../utils/optionalRequire.ts';
+import extname from '../lib/extname.ts';
+import optionalRequire from '../lib/optionalRequire.ts';
 
 const fastExtract = optionalRequire('fast-extract');
 
