@@ -2,6 +2,8 @@ import fs from 'fs';
 import mkdirp from 'mkdirp-classic';
 import oo from 'on-one';
 import path from 'path';
+import rimraf2 from 'rimraf2';
+import tempSuffix from 'temp-suffix';
 
 import getBasename from '../sourceStats/basename.ts';
 import type { FileCallback, Options } from '../types.ts';
@@ -16,14 +18,33 @@ function worker(dest: string, options: Options, callback: Callback) {
 
     const basename = getBasename(res, options, this.endpoint);
     const fullPath = basename === undefined ? dest : path.join(dest, basename);
+    const tempPath = tempSuffix(fullPath);
 
-    mkdirp(path.dirname(fullPath), (err?: Error) => {
+    mkdirp(path.dirname(tempPath), (err?: Error) => {
       if (err) return callback(err);
 
-      // write to file
-      res = pump(res, fs.createWriteStream(fullPath));
+      // write to temp file
+      res = pump(res, fs.createWriteStream(tempPath));
       oo(res, ['error', 'end', 'close', 'finish'], (err?: Error) => {
-        err ? callback(err) : callback(null, fullPath);
+        if (err) {
+          rimraf2(tempPath, { disableGlob: true }, () => callback(err));
+          return;
+        }
+
+        // atomic rename to final destination
+        mkdirp(path.dirname(fullPath), (err?: Error) => {
+          if (err && (err as NodeJS.ErrnoException).code !== 'EEXIST') {
+            rimraf2(tempPath, { disableGlob: true }, () => callback(err));
+            return;
+          }
+          fs.rename(tempPath, fullPath, (err?: Error) => {
+            if (err) {
+              rimraf2(tempPath, { disableGlob: true }, () => callback(err));
+              return;
+            }
+            callback(null, fullPath);
+          });
+        });
       });
     });
   });
