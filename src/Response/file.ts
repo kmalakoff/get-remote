@@ -4,10 +4,9 @@ import oo from 'on-one';
 import path from 'path';
 import rimraf2 from 'rimraf2';
 import tempSuffix from 'temp-suffix';
-
+import pump from '../lib/pump.ts';
 import getBasename from '../sourceStats/basename.ts';
 import type { FileCallback, Options } from '../types.ts';
-import pump from '../utils/pump.ts';
 
 export type Callback = (error?: Error, fullPath?: string) => undefined;
 
@@ -39,6 +38,13 @@ function worker(dest: string, options: Options, callback: Callback) {
           }
           fs.rename(tempPath, fullPath, (err?: Error) => {
             if (err) {
+              const code = (err as NodeJS.ErrnoException).code;
+              // On Windows, EPERM can occur if dest is locked by another process
+              // EEXIST/ENOTEMPTY means another process won the race - that's ok
+              if (code === 'EPERM' || code === 'EEXIST' || code === 'ENOTEMPTY') {
+                rimraf2(tempPath, { disableGlob: true }, () => callback(null, fullPath));
+                return;
+              }
               rimraf2(tempPath, { disableGlob: true }, () => callback(err));
               return;
             }
