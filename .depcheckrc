@@ -1,1 +1,1 @@
-ignores: ["get-remote", "lzma-native", "supports-color", "function-exec-sync", "node-exec-path"]
+ignores: ["node-version-use", "ts-dev-stack", "@biomejs/biome", "get-remote", "lzma-native", "supports-color", "function-exec-sync", "node-exec-path"]
