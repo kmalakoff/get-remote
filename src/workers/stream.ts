@@ -1,11 +1,8 @@
 import fs from 'fs';
 import mkdirp from 'mkdirp-classic';
-import os from 'os';
-import osShim from 'os-shim';
 import path from 'path';
 import suffix from 'temp-suffix';
-
-const tmpdir = os.tmpdir || osShim.tmpdir;
+import { tmpdir } from '../compat.ts';
 
 import Response from '../Response/index.ts';
 import type { Options, ReadStream, StreamOptions, WriteStream } from '../types.ts';
