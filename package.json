@@ -41,7 +41,6 @@
     "function-exec-sync": "*",
     "mkdirp-classic": "*",
     "node-exec-path": "*",
-    "object-assign": "*",
     "on-one": "*",
     "os-shim": "*",
     "progress-stream": "*",
@@ -63,7 +62,7 @@
     "lzma-native": "*",
     "node-version-use": "*",
     "pinkie-promise": "*",
-    "queue-cb": "^1.5.8",
+    "queue-cb": "^1.5.9",
     "supports-color": "*",
     "ts-dev-stack": "*"
   },
