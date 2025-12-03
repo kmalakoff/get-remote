@@ -1,12 +1,17 @@
-import objectAssign from 'object-assign';
 import progressStream from 'progress-stream';
-import StreamCompat from 'readable-stream';
 import Stream from 'stream';
+
+import { objectAssign } from '../compat.ts';
 import sourceStats from '../sourceStats/index.ts';
 import pump from './pump.ts';
 
 const major = +process.versions.node.split('.')[0];
-const PassThrough = major > 0 ? Stream.PassThrough : (StreamCompat.PassThrough as typeof Stream.PassThrough);
+let PassThrough: typeof Stream.PassThrough;
+if (major > 0) {
+  PassThrough = Stream.PassThrough;
+} else {
+  PassThrough = require('readable-stream').PassThrough;
+}
 
 import type { default as Response } from '../Response/index.ts';
 import type { OptionsInternal, ReadStream } from '../types.ts';
