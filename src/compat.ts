@@ -27,13 +27,13 @@ export function tmpdir(): string {
 var hasObjectAssign = typeof Object.assign === 'function';
 var _hasOwnProperty = Object.prototype.hasOwnProperty;
 
-// biome-ignore lint/suspicious/noExplicitAny: Generic object assignment for Node 0.8 compat
 export function objectAssign<T, U>(target: T, source: U): T & U {
   if (hasObjectAssign) {
     return Object.assign(target, source);
   }
   for (var key in source) {
     if (_hasOwnProperty.call(source, key)) {
+      // biome-ignore lint/suspicious/noExplicitAny: Generic object assignment for Node 0.8 compat
       (target as any)[key] = (source as any)[key];
     }
   }
