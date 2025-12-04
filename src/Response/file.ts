@@ -1,8 +1,8 @@
 import fs from 'fs';
+import { rm } from 'fs-remove-compat';
 import mkdirp from 'mkdirp-classic';
 import oo from 'on-one';
 import path from 'path';
-import rimraf2 from 'rimraf2';
 import tempSuffix from 'temp-suffix';
 import pump from '../lib/pump.ts';
 import getBasename from '../sourceStats/basename.ts';
@@ -26,14 +26,14 @@ function worker(dest: string, options: Options, callback: Callback) {
       res = pump(res, fs.createWriteStream(tempPath));
       oo(res, ['error', 'end', 'close', 'finish'], (err?: Error) => {
         if (err) {
-          rimraf2(tempPath, { disableGlob: true }, () => callback(err));
+          rm(tempPath, () => callback(err));
           return;
         }
 
         // atomic rename to final destination
         mkdirp(path.dirname(fullPath), (err?: Error) => {
           if (err && (err as NodeJS.ErrnoException).code !== 'EEXIST') {
-            rimraf2(tempPath, { disableGlob: true }, () => callback(err));
+            rm(tempPath, () => callback(err));
             return;
           }
           fs.rename(tempPath, fullPath, (err?: Error) => {
@@ -42,10 +42,10 @@ function worker(dest: string, options: Options, callback: Callback) {
               // On Windows, EPERM can occur if dest is locked by another process
               // EEXIST/ENOTEMPTY means another process won the race - that's ok
               if (code === 'EPERM' || code === 'EEXIST' || code === 'ENOTEMPTY') {
-                rimraf2(tempPath, { disableGlob: true }, () => callback(null, fullPath));
+                rm(tempPath, () => callback(null, fullPath));
                 return;
               }
-              rimraf2(tempPath, { disableGlob: true }, () => callback(err));
+              rm(tempPath, () => callback(err));
               return;
             }
             callback(null, fullPath);
