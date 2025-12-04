@@ -1,11 +1,11 @@
 import assert from 'assert';
 import cr from 'cr';
 import fs from 'fs';
+import { safeRm } from 'fs-remove-compat';
 import get from 'get-remote';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Pinkie from 'pinkie-promise';
-import rimraf2 from 'rimraf2';
 
 import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants.ts';
 import streamToBuffer from '../lib/streamToBuffer.ts';
@@ -28,7 +28,7 @@ describe('api', () => {
   })();
 
   beforeEach((callback) => {
-    rimraf2(TMP_DIR, { disableGlob: true }, () => {
+    safeRm(TMP_DIR, () => {
       mkdirp(TMP_DIR, callback);
     });
   });

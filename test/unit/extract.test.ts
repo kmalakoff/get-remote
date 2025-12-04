@@ -1,10 +1,10 @@
 import { createWriteStream } from 'fast-extract';
+import { safeRm } from 'fs-remove-compat';
 import get from 'get-remote';
 import mkdirp from 'mkdirp-classic';
 import oo from 'on-one';
 import Pinkie from 'pinkie-promise';
 import requireOptional from 'require_optional';
-import rimraf2 from 'rimraf2';
 
 import { TARGET, TMP_DIR } from '../lib/constants.ts';
 import validateFiles from '../lib/validateFiles.ts';
@@ -115,7 +115,7 @@ function addTests(type) {
 
 describe('extract', () => {
   beforeEach((callback) => {
-    rimraf2(TMP_DIR, { disableGlob: true }, () => {
+    safeRm(TMP_DIR, () => {
       mkdirp(TMP_DIR, callback);
     });
   });
