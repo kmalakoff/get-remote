@@ -46,7 +46,7 @@
     "os-shim": "*",
     "progress-stream": "*",
     "pump": "*",
-    "readable-stream": "^2.3.7",
+    "readable-stream": "^2.3.8",
     "require_optional": "*",
     "rimraf2": "*",
     "temp-suffix": "*"
