@@ -1,11 +1,11 @@
 import assert from 'assert';
 import fs from 'fs';
+import { safeRm } from 'fs-remove-compat';
 import get, { fileType, getBasename } from 'get-remote';
 import isTar from 'is-tar';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Pinkie from 'pinkie-promise';
-import rimraf2 from 'rimraf2';
 
 import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants.ts';
 import streamToBuffer from '../lib/streamToBuffer.ts';
@@ -28,7 +28,7 @@ describe('download', () => {
   })();
 
   beforeEach((callback) => {
-    rimraf2(TMP_DIR, { disableGlob: true }, () => {
+    safeRm(TMP_DIR, () => {
       mkdirp(TMP_DIR, callback);
     });
   });

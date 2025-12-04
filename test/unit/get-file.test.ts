@@ -1,11 +1,11 @@
 import assert from 'assert';
 import fs from 'fs';
+import { safeRm } from 'fs-remove-compat';
 import get from 'get-remote';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Pinkie from 'pinkie-promise';
 import Queue from 'queue-cb';
-import rimraf2 from 'rimraf2';
 
 import { TARGET, TMP_DIR } from '../lib/constants.ts';
 
@@ -25,7 +25,7 @@ describe('get-file', () => {
   })();
 
   beforeEach((callback) => {
-    rimraf2(TMP_DIR, { disableGlob: true }, () => {
+    safeRm(TMP_DIR, () => {
       mkdirp(TMP_DIR, callback);
     });
   });
