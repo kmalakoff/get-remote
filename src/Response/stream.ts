@@ -1,11 +1,11 @@
 import once from 'call-once-fn';
 import fs from 'fs';
+import { rmSync } from 'fs-remove-compat';
 import http from 'http';
 import https from 'https';
 import Module from 'module';
 import oo from 'on-one';
 import path from 'path';
-import rimraf2 from 'rimraf2';
 import url from 'url';
 
 import wrapResponse, { type Callback } from '../lib/wrapResponse.ts';
@@ -49,7 +49,7 @@ function worker(options, callback) {
         res.headers = streamInfo.headers;
         res.statusCode = streamInfo.statusCode;
         oo(res, ['error', 'end', 'close', 'finish'], () => {
-          rimraf2.sync(streamInfo.filename, { disableGlob: true }); // clean up
+          rmSync(streamInfo.filename); // clean up
         });
         wrapResponse(res, this, options, callback);
       }
