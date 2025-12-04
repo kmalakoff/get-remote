@@ -23,6 +23,7 @@
     "./package.json": "./package.json"
   },
   "main": "dist/cjs/index.js",
+  "source": "src/index.ts",
   "types": "dist/cjs/index.d.ts",
   "files": [
     "dist"
@@ -62,14 +63,11 @@
     "lzma-native": "*",
     "node-version-use": "*",
     "pinkie-promise": "*",
-    "queue-cb": "^1.5.9",
+    "queue-cb": "^1.5.10",
     "supports-color": "*",
     "ts-dev-stack": "*"
   },
   "engines": {
     "node": ">=0.8"
-  },
-  "tsds": {
-    "source": "src/index.ts"
   }
 }
