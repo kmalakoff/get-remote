@@ -37,13 +37,13 @@ describe('api', () => {
     it('should provide a stream method', (done) => {
       get(`${URL}/test/data/fixture.json`).stream((err, stream) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
 
         streamToBuffer(stream, (err, buffer) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           assert.equal(cr(buffer.toString()), cr(FIXTURE_JSON));
@@ -62,13 +62,13 @@ describe('api', () => {
       const options = { strip: 1 };
       get(`${URL}/test/data/fixture.tar.gz`).extract(TARGET, options, (err?: Error) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
 
         validateFiles(options, 'tar.gz', (err?: Error) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           done();
@@ -83,7 +83,7 @@ describe('api', () => {
         .then(() => {
           validateFiles(options, 'tar.gz', (err?: Error) => {
             if (err) {
-              done(err.message);
+              done(err);
               return;
             }
             done();
@@ -95,13 +95,13 @@ describe('api', () => {
     it('should provide a file method', (done) => {
       get(`${URL}/test/data/fixture.json`).file(TARGET, (err?: Error) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
 
         fs.readdir(TARGET, (err, files) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           assert.deepEqual(files.sort(), ['fixture.json']);
@@ -117,7 +117,7 @@ describe('api', () => {
         .then(() => {
           fs.readdir(TARGET, (err, files) => {
             if (err) {
-              done(err.message);
+              done(err);
               return;
             }
             assert.deepEqual(files.sort(), ['fixture.json']);
@@ -131,7 +131,7 @@ describe('api', () => {
     it('should provide a head method', (done) => {
       get(`${URL}/test/data/fixture.json`).head((err, res) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         assert.equal(res.statusCode, 200);
@@ -154,7 +154,7 @@ describe('api', () => {
     it('should provide a json method', (done) => {
       get(`${URL}/test/data/fixture.json`).json((err, res) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         assert.equal(res.statusCode, 200);
@@ -177,13 +177,13 @@ describe('api', () => {
     it('should provide a pipe method', (done) => {
       mkdirp(TARGET, (err?: Error) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
 
         get(`${URL}/test/data/fixture.json`).pipe(fs.createWriteStream(path.join(TARGET, 'fixture.json')), (err?: Error) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(FIXTURE_JSON));
@@ -195,7 +195,7 @@ describe('api', () => {
     it('should provide a pipe method - promise', (done) => {
       mkdirp(TARGET, (err?: Error) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
 
@@ -212,7 +212,7 @@ describe('api', () => {
     it('should provide a text method', (done) => {
       get(`${URL}/test/data/fixture.text`).text((err, res) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         assert.equal(res.statusCode, 200);

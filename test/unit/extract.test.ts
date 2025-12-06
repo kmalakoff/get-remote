@@ -35,13 +35,13 @@ function addTests(type) {
       const options = { strip: 1 };
       get(`${URL}/test/data/fixture.${type}`).extract(TARGET, options, (err?: Error) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
 
         validateFiles(options, type, (err?: Error) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           done();
@@ -53,13 +53,13 @@ function addTests(type) {
       const options = { strip: 1, type: type };
       get(`${URL}/test/data/fixture-${type}`).extract(TARGET, options, (err?: Error) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
 
         validateFiles(options, type, (err?: Error) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           done();
@@ -70,7 +70,7 @@ function addTests(type) {
     it('extract file using stream', (done) => {
       get(`${URL}/test/data/fixture-${type}`).stream((err, stream) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
 
@@ -78,13 +78,13 @@ function addTests(type) {
         const res = stream.pipe(createWriteStream(TARGET, options));
         oo(res, ['error', 'end', 'close', 'finish'], (err?: Error) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
 
           validateFiles(options, type, (err?: Error) => {
             if (err) {
-              done(err.message);
+              done(err);
               return;
             }
             done();
@@ -97,13 +97,13 @@ function addTests(type) {
       const options = { strip: 1, type: type };
       get(`${URL}/test/data/fixture-${type}`).pipe(createWriteStream(TARGET, options), (err?: Error) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
 
         validateFiles(options, type, (err?: Error) => {
           if (err) {
-            done(err.message);
+            done(err);
             return;
           }
           done();
