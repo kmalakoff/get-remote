@@ -36,12 +36,12 @@ describe('download', () => {
   it('get as stream', (done) => {
     get(`${URL}/test/data/fixture.tar`).stream((err, stream) => {
       if (err) {
-        done(err.message);
+        done(err);
         return;
       }
       streamToBuffer(stream, (err, buffer) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         assert.ok(isTar(buffer));
@@ -59,12 +59,12 @@ describe('download', () => {
   it('get a very large file', (done) => {
     get('https://nodejs.org/dist/v22.12.0/node-v22.12.0-darwin-arm64.tar.gz').stream((err, stream) => {
       if (err) {
-        done(err.message);
+        done(err);
         return;
       }
       streamToBuffer(stream, (err, buffer) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         assert.equal(buffer.length, 48568612);
@@ -76,12 +76,12 @@ describe('download', () => {
   it('get and rename file', (done) => {
     get(`${URL}/test/data/fixture.tar`).file(TARGET, { filename: 'bar.tar' }, (err?: Error) => {
       if (err) {
-        done(err.message);
+        done(err);
         return;
       }
       fs.readdir(TARGET, (err, files) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         assert.deepEqual(files.sort(), ['bar.tar']);
@@ -93,12 +93,12 @@ describe('download', () => {
   it('save file', (done) => {
     get(`${URL}/test/data/fixture.tar`).file(TARGET, (err?: Error) => {
       if (err) {
-        done(err.message);
+        done(err);
         return;
       }
       fs.readdir(TARGET, (err, files) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         assert.deepEqual(files.sort(), ['fixture.tar']);
@@ -111,13 +111,13 @@ describe('download', () => {
     const options = { strip: 1 };
     get(`${URL}/test/data/fixture.tar`).extract(TARGET, options, (err?: Error) => {
       if (err) {
-        done(err.message);
+        done(err);
         return;
       }
 
       validateFiles(options, 'tar.gz', (err?: Error) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         done();
@@ -128,13 +128,13 @@ describe('download', () => {
   it('extract file that is not compressed', (done) => {
     get(`${URL}/test/data/fixture.js`).extract(TARGET, (err?: Error) => {
       if (err) {
-        done(err.message);
+        done(err);
         return;
       }
 
       fs.readdir(TARGET, (err, files) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         assert.deepEqual(files.sort(), ['fixture.js']);
@@ -175,12 +175,12 @@ describe('download', () => {
   it('follow redirects', (done) => {
     get(`${URL.replace('https', 'http')}/test/data/fixture.tar`).stream((err, stream) => {
       if (err) {
-        done(err.message);
+        done(err);
         return;
       }
       streamToBuffer(stream, (err, buffer) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         assert.ok(isTar(buffer));
@@ -192,12 +192,12 @@ describe('download', () => {
   it('follow redirect to https', (done) => {
     get(`${URL.replace('https', 'http')}/test/data/fixture.tar`).stream((err, stream) => {
       if (err) {
-        done(err.message);
+        done(err);
         return;
       }
       streamToBuffer(stream, (err, buffer) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         assert.ok(isTar(buffer));
@@ -209,12 +209,12 @@ describe('download', () => {
   it('handle query string', (done) => {
     get(`${URL}/test/data/fixture.tar?param=value`).file(TARGET, (err?: Error) => {
       if (err) {
-        done(err.message);
+        done(err);
         return;
       }
       fs.readdir(TARGET, (err, files) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         assert.deepEqual(files.sort(), ['fixture.tar']);
@@ -227,7 +227,7 @@ describe('download', () => {
     // GitHub archive downloads send Content-Disposition header with filename
     get(GITHUB_ARCHIVE_URL).stream((err, stream) => {
       if (err) {
-        done(err.message);
+        done(err);
         return;
       }
       // Verify the content-disposition header was received and parsed
@@ -237,7 +237,7 @@ describe('download', () => {
       // Verify we can read the content as a zip
       streamToBuffer(stream, (err, buffer) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
         const type = fileType(buffer);
@@ -252,13 +252,13 @@ describe('download', () => {
     // Using GitHub archive URL which returns a zip file
     get(GITHUB_ARCHIVE_URL).stream((err, stream) => {
       if (err) {
-        done(err.message);
+        done(err);
         return;
       }
 
       streamToBuffer(stream, (err, buffer) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
 
