@@ -11,10 +11,14 @@ import validateFiles from '../lib/validateFiles.ts';
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 const EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip'];
-try {
-  require('lzma-native');
-  EXTRACT_TYPES.push('tar.xz');
-} catch (_err) {}
+// lzma-native requires Node 10+ (uses N-API features not available in older versions)
+const major = +process.versions.node.split('.')[0];
+if (major >= 10) {
+  try {
+    require('lzma-native');
+    EXTRACT_TYPES.push('tar.xz');
+  } catch (_err) {}
+}
 
 function addTests(type) {
   (() => {
