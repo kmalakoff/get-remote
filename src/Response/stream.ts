@@ -28,6 +28,7 @@ let Response = null;
 
 import type { ReadStream, StreamCallback, StreamOptions } from '../types.ts';
 
+let functionExec = null; // break dependencies
 function worker(options, callback) {
   options = { ...this.options, ...options };
 
@@ -40,7 +41,8 @@ function worker(options, callback) {
     }
 
     try {
-      const streamInfo = _require('function-exec-sync')({ execPath, callbacks: true }, workerPath, [this.endpoint, this.options], options);
+      if (!functionExec) functionExec = _require('function-exec-sync');
+      const streamInfo = functionExec({ execPath, callbacks: true }, workerPath, [this.endpoint, this.options], options);
       if ((options as StreamOptions).method === 'HEAD') {
         streamInfo.resume = () => {};
         callback(null, streamInfo);
