@@ -40,7 +40,7 @@
     "call-once-fn": "^1.1.8",
     "content-disposition": "^1.0.1",
     "fs-remove-compat": "^0.2.1",
-    "function-exec-sync": "^1.5.2",
+    "function-exec-sync": "^1.5.3",
     "mkdirp-classic": "^0.5.3",
     "node-exec-path": "^1.1.16",
     "on-one": "^1.0.8",
@@ -64,7 +64,7 @@
     "queue-cb": "^1.6.1",
     "supports-color": "^10.2.2",
     "ts-dev-stack": "^1.21.3",
-    "tsds-config": "^0.2.0"
+    "tsds-config": "^0.2.1"
   },
   "engines": {
     "node": ">=0.8"
