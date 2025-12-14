@@ -65,7 +65,7 @@ function worker(options, callback) {
   const parsed = URL_REGEX.exec(this.endpoint);
   const protocol = parsed[1];
   const host = parsed[4];
-  const path = parsed[5];
+  const path = parsed[5] + (parsed[6] || '');
 
   const secure = protocol === 'https:';
   const requestOptions = { host, path, port: secure ? 443 : 80, method: 'GET', ...options };

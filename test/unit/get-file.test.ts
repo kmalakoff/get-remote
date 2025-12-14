@@ -42,6 +42,24 @@ describe('get-file', () => {
     });
   });
 
+  it('should preserve query string in URLs', (done) => {
+    // npm search API requires 'text' query param - returns error without it
+    const url = 'https://registry.npmjs.org/-/v1/search?text=is-promise&size=1';
+    get(url).file(TARGET, { filename: 'search-result.json' }, (err?: Error) => {
+      if (err) {
+        done(err);
+        return;
+      }
+      const dest = path.join(TARGET, 'search-result.json');
+      const content = JSON.parse(fs.readFileSync(dest, 'utf8'));
+      // If query string was dropped, we'd get {error: "'text' query parameter is required"}
+      assert.ok(content.objects, 'Should have search results (query string preserved)');
+      assert.ok(content.objects.length > 0, 'Should have at least one result');
+      assert.strictEqual(content.objects[0].package.name, 'is-promise');
+      done();
+    });
+  });
+
   it('should get file over http', (done) => {
     get(`${URL}/package.json`).file(TARGET, (err?: Error) => {
       if (err) {
