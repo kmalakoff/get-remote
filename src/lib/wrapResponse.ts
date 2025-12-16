@@ -1,7 +1,6 @@
 import progressStream from 'progress-stream';
 import Stream from 'stream';
 
-import { objectAssign } from '../compat.ts';
 import sourceStats from '../sourceStats/index.ts';
 import pump from './pump.ts';
 
@@ -40,6 +39,8 @@ export default function wrapResponse(res: ReadStream, self: Response, options: O
     }
 
     // store stats on the source
-    return callback(null, objectAssign(res, stats));
+    res.size = stats.size;
+    res.basename = stats.basename;
+    return callback(null, res);
   });
 }
