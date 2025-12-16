@@ -1,11 +1,14 @@
 import once from 'call-once-fn';
 import fs from 'fs';
 import { rmSync } from 'fs-remove-compat';
+import { getFile, head } from 'get-file-compat';
 import http from 'http';
 import https from 'https';
 import Module from 'module';
 import oo from 'on-one';
+import os from 'os';
 import path from 'path';
+import suffix from 'temp-suffix';
 import url from 'url';
 
 import wrapResponse, { type Callback } from '../lib/wrapResponse.ts';
@@ -14,50 +17,44 @@ const URL_REGEX = /^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
+const tmpdir = typeof os.tmpdir === 'function' ? os.tmpdir : _require('os-shim').tmpdir;
 
 // node <= 0.8 does not support https and node 0.12 certs cannot be trusted
 const major = +process.versions.node.split('.')[0];
 const minor = +process.versions.node.split('.')[1];
 const noHTTPS = major === 0 && (minor <= 8 || minor === 12);
 
-const workerPath = path.join(__dirname, '..', 'workers', 'stream.js');
-let execPath = null;
-
 const responsePath = path.join(__dirname, '..', '..', 'cjs', 'Response', 'index.js');
 let Response = null;
 
 import type { ReadStream, StreamCallback, StreamOptions } from '../types.ts';
 
-let functionExec = null; // break dependencies
 function worker(options, callback) {
   options = { ...this.options, ...options };
 
-  // node <=0.8 does not support https
-  if (noHTTPS) {
-    if (!execPath) {
-      const satisfiesSemverSync = _require('node-exec-path').satisfiesSemverSync;
-      execPath = satisfiesSemverSync('>0'); // must be more than node 0.12
-      if (!execPath) return callback(new Error('get-remote needs a version of node >0 to use https'));
-    }
+  // HEAD requests - use head() which handles noHTTPS internally
+  if ((options as StreamOptions).method === 'HEAD') {
+    head(this.endpoint, (err, result) => {
+      if (err) return callback(err);
+      const headResult = { ...result, resume: () => {} };
+      callback(null, headResult as unknown as ReadStream);
+    });
+    return;
+  }
 
-    try {
-      if (!functionExec) functionExec = _require('function-exec-sync');
-      const streamInfo = functionExec({ execPath, callbacks: true }, workerPath, [this.endpoint, this.options], options);
-      if ((options as StreamOptions).method === 'HEAD') {
-        streamInfo.resume = () => {};
-        callback(null, streamInfo);
-      } else {
-        const res = fs.createReadStream(streamInfo.filename) as ReadStream;
-        res.headers = streamInfo.headers;
-        res.statusCode = streamInfo.statusCode;
-        oo(res, ['error', 'end', 'close', 'finish'], () => {
-          rmSync(streamInfo.filename); // clean up
-        });
-        wrapResponse(res, this, options, callback);
-      }
-    } catch (err) {
-      callback(err);
-    }
+  // Non-HEAD on legacy Node - use getFile() which handles noHTTPS internally
+  if (noHTTPS) {
+    const tempPath = path.join(tmpdir(), 'get-remote', suffix('compat'));
+    getFile(this.endpoint, tempPath, (err, result) => {
+      if (err) return callback(err);
+      const res = fs.createReadStream(result.path) as ReadStream;
+      res.headers = result.headers;
+      res.statusCode = result.statusCode;
+      oo(res, ['error', 'end', 'close', 'finish'], () => {
+        rmSync(result.path); // clean up
+      });
+      wrapResponse(res, this, options, callback);
+    });
     return;
   }
 
@@ -65,10 +62,10 @@ function worker(options, callback) {
   const parsed = URL_REGEX.exec(this.endpoint);
   const protocol = parsed[1];
   const host = parsed[4];
-  const path = parsed[5] + (parsed[6] || '');
+  const urlPath = parsed[5] + (parsed[6] || '');
 
   const secure = protocol === 'https:';
-  const requestOptions = { host, path, port: secure ? 443 : 80, method: 'GET', ...options };
+  const requestOptions = { host, path: urlPath, port: secure ? 443 : 80, method: 'GET', ...options };
   const req = secure ? https.request(requestOptions) : http.request(requestOptions);
   const end = once(callback) as Callback;
   req.on('response', (res) => {

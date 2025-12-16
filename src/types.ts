@@ -40,6 +40,8 @@ export interface ReadStream extends NodeJS.ReadableStream {
   filename?: string;
   statusCode?: number;
   headers?: object | Headers;
+  size?: number;
+  basename?: string;
 }
 export type StreamCallback = (error?: Error, stream?: ReadStream) => void;
 
