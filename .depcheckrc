@@ -1,1 +1,1 @@
-ignores: ["node-version-use", "ts-dev-stack", "get-remote", "lzma-native", "os-shim"]
+ignores: ["node-version-use", "ts-dev-stack", "get-remote", "os-shim"]

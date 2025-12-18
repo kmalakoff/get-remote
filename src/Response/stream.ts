@@ -88,13 +88,16 @@ function worker(options, callback) {
   req.end();
 }
 
-export default function stream(options?: StreamOptions | StreamCallback, callback?: StreamCallback): undefined | Promise<ReadStream> {
+export default function stream(callback: StreamCallback): void;
+export default function stream(options: StreamOptions, callback: StreamCallback): void;
+export default function stream(options?: StreamOptions): Promise<ReadStream>;
+export default function stream(options?: StreamOptions | StreamCallback, callback?: StreamCallback): void | Promise<ReadStream> {
   if (typeof options === 'function') {
     callback = options as StreamCallback;
     options = null;
   }
   options = options || {};
 
-  if (typeof callback === 'function') return worker.call(this, options, callback) as undefined;
+  if (typeof callback === 'function') return worker.call(this, options, callback);
   return new Promise((resolve, reject) => worker.call(this, options, (err, res) => (err ? reject(err) : resolve(res))));
 }
