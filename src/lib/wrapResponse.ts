@@ -15,9 +15,9 @@ if (major > 0) {
 import type { default as Response } from '../Response/index.ts';
 import type { OptionsInternal, ReadStream } from '../types.ts';
 
-export type Callback = (error?: Error, res?: ReadStream) => undefined;
+export type Callback = (error?: Error, res?: ReadStream) => void;
 
-export default function wrapResponse(res: ReadStream, self: Response, options: OptionsInternal, callback: Callback): undefined {
+export default function wrapResponse(res: ReadStream, self: Response, options: OptionsInternal, callback: Callback): void {
   // add a pausable PassThrough stream to workaround streams 1 not starting streams paused
   if (!res.unpipe) res = pump(res, new PassThrough());
 

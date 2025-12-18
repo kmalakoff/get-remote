@@ -14,7 +14,9 @@ function worker(dest, callback) {
   });
 }
 
-export default function pipe(dest: NodeJS.WritableStream, callback?: PipeCallback): undefined | Promise<undefined> {
-  if (typeof callback === 'function') return worker.call(this, dest, callback) as undefined;
-  return new Promise((resolve, reject) => worker.call(this, dest, (err, res) => (err ? reject(err) : resolve(res))));
+export default function pipe(dest: NodeJS.WritableStream, callback: PipeCallback): void;
+export default function pipe(dest: NodeJS.WritableStream): Promise<void>;
+export default function pipe(dest: NodeJS.WritableStream, callback?: PipeCallback): void | Promise<void> {
+  if (typeof callback === 'function') return worker.call(this, dest, callback);
+  return new Promise((resolve, reject) => worker.call(this, dest, (err) => (err ? reject(err) : resolve())));
 }

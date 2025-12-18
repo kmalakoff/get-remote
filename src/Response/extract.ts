@@ -21,7 +21,10 @@ function worker(dest: string, options: Options, callback: Callback) {
   });
 }
 
-export default function extract(dest: string, options: Options | Callback, callback?: Callback): undefined | Promise<undefined> {
+export default function extract(dest: string, callback: Callback): void;
+export default function extract(dest: string, options: Options, callback: Callback): void;
+export default function extract(dest: string, options?: Options): Promise<void>;
+export default function extract(dest: string, options: Options | Callback, callback?: Callback): void | Promise<void> {
   if (typeof options === 'function') {
     callback = options as Callback;
     options = null;
@@ -29,5 +32,5 @@ export default function extract(dest: string, options: Options | Callback, callb
   options = options || {};
 
   if (typeof callback === 'function') return worker.call(this, dest, options, callback);
-  return new Promise((resolve, reject) => worker.call(this, dest, options, (err?: Error) => (err ? reject(err) : resolve(undefined))));
+  return new Promise((resolve, reject) => worker.call(this, dest, options as Options, (err?: Error) => (err ? reject(err) : resolve())));
 }

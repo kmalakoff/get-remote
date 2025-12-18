@@ -54,7 +54,7 @@
     "@types/node": "*",
     "cr": "^0.1.0",
     "fast-extract": "^1.0.0",
-    "fs-iterator": "^6.1.12",
+    "fs-iterator": "^7.0.0",
     "fs-stats-spys": "^1.0.0",
     "is-tar": "^1.0.0",
     "lzma-native": "^8.0.6",

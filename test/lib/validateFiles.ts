@@ -47,7 +47,7 @@ export default function validateFiles(options, _type, callback) {
       const dataPath = !options.strip ? path.join(TARGET, 'data') : TARGET;
       const spys = statsSpys();
       new Iterator(dataPath, { lstat: true }).forEach(
-        (entry: Entry): undefined => {
+        (entry: Entry): void => {
           spys(entry.stats as Stats);
           if (entry.stats.isFile()) {
             assert.equal(cr(fs.readFileSync(entry.fullPath, 'utf8')), CONTENTS);
