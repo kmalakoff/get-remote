@@ -17,7 +17,9 @@ function worker(callback) {
   });
 }
 
-export default function text(callback?: TextCallback): undefined | Promise<TextResponse> {
-  if (typeof callback === 'function') return worker.call(this, callback) as undefined;
+export default function text(callback: TextCallback): void;
+export default function text(): Promise<TextResponse>;
+export default function text(callback?: TextCallback): void | Promise<TextResponse> {
+  if (typeof callback === 'function') return worker.call(this, callback);
   return new Promise((resolve, reject) => worker.call(this, (err, res) => (err ? reject(err) : resolve(res))));
 }

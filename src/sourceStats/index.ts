@@ -2,9 +2,9 @@ import type { Options, Source, SourceStats } from '../types.ts';
 import getBasename from './basename.ts';
 import getSize from './size.ts';
 
-type Callback = (error?: Error, stats?: SourceStats) => undefined;
+type Callback = (error?: Error, stats?: SourceStats) => void;
 
-export default function sourceStats(source: Source, options: Options, endpoint: string, callback: Callback): undefined {
+export default function sourceStats(source: Source, options: Options, endpoint: string, callback: Callback): void {
   if (typeof endpoint === 'function') {
     callback = endpoint;
     endpoint = null;
