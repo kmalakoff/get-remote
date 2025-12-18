@@ -8,7 +8,7 @@ import pump from '../lib/pump.ts';
 import getBasename from '../sourceStats/basename.ts';
 import type { FileCallback, Options } from '../types.ts';
 
-export type Callback = (error?: Error, fullPath?: string) => undefined;
+export type Callback = (error?: Error, fullPath?: string) => void;
 
 function worker(dest: string, options: Options, callback: Callback) {
   options = { ...this.options, ...options };
@@ -56,7 +56,10 @@ function worker(dest: string, options: Options, callback: Callback) {
   });
 }
 
-export default function file(dest: string, options?: object | FileCallback, callback?: FileCallback | undefined): undefined | Promise<string> {
+export default function file(dest: string, callback: FileCallback): void;
+export default function file(dest: string, options: object, callback: FileCallback): void;
+export default function file(dest: string, options?: object): Promise<string>;
+export default function file(dest: string, options?: object | FileCallback, callback?: FileCallback): void | Promise<string> {
   if (typeof options === 'function') {
     callback = options as FileCallback;
     options = null;

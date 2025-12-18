@@ -9,7 +9,9 @@ function worker(callback) {
   });
 }
 
-export default function head(callback?: HeadCallback): undefined | Promise<HeadResponse> {
-  if (typeof callback === 'function') return worker.call(this, callback) as undefined;
+export default function head(callback: HeadCallback): void;
+export default function head(): Promise<HeadResponse>;
+export default function head(callback?: HeadCallback): void | Promise<HeadResponse> {
+  if (typeof callback === 'function') return worker.call(this, callback);
   return new Promise((resolve, reject) => worker.call(this, (err, res) => (err ? reject(err) : resolve(res))));
 }

@@ -80,7 +80,7 @@ describe('get-file', () => {
 
   it('should get with progress', (done) => {
     const progressUpdates = [];
-    const progress = (update): undefined => {
+    const progress = (update): void => {
       progressUpdates.push(update);
     };
 
