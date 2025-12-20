@@ -30,10 +30,10 @@ let Response = null;
 import type { ReadStream, StreamCallback, StreamOptions } from '../types.ts';
 
 function worker(options, callback) {
-  options = { ...this.options, ...options };
+  options = { ...this.options, ...options } as StreamOptions;
 
   // HEAD requests - use head() which handles noHTTPS internally
-  if ((options as StreamOptions).method === 'HEAD') {
+  if (options.method === 'HEAD') {
     head(this.endpoint, (err, result) => {
       if (err) return callback(err);
       const headResult = { ...result, resume: () => {} };
@@ -92,11 +92,8 @@ export default function stream(callback: StreamCallback): void;
 export default function stream(options: StreamOptions, callback: StreamCallback): void;
 export default function stream(options?: StreamOptions): Promise<ReadStream>;
 export default function stream(options?: StreamOptions | StreamCallback, callback?: StreamCallback): void | Promise<ReadStream> {
-  if (typeof options === 'function') {
-    callback = options as StreamCallback;
-    options = null;
-  }
-  options = options || {};
+  callback = typeof options === 'function' ? options : callback;
+  options = typeof options === 'function' ? {} : ((options || {}) as StreamOptions);
 
   if (typeof callback === 'function') return worker.call(this, options, callback);
   return new Promise((resolve, reject) => worker.call(this, options, (err, res) => (err ? reject(err) : resolve(res))));

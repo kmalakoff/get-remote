@@ -1,1 +1,1 @@
-ignores: ["node-version-use", "ts-dev-stack", "get-remote", "os-shim"]
+ignores: ["node-version-use", "ts-dev-stack", "get-remote", "os-shim", "readable-stream"]

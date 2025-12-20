@@ -57,14 +57,11 @@ function worker(dest: string, options: Options, callback: Callback) {
 }
 
 export default function file(dest: string, callback: FileCallback): void;
-export default function file(dest: string, options: object, callback: FileCallback): void;
-export default function file(dest: string, options?: object): Promise<string>;
-export default function file(dest: string, options?: object | FileCallback, callback?: FileCallback): void | Promise<string> {
-  if (typeof options === 'function') {
-    callback = options as FileCallback;
-    options = null;
-  }
-  options = options || {};
+export default function file(dest: string, options: Options, callback: FileCallback): void;
+export default function file(dest: string, options?: Options): Promise<string>;
+export default function file(dest: string, options?: Options | FileCallback, callback?: FileCallback): void | Promise<string> {
+  callback = typeof options === 'function' ? options : callback;
+  options = typeof options === 'function' ? {} : ((options || {}) as Options);
 
   if (typeof callback === 'function') return worker.call(this, dest, options, callback);
   return new Promise((resolve, reject) => worker.call(this, dest, options, (err, res) => (err ? reject(err) : resolve(res))));
