@@ -25,12 +25,9 @@ export default function extract(dest: string, callback: Callback): void;
 export default function extract(dest: string, options: Options, callback: Callback): void;
 export default function extract(dest: string, options?: Options): Promise<void>;
 export default function extract(dest: string, options: Options | Callback, callback?: Callback): void | Promise<void> {
-  if (typeof options === 'function') {
-    callback = options as Callback;
-    options = null;
-  }
-  options = options || {};
+  callback = typeof options === 'function' ? options : callback;
+  options = typeof options === 'function' ? {} : ((options || {}) as Options);
 
   if (typeof callback === 'function') return worker.call(this, dest, options, callback);
-  return new Promise((resolve, reject) => worker.call(this, dest, options as Options, (err?: Error) => (err ? reject(err) : resolve())));
+  return new Promise((resolve, reject) => worker.call(this, dest, options, (err?: Error) => (err ? reject(err) : resolve())));
 }
