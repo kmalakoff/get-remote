@@ -62,7 +62,7 @@ export default function validateFiles(options, _type, callback) {
         }
       );
     }
-  } else {
-    return new Promise((resolve, reject) => validateFiles(options, _type, (err?: Error) => (err ? reject(err) : resolve(null))));
+    return;
   }
+  return new Promise((resolve, reject) => validateFiles(options, _type, (err?: Error) => (err ? reject(err) : resolve(null))));
 }
