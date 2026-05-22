@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "call-once-fn": "^1.1.6",
-    "content-disposition": "1.0.1",
+    "content-disposition": "1.0.0",
     "fs-remove-compat": "^1.0.0",
     "get-file-compat": "^2.0.0",
     "mkdirp-classic": "^0.5.2",
