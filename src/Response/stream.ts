@@ -19,10 +19,9 @@ const _require = typeof require === 'undefined' ? Module.createRequire(import.me
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
 const tmpdir = typeof os.tmpdir === 'function' ? os.tmpdir : _require('os-shim').tmpdir;
 
-// node <= 0.8 does not support https and node 0.12 certs cannot be trusted
+// node 0.x does not support https or has untrusted certs
 const major = +process.versions.node.split('.')[0];
-const minor = +process.versions.node.split('.')[1];
-const noHTTPS = major === 0 && (minor <= 8 || minor === 12);
+const noHTTPS = major === 0;
 
 const responsePath = path.join(__dirname, '..', '..', 'cjs', 'Response', 'index.js');
 let Response = null;
