@@ -6,7 +6,7 @@ type Callback = (error?: Error, stats?: SourceStats) => void;
 
 export default function sourceStats(source: Source, options: Options, endpoint: string, callback: Callback): void {
   callback = typeof endpoint === 'function' ? endpoint : callback;
-  endpoint = typeof endpoint === 'function' ? null : endpoint;
+  endpoint = typeof endpoint === 'function' ? '' : endpoint;
 
   getSize(source, options, (err, size) => {
     if (err) return callback(err);
@@ -14,6 +14,6 @@ export default function sourceStats(source: Source, options: Options, endpoint: 
     const basename = getBasename(source, options, endpoint);
     if (basename !== undefined) stats.basename = basename;
     if (size !== undefined) stats.size = size;
-    callback(null, stats);
+    callback(undefined, stats);
   });
 }

@@ -1,7 +1,7 @@
 import assert from 'assert';
 import fs from 'fs';
 import { safeRm } from 'fs-remove-compat';
-import get, { fileType, getBasename } from 'get-remote';
+import get, { fileType, getBasename, type Source } from 'get-remote';
 import isTar from 'is-tar';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
@@ -35,16 +35,11 @@ describe('download', () => {
 
   it('get as stream', (done) => {
     get(`${URL}/test/data/fixture.tar`).stream((err, stream) => {
-      if (err) {
-        done(err);
-        return;
-      }
-      streamToBuffer(stream, (err, buffer) => {
-        if (err) {
-          done(err);
-          return;
-        }
-        assert.ok(isTar(buffer));
+      if (err) return done(err);
+      if (!stream) return done(new Error('No stream'));
+      streamToBuffer(stream, (err: Error | null, buffer: Buffer | undefined) => {
+        if (err) return done(err);
+        assert.ok(isTar(buffer as Buffer));
         done();
       });
     });
@@ -58,16 +53,13 @@ describe('download', () => {
 
   it('get a very large file', (done) => {
     get('https://nodejs.org/dist/v22.12.0/node-v22.12.0-darwin-arm64.tar.gz').stream((err, stream) => {
-      if (err) {
-        done(err);
-        return;
-      }
-      streamToBuffer(stream, (err, buffer) => {
-        if (err) {
-          done(err);
-          return;
-        }
-        assert.equal(buffer.length, 48568612);
+      if (err) return done(err);
+      if (!stream) return done(new Error('No stream'));
+      streamToBuffer(stream, (err: Error | null, buffer: Buffer | undefined) => {
+        if (err) return done(err);
+        const buf = buffer as Buffer;
+        assert.ok(buf[0] === 0x1f && buf[1] === 0x8b, 'expected gzip magic bytes');
+        assert.equal(buf.length, 48568612);
         done();
       });
     });
@@ -75,15 +67,9 @@ describe('download', () => {
 
   it('get and rename file', (done) => {
     get(`${URL}/test/data/fixture.tar`).file(TARGET, { filename: 'bar.tar' }, (err?: Error) => {
-      if (err) {
-        done(err);
-        return;
-      }
+      if (err) return done(err);
       fs.readdir(TARGET, (err, files) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         assert.deepEqual(files.sort(), ['bar.tar']);
         done();
       });
@@ -92,15 +78,9 @@ describe('download', () => {
 
   it('save file', (done) => {
     get(`${URL}/test/data/fixture.tar`).file(TARGET, (err?: Error) => {
-      if (err) {
-        done(err);
-        return;
-      }
+      if (err) return done(err);
       fs.readdir(TARGET, (err, files) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         assert.deepEqual(files.sort(), ['fixture.tar']);
         done();
       });
@@ -110,16 +90,10 @@ describe('download', () => {
   it('extract file', (done) => {
     const options = { strip: 1 };
     get(`${URL}/test/data/fixture.tar`).extract(TARGET, options, (err?: Error) => {
-      if (err) {
-        done(err);
-        return;
-      }
+      if (err) return done(err);
 
       validateFiles(options, 'tar.gz', (err?: Error) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         done();
       });
     });
@@ -127,16 +101,10 @@ describe('download', () => {
 
   it('extract file that is not compressed', (done) => {
     get(`${URL}/test/data/fixture.js`).extract(TARGET, (err?: Error) => {
-      if (err) {
-        done(err);
-        return;
-      }
+      if (err) return done(err);
 
       fs.readdir(TARGET, (err, files) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         assert.deepEqual(files.sort(), ['fixture.js']);
         done();
       });
@@ -154,36 +122,31 @@ describe('download', () => {
   it('sanitize invalid filename characters', () => {
     // Test POSIX invalid characters are replaced with '!'
     // Note: ? is a query string delimiter in URLs, so it gets stripped not sanitized
-    assert.equal(getBasename(null, {}, 'http://example.com/foo*bar.tar'), 'foo!bar.tar');
-    assert.equal(getBasename(null, {}, 'http://example.com/foo<bar>.tar'), 'foo!bar!.tar');
-    assert.equal(getBasename(null, {}, 'http://example.com/foo:bar.tar'), 'foo!bar.tar');
-    assert.equal(getBasename(null, {}, 'http://example.com/foo"bar.tar'), 'foo!bar.tar');
-    assert.equal(getBasename(null, {}, 'http://example.com/foo|bar.tar'), 'foo!bar.tar');
+    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/foo*bar.tar'), 'foo!bar.tar');
+    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/foo<bar>.tar'), 'foo!bar!.tar');
+    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/foo:bar.tar'), 'foo!bar.tar');
+    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/foo"bar.tar'), 'foo!bar.tar');
+    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/foo|bar.tar'), 'foo!bar.tar');
 
     // Test Windows reserved names are replaced
-    assert.equal(getBasename(null, {}, 'http://example.com/con'), '!');
-    assert.equal(getBasename(null, {}, 'http://example.com/prn'), '!');
-    assert.equal(getBasename(null, {}, 'http://example.com/aux'), '!');
-    assert.equal(getBasename(null, {}, 'http://example.com/nul'), '!');
-    assert.equal(getBasename(null, {}, 'http://example.com/com1'), '!');
-    assert.equal(getBasename(null, {}, 'http://example.com/lpt9'), '!');
+    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/con'), '!');
+    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/prn'), '!');
+    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/aux'), '!');
+    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/nul'), '!');
+    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/com1'), '!');
+    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/lpt9'), '!');
 
     // Test query strings are stripped before sanitization
-    assert.equal(getBasename(null, {}, 'http://example.com/file.tar?query=value'), 'file.tar');
+    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/file.tar?query=value'), 'file.tar');
   });
 
   it('follow redirects', (done) => {
     get(`${URL.replace('https', 'http')}/test/data/fixture.tar`).stream((err, stream) => {
-      if (err) {
-        done(err);
-        return;
-      }
-      streamToBuffer(stream, (err, buffer) => {
-        if (err) {
-          done(err);
-          return;
-        }
-        assert.ok(isTar(buffer));
+      if (err) return done(err);
+      if (!stream) return done(new Error('No stream'));
+      streamToBuffer(stream, (err: Error | null, buffer: Buffer | undefined) => {
+        if (err) return done(err);
+        assert.ok(isTar(buffer as Buffer));
         done();
       });
     });
@@ -191,16 +154,11 @@ describe('download', () => {
 
   it('follow redirect to https', (done) => {
     get(`${URL.replace('https', 'http')}/test/data/fixture.tar`).stream((err, stream) => {
-      if (err) {
-        done(err);
-        return;
-      }
-      streamToBuffer(stream, (err, buffer) => {
-        if (err) {
-          done(err);
-          return;
-        }
-        assert.ok(isTar(buffer));
+      if (err) return done(err);
+      if (!stream) return done(new Error('No stream'));
+      streamToBuffer(stream, (err: Error | null, buffer: Buffer | undefined) => {
+        if (err) return done(err);
+        assert.ok(isTar(buffer as Buffer));
         done();
       });
     });
@@ -208,15 +166,9 @@ describe('download', () => {
 
   it('handle query string', (done) => {
     get(`${URL}/test/data/fixture.tar?param=value`).file(TARGET, (err?: Error) => {
-      if (err) {
-        done(err);
-        return;
-      }
+      if (err) return done(err);
       fs.readdir(TARGET, (err, files) => {
-        if (err) {
-          done(err);
-          return;
-        }
+        if (err) return done(err);
         assert.deepEqual(files.sort(), ['fixture.tar']);
         done();
       });
@@ -226,21 +178,17 @@ describe('download', () => {
   it('handle content disposition', (done) => {
     // GitHub archive downloads send Content-Disposition header with filename
     get(GITHUB_ARCHIVE_URL).stream((err, stream) => {
-      if (err) {
-        done(err);
-        return;
-      }
+      if (err) return done(err);
       // Verify the content-disposition header was received and parsed
-      assert.ok(stream.headers['content-disposition'], 'Expected content-disposition header');
-      assert.ok(stream.headers['content-disposition'].indexOf('get-remote-master.zip') !== -1, 'Expected filename in content-disposition');
+      if (!stream) return done(new Error('No stream'));
+      const contentDisp = (stream.headers as Record<string, string>)['content-disposition'];
+      assert.ok(contentDisp, 'Expected content-disposition header');
+      assert.ok(contentDisp.indexOf('get-remote-master.zip') !== -1, 'Expected filename in content-disposition');
 
       // Verify we can read the content as a zip
-      streamToBuffer(stream, (err, buffer) => {
-        if (err) {
-          done(err);
-          return;
-        }
-        const type = fileType(buffer);
+      streamToBuffer(stream, (err: Error | null, buffer: Buffer | undefined) => {
+        if (err) return done(err);
+        const type = fileType(buffer as Buffer);
         assert.ok(type && type.ext === 'zip', 'Expected zip content');
         done();
       });
@@ -251,18 +199,13 @@ describe('download', () => {
     // Test that we can detect file types from content when URL has no extension
     // Using GitHub archive URL which returns a zip file
     get(GITHUB_ARCHIVE_URL).stream((err, stream) => {
-      if (err) {
-        done(err);
-        return;
-      }
+      if (err) return done(err);
+      if (!stream) return done(new Error('No stream'));
 
-      streamToBuffer(stream, (err, buffer) => {
-        if (err) {
-          done(err);
-          return;
-        }
+      streamToBuffer(stream, (err: Error | null, buffer: Buffer | undefined) => {
+        if (err) return done(err);
 
-        const result = fileType(buffer);
+        const result = fileType(buffer as Buffer);
         assert.ok(result, 'Expected file type to be detected');
         assert.equal(result.ext, 'zip');
         assert.equal(result.mime, 'application/zip');
