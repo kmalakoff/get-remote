@@ -13,6 +13,7 @@ export default function wrapResponse(res: ReadStream, self: Response, options: O
 
   sourceStats(res, options, self.endpoint, (err, stats) => {
     if (err) return callback(err);
+    if (!stats) return callback(new Error('No stats'));
 
     // add progress
     if (options.progress) {
@@ -22,7 +23,7 @@ export default function wrapResponse(res: ReadStream, self: Response, options: O
           time: options.time,
         },
         (update) => {
-          options.progress({ progress: 'download', ...update, ...stats });
+          (options.progress as unknown as (p: Record<string, unknown>) => void)({ progress: 'download', ...(update as unknown as Record<string, unknown>), ...(stats as unknown as Record<string, unknown>) });
         }
       );
       res = pump(res, progress);
@@ -31,6 +32,6 @@ export default function wrapResponse(res: ReadStream, self: Response, options: O
     // store stats on the source
     res.size = stats.size;
     res.basename = stats.basename;
-    return callback(null, res);
+    return callback(undefined, res);
   });
 }

@@ -1,7 +1,7 @@
 import assert from 'assert';
 import fs from 'fs';
 import { safeRm } from 'fs-remove-compat';
-import get from 'get-remote';
+import get, { type Progress } from 'get-remote';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
 import Pinkie from 'pinkie-promise';
@@ -32,10 +32,7 @@ describe('get-file', () => {
 
   it('should get file over https', (done) => {
     get(`${URL}/package.json`).file(TARGET, (err?: Error) => {
-      if (err) {
-        done(err);
-        return;
-      }
+      if (err) return done(err);
       const files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
       done();
@@ -46,10 +43,7 @@ describe('get-file', () => {
     // npm search API requires 'text' query param - returns error without it
     const url = 'https://registry.npmjs.org/-/v1/search?text=is-promise&size=1';
     get(url).file(TARGET, { filename: 'search-result.json' }, (err?: Error) => {
-      if (err) {
-        done(err);
-        return;
-      }
+      if (err) return done(err);
       const dest = path.join(TARGET, 'search-result.json');
       const content = JSON.parse(fs.readFileSync(dest, 'utf8'));
       // If query string was dropped, we'd get {error: "'text' query parameter is required"}
@@ -62,10 +56,7 @@ describe('get-file', () => {
 
   it('should get file over http', (done) => {
     get(`${URL}/package.json`).file(TARGET, (err?: Error) => {
-      if (err) {
-        done(err);
-        return;
-      }
+      if (err) return done(err);
       const files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
       done();
@@ -79,16 +70,13 @@ describe('get-file', () => {
   });
 
   it('should get with progress', (done) => {
-    const progressUpdates = [];
-    const progress = (update): void => {
+    const progressUpdates: Progress[] = [];
+    const progress = (update: Progress): void => {
       progressUpdates.push(update);
     };
 
     get(`${URL}/package.json`, { progress }).file(TARGET, (err?: Error) => {
-      if (err) {
-        done(err);
-        return;
-      }
+      if (err) return done(err);
       const files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
       assert.ok(progressUpdates.length > 1);
@@ -99,7 +87,7 @@ describe('get-file', () => {
   it('should handle concurrent downloads to the same file without corruption', (done) => {
     const CONCURRENCY = 10;
     const dest = path.join(TARGET, 'package.json');
-    let expectedSize = null;
+    let expectedSize: number | null = null;
 
     mkdirp(TARGET, (err) => {
       if (err) return done(err);
@@ -114,16 +102,15 @@ describe('get-file', () => {
 
           // Now run concurrent downloads
           const queue = new Queue(CONCURRENCY);
-          const errors = [];
-          const sizes = [];
+          const errors: Error[] = [];
+          const sizes: number[] = [];
 
           for (let i = 0; i < CONCURRENCY; i++) {
             queue.defer((cb) => {
               get(`${URL}/package.json`).file(TARGET, (err?: Error) => {
                 if (err) {
                   errors.push(err);
-                  cb();
-                  return;
+                  return cb();
                 }
                 // Check file size immediately after each download completes
                 fs.stat(dest, (err, stats) => {
@@ -151,7 +138,7 @@ describe('get-file', () => {
                 assert.ok(json.name, 'File should contain valid JSON with a name field');
                 done();
               } catch (parseErr) {
-                done(new Error(`File is corrupted or incomplete: ${parseErr.message}`));
+                done(new Error(`File is corrupted or incomplete: ${(parseErr as Error).message}`));
               }
             });
           });

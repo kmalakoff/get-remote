@@ -1,20 +1,18 @@
 import oo from 'on-one';
 
-function worker(stream, callback) {
-  const chunks = [];
-  stream.on('data', (chunk) => {
+function worker(stream: NodeJS.ReadableStream, callback: (err: Error | null, buffer?: Buffer) => void) {
+  const chunks: Buffer[] = [];
+  stream.on('data', (chunk: Buffer) => {
     chunks.push(chunk);
   });
-  // NOTE: Do not listen for 'finish' - it's a writable-side event that can fire
-  // before 'data' events on the readable side (especially on Node 0.8 with
-  // readable-stream's PassThrough). Only listen for 'end' (readable complete)
-  // and 'close' (stream destroyed).
-  oo(stream, ['error', 'end', 'close'], (err?: Error) => {
+  oo(stream, ['error', 'end', 'close'], (err: Error | null) => {
     err ? callback(err) : callback(null, Buffer.concat(chunks));
   });
 }
 
-export default function streamToBuffer(stream, callback?) {
+export default function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer>;
+export default function streamToBuffer(stream: NodeJS.ReadableStream, callback: (err: Error | null, buffer?: Buffer) => void): void;
+export default function streamToBuffer(stream: NodeJS.ReadableStream, callback?: (err: Error | null, buffer?: Buffer) => void): void | Promise<Buffer> {
   if (typeof callback === 'function') return worker(stream, callback);
-  return new Promise((resolve, reject) => worker(stream, (err, buffer) => (err ? reject(err) : resolve(buffer))));
+  return new Promise<Buffer>((resolve, reject) => worker(stream, (err: Error | null, buffer?: Buffer) => (err ? reject(err) : resolve(buffer as Buffer))));
 }

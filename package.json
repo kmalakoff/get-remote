@@ -37,7 +37,6 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "call-once-fn": "^1.1.6",
     "content-disposition": "1.0.0",
     "fs-remove-compat": "^1.0.0",
     "get-file-compat": "^2.0.0",
@@ -50,8 +49,11 @@
     "temp-suffix": "^1.0.10"
   },
   "devDependencies": {
+    "@types/content-disposition": "^0.5.9",
     "@types/mocha": "*",
     "@types/node": "*",
+    "@types/progress-stream": "^2.0.5",
+    "@types/pump": "^1.1.3",
     "cr": "^0.1.0",
     "fast-extract": "^1.0.0",
     "fs-iterator": "^7.0.0",
