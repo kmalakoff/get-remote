@@ -7,48 +7,46 @@ import tempSuffix from 'temp-suffix';
 import pump from '../lib/pump.ts';
 import getBasename from '../sourceStats/basename.ts';
 import type { FileCallback, Options } from '../types.ts';
+import type Response from './index.ts';
 
 export type Callback = (error?: Error, fullPath?: string) => void;
 
-function worker(dest: string, options: Options, callback: Callback) {
+function worker(this: Response, dest: string, options: Options, callback: Callback) {
   options = { ...this.options, ...options };
-  return this.stream(options, (err, res) => {
+  return this.stream(options as import('../types.ts').StreamOptions, (err, res) => {
     if (err) return callback(err);
+    if (!res) return callback(new Error('No response'));
 
     const basename = getBasename(res, options, this.endpoint);
     const fullPath = basename === undefined ? dest : path.join(dest, basename);
     const tempPath = tempSuffix(fullPath);
 
-    mkdirp(path.dirname(tempPath), (err?: Error) => {
-      if (err) return callback(err);
+    mkdirp(path.dirname(tempPath), (err) => {
+      if (err) return callback(err ?? undefined);
 
       // write to temp file
-      res = pump(res, fs.createWriteStream(tempPath));
-      oo(res, ['error', 'end', 'close', 'finish'], (err?: Error) => {
-        if (err) {
-          rm(tempPath, () => callback(err));
-          return;
-        }
+      res = pump(res!, fs.createWriteStream(tempPath));
+      oo(res, ['error', 'end', 'close', 'finish'], (err: Error | null) => {
+        if (err) return rm(tempPath, () => callback(err));
 
         // atomic rename to final destination
-        mkdirp(path.dirname(fullPath), (err?: Error) => {
+        mkdirp(path.dirname(fullPath), (err) => {
           if (err && (err as NodeJS.ErrnoException).code !== 'EEXIST') {
             rm(tempPath, () => callback(err));
             return;
           }
-          fs.rename(tempPath, fullPath, (err?: Error) => {
+          fs.rename(tempPath, fullPath, (err) => {
             if (err) {
               const code = (err as NodeJS.ErrnoException).code;
               // On Windows, EPERM can occur if dest is locked by another process
               // EEXIST/ENOTEMPTY means another process won the race - that's ok
               if (code === 'EPERM' || code === 'EEXIST' || code === 'ENOTEMPTY') {
-                rm(tempPath, () => callback(null, fullPath));
+                rm(tempPath, () => callback(undefined, fullPath));
                 return;
               }
-              rm(tempPath, () => callback(err));
-              return;
+              return rm(tempPath, () => callback(err));
             }
-            callback(null, fullPath);
+            callback(undefined, fullPath);
           });
         });
       });
@@ -59,10 +57,10 @@ function worker(dest: string, options: Options, callback: Callback) {
 export default function file(dest: string, callback: FileCallback): void;
 export default function file(dest: string, options: Options, callback: FileCallback): void;
 export default function file(dest: string, options?: Options): Promise<string>;
-export default function file(dest: string, options?: Options | FileCallback, callback?: FileCallback): void | Promise<string> {
+export default function file(this: Response, dest: string, options?: Options | FileCallback, callback?: FileCallback): void | Promise<string> {
   callback = typeof options === 'function' ? options : callback;
   options = typeof options === 'function' ? {} : ((options || {}) as Options);
 
   if (typeof callback === 'function') return worker.call(this, dest, options, callback);
-  return new Promise((resolve, reject) => worker.call(this, dest, options, (err, res) => (err ? reject(err) : resolve(res))));
+  return new Promise((resolve, reject) => worker.call(this, dest, options, (err, res) => (err ? reject(err) : resolve(res!))));
 }

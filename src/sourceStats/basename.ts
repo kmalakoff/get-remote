@@ -16,8 +16,8 @@ export default function getBasename(source: Source, options: Options, endpoint: 
   if (typeof source === 'string') return path.basename(source);
   // stream
   if (source) {
-    if (source.headers && source.headers['content-disposition']) {
-      const information = contentDisposition.parse(source.headers['content-disposition']);
+    if (source.headers && (source.headers as Record<string, string>)['content-disposition']) {
+      const information = contentDisposition.parse((source.headers as Record<string, string>)['content-disposition']);
       return information.parameters.filename;
     }
     basename = source.basename || source.filename;
