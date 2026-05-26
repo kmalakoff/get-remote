@@ -1,4 +1,3 @@
-import once from 'call-once-fn';
 import fs from 'fs';
 import { rmSync } from 'fs-remove-compat';
 import { getFile, head } from 'get-file-compat';
@@ -10,8 +9,8 @@ import os from 'os';
 import path from 'path';
 import suffix from 'temp-suffix';
 import url from 'url';
-
-import wrapResponse, { type Callback } from '../lib/wrapResponse.ts';
+import type { Callback } from '../lib/wrapResponse.ts';
+import wrapResponse from '../lib/wrapResponse.ts';
 
 const URL_REGEX = /^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
 
@@ -24,19 +23,21 @@ const major = +process.versions.node.split('.')[0];
 const noHTTPS = major === 0;
 
 const responsePath = path.join(__dirname, '..', '..', 'cjs', 'Response', 'index.js');
-let Response = null;
+let Response: typeof import('./index.ts').default | null = null;
 
-import type { ReadStream, StreamCallback, StreamOptions } from '../types.ts';
+import type { OptionsInternal, ReadStream, StreamCallback, StreamOptions } from '../types.ts';
+import type ResponseClass from './index.ts';
 
-function worker(options, callback) {
-  options = { ...this.options, ...options } as StreamOptions;
+function worker(this: ResponseClass, options: StreamOptions, callback: StreamCallback) {
+  const mergedOptions: OptionsInternal = { ...this.options, ...options } as OptionsInternal;
 
   // HEAD requests - use head() which handles noHTTPS internally
   if (options.method === 'HEAD') {
     head(this.endpoint, (err, result) => {
       if (err) return callback(err);
+      if (!result) return callback(new Error('No result'));
       const headResult = { ...result, resume: () => {} };
-      callback(null, headResult as unknown as ReadStream);
+      callback(undefined, headResult as unknown as ReadStream);
     });
     return;
   }
@@ -46,54 +47,56 @@ function worker(options, callback) {
     const tempPath = path.join(tmpdir(), 'get-remote', suffix('compat'));
     getFile(this.endpoint, tempPath, (err, result) => {
       if (err) return callback(err);
+      if (!result) return callback(new Error('No result'));
       const res = fs.createReadStream(result.path) as ReadStream;
       res.headers = result.headers;
       res.statusCode = result.statusCode;
       oo(res, ['error', 'end', 'close', 'finish'], () => {
         rmSync(result.path); // clean up
       });
-      wrapResponse(res, this, options, callback);
+      wrapResponse(res, this, mergedOptions, callback);
     });
     return;
   }
 
   // url.parse replacement
   const parsed = URL_REGEX.exec(this.endpoint);
+  if (!parsed) return callback(new Error('Invalid URL'));
   const protocol = parsed[1];
   const host = parsed[4];
   const urlPath = parsed[5] + (parsed[6] || '');
 
   const secure = protocol === 'https:';
-  const requestOptions = { host, path: urlPath, port: secure ? 443 : 80, method: 'GET', ...options };
+  const requestOptions: http.RequestOptions = { host, path: urlPath, port: secure ? 443 : 80, method: options.method || 'GET' };
   const req = secure ? https.request(requestOptions) : http.request(requestOptions);
-  const end = once(callback) as Callback;
-  req.on('response', (res) => {
+  const end: Callback = (err?: Error, res?: ReadStream) => callback(err, res);
+  req.on('response', (res: http.IncomingMessage) => {
     // Follow 3xx redirects
-    if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+    if (res.statusCode !== undefined && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
       res.resume(); // Discard response
       if (!Response) Response = _require(responsePath).default; // break cycle
 
-      return new Response(res.headers.location, options).stream(end);
+      return new Response!(res.headers.location, mergedOptions).stream(end);
     }
 
     // Not successful
-    if (res.statusCode < 200 || res.statusCode >= 300) {
+    if (res.statusCode === undefined || res.statusCode < 200 || res.statusCode >= 300) {
       res.resume(); // Discard response
-      return end(new Error(`Response code ${res.statusCode} (${http.STATUS_CODES[res.statusCode]})`));
+      return end(new Error(`Response code ${res.statusCode} (${http.STATUS_CODES[res.statusCode as unknown as number]})`));
     }
-    wrapResponse(res as unknown as ReadStream, this, options, end);
+    wrapResponse(res as unknown as ReadStream, this, mergedOptions, end);
   });
   req.on('error', end);
   req.end();
 }
 
-export default function stream(callback: StreamCallback): void;
-export default function stream(options: StreamOptions, callback: StreamCallback): void;
-export default function stream(options?: StreamOptions): Promise<ReadStream>;
-export default function stream(options?: StreamOptions | StreamCallback, callback?: StreamCallback): void | Promise<ReadStream> {
+export default function stream(this: ResponseClass, callback: StreamCallback): void;
+export default function stream(this: ResponseClass, options: StreamOptions, callback: StreamCallback): void;
+export default function stream(this: ResponseClass, options?: StreamOptions): Promise<ReadStream>;
+export default function stream(this: ResponseClass, options?: StreamOptions | StreamCallback, callback?: StreamCallback): void | Promise<ReadStream> {
   callback = typeof options === 'function' ? options : callback;
   options = typeof options === 'function' ? {} : ((options || {}) as StreamOptions);
 
   if (typeof callback === 'function') return worker.call(this, options, callback);
-  return new Promise((resolve, reject) => worker.call(this, options, (err, res) => (err ? reject(err) : resolve(res))));
+  return new Promise((resolve, reject) => worker.call(this, options, (err, res) => (err ? reject(err) : resolve(res!))));
 }

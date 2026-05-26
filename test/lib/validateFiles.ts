@@ -6,7 +6,7 @@ import statsSpys from 'fs-stats-spys';
 import path from 'path';
 import { CONTENTS, TARGET, TMP_DIR } from './constants.ts';
 
-export default function validateFiles(options, _type, callback) {
+export default function validateFiles(options: string | { type?: string; strip?: boolean | number }, _type?: string | ((err?: Error) => void), callback?: (err?: Error) => void): void | Promise<null> {
   callback = typeof _type === 'function' ? _type : callback;
   _type = typeof _type === 'function' ? undefined : _type;
 
@@ -47,9 +47,9 @@ export default function validateFiles(options, _type, callback) {
       new Iterator(dataPath, { lstat: true }).forEach(
         (entry: Entry): void => {
           spys(entry.stats as Stats);
-          if (entry.stats.isFile()) {
+          if (entry.stats?.isFile()) {
             assert.equal(cr(fs.readFileSync(entry.fullPath, 'utf8')), CONTENTS);
-          } else if (entry.stats.isSymbolicLink()) {
+          } else if (entry.stats?.isSymbolicLink()) {
             assert.equal(cr(fs.readFileSync(fs.realpathSync(entry.fullPath), 'utf8')), CONTENTS);
           }
         },
