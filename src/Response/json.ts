@@ -19,5 +19,5 @@ export default function json(this: Response, callback: JSONCallback): void;
 export default function json(this: Response): Promise<JSONResponse>;
 export default function json(this: Response, callback?: JSONCallback): void | Promise<JSONResponse> {
   if (typeof callback === 'function') return worker.call(this, callback);
-  return new Promise((resolve, reject) => worker.call(this, (err, res) => (err ? reject(err) : resolve(res!))));
+  return new Promise((resolve, reject) => worker.call(this, (err, res) => (err ? reject(err) : resolve(res as JSONResponse))));
 }

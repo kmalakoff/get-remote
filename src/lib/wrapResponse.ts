@@ -5,7 +5,7 @@ import sourceStats from '../sourceStats/index.ts';
 import type { OptionsInternal, ReadStream } from '../types.ts';
 import pump from './pump.ts';
 
-export type Callback = (error?: Error, res?: ReadStream) => void;
+export type Callback = (error?: Error | null, res?: ReadStream) => void;
 
 export default function wrapResponse(res: ReadStream, self: Response, options: OptionsInternal, callback: Callback): void {
   // add a pausable PassThrough stream to workaround streams 1 not starting streams paused

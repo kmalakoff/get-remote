@@ -36,10 +36,10 @@ function addTests(type: string) {
   describe(type, () => {
     it('extract file', (done) => {
       const options = { strip: 1 };
-      get(`${URL}/test/data/fixture.${type}`).extract(TARGET, options, (err?: Error) => {
+      get(`${URL}/test/data/fixture.${type}`).extract(TARGET, options, (err?: Error | null) => {
         if (err) return done(err);
 
-        validateFiles(options, type, (err?: Error) => {
+        validateFiles(options, type, (err?: Error | null) => {
           if (err) return done(err);
 
           done();
@@ -49,10 +49,10 @@ function addTests(type: string) {
 
     it('extract file without type', (done) => {
       const options = { strip: 1, type: type };
-      get(`${URL}/test/data/fixture-${type}`).extract(TARGET, options, (err?: Error) => {
+      get(`${URL}/test/data/fixture-${type}`).extract(TARGET, options, (err?: Error | null) => {
         if (err) return done(err);
 
-        validateFiles(options, type, (err?: Error) => {
+        validateFiles(options, type, (err?: Error | null) => {
           if (err) return done(err);
 
           done();
@@ -70,7 +70,7 @@ function addTests(type: string) {
         oo(res, ['error', 'end', 'close', 'finish'], (err: Error | null) => {
           if (err) return done(err);
 
-          validateFiles(options, type, (err?: Error) => {
+          validateFiles(options, type, (err?: Error | null) => {
             if (err) return done(err);
             done();
           });
@@ -80,10 +80,10 @@ function addTests(type: string) {
 
     it('extract file using pipe', (done) => {
       const options = { strip: 1, type: type };
-      get(`${URL}/test/data/fixture-${type}`).pipe(createWriteStream(TARGET, options), (err?: Error) => {
+      get(`${URL}/test/data/fixture-${type}`).pipe(createWriteStream(TARGET, options), (err?: Error | null) => {
         if (err) return done(err);
 
-        validateFiles(options, type, (err?: Error) => {
+        validateFiles(options, type, (err?: Error | null) => {
           if (err) return done(err);
 
           done();
