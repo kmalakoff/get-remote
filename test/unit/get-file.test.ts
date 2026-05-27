@@ -31,7 +31,7 @@ describe('get-file', () => {
   });
 
   it('should get file over https', (done) => {
-    get(`${URL}/package.json`).file(TARGET, (err?: Error) => {
+    get(`${URL}/package.json`).file(TARGET, (err?: Error | null) => {
       if (err) return done(err);
       const files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
@@ -42,7 +42,7 @@ describe('get-file', () => {
   it('should preserve query string in URLs', (done) => {
     // npm search API requires 'text' query param - returns error without it
     const url = 'https://registry.npmjs.org/-/v1/search?text=is-promise&size=1';
-    get(url).file(TARGET, { filename: 'search-result.json' }, (err?: Error) => {
+    get(url).file(TARGET, { filename: 'search-result.json' }, (err?: Error | null) => {
       if (err) return done(err);
       const dest = path.join(TARGET, 'search-result.json');
       const content = JSON.parse(fs.readFileSync(dest, 'utf8'));
@@ -55,7 +55,7 @@ describe('get-file', () => {
   });
 
   it('should get file over http', (done) => {
-    get(`${URL}/package.json`).file(TARGET, (err?: Error) => {
+    get(`${URL}/package.json`).file(TARGET, (err?: Error | null) => {
       if (err) return done(err);
       const files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
@@ -75,7 +75,7 @@ describe('get-file', () => {
       progressUpdates.push(update);
     };
 
-    get(`${URL}/package.json`, { progress }).file(TARGET, (err?: Error) => {
+    get(`${URL}/package.json`, { progress }).file(TARGET, (err?: Error | null) => {
       if (err) return done(err);
       const files = fs.readdirSync(TARGET);
       assert.ok(files.length === 1);
@@ -93,7 +93,7 @@ describe('get-file', () => {
       if (err) return done(err);
 
       // First, get the expected file size with a single download
-      get(`${URL}/package.json`).file(TARGET, (err?: Error) => {
+      get(`${URL}/package.json`).file(TARGET, (err?: Error | null) => {
         if (err) return done(err);
 
         fs.stat(dest, (err, stats) => {
@@ -107,7 +107,7 @@ describe('get-file', () => {
 
           for (let i = 0; i < CONCURRENCY; i++) {
             queue.defer((cb) => {
-              get(`${URL}/package.json`).file(TARGET, (err?: Error) => {
+              get(`${URL}/package.json`).file(TARGET, (err?: Error | null) => {
                 if (err) {
                   errors.push(err);
                   return cb();
@@ -174,7 +174,7 @@ describe('get-file', () => {
         }
       }, 50);
 
-      get(largeFileUrl).file(TARGET, (err?: Error) => {
+      get(largeFileUrl).file(TARGET, (err?: Error | null) => {
         clearInterval(interval);
 
         if (err) return done(err);

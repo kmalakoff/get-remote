@@ -1,4 +1,5 @@
 import type fastExtractT from 'fast-extract';
+import type { Source } from 'fast-extract';
 import extname from '../lib/extname.ts';
 import optionalRequire from '../lib/optionalRequire.ts';
 
@@ -19,7 +20,7 @@ function worker(this: Response, dest: string, options: Options, callback: Callba
 
     const type = extname(res.basename ?? '', options);
     if (!type) return callback(new Error(`Cannot determine extract type for ${res.basename ?? ''}`));
-    (fastExtract as typeof fastExtractT)(res, dest, { ...options, type }, callback);
+    (fastExtract as typeof fastExtractT)(res as unknown as Source, dest, { ...options, type }, callback);
   });
 }
 
@@ -31,5 +32,5 @@ export default function extract(this: Response, dest: string, options?: Options 
   options = typeof options === 'function' ? {} : ((options || {}) as Options);
 
   if (typeof callback === 'function') return worker.call(this, dest, options, callback);
-  return new Promise((resolve, reject) => worker.call(this, dest, options, (err?: Error) => (err ? reject(err) : resolve())));
+  return new Promise((resolve, reject) => worker.call(this, dest, options, (err?: Error | null) => (err ? reject(err) : resolve())));
 }

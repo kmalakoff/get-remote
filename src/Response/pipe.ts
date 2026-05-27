@@ -11,8 +11,8 @@ function worker(this: Response, dest: NodeJS.WritableStream, callback: PipeCallb
     }
     if (!res) return callback(new Error('No response'));
 
-    res = pump(res!, dest);
-    oo(res, ['error', 'end', 'close', 'finish'], (err: Error | null) => callback(err ?? undefined));
+    const piped = pump(res, dest);
+    oo(piped, ['error', 'end', 'close', 'finish'], (err: Error | null) => callback(err));
   });
 }
 
