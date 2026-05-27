@@ -36,6 +36,9 @@ function worker(this: ResponseClass, options: StreamOptions, callback: StreamCal
     head(this.endpoint, (err, result) => {
       if (err) return callback(err);
       if (!result) return callback(new Error('No result'));
+      if (result.statusCode < 200 || result.statusCode >= 300) {
+        return callback(new Error(`Response code ${result.statusCode} (${http.STATUS_CODES[result.statusCode]})`));
+      }
       const headResult = { ...result, resume: () => {} };
       callback(undefined, headResult as unknown as ReadStream);
     });
@@ -69,14 +72,14 @@ function worker(this: ResponseClass, options: StreamOptions, callback: StreamCal
   const secure = protocol === 'https:';
   const requestOptions: http.RequestOptions = { host, path: urlPath, port: secure ? 443 : 80, method: options.method || 'GET' };
   const req = secure ? https.request(requestOptions) : http.request(requestOptions);
-  const end: Callback = (err?: Error, res?: ReadStream) => callback(err, res);
+  const end: Callback = (err?: Error | null, res?: ReadStream) => callback(err, res);
   req.on('response', (res: http.IncomingMessage) => {
     // Follow 3xx redirects
     if (res.statusCode !== undefined && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
       res.resume(); // Discard response
       if (!Response) Response = _require(responsePath).default; // break cycle
-
-      return new Response!(res.headers.location, mergedOptions).stream(end);
+      const Cls = Response as typeof import('./index.ts').default;
+      return new Cls(res.headers.location, mergedOptions).stream(end);
     }
 
     // Not successful
@@ -98,5 +101,5 @@ export default function stream(this: ResponseClass, options?: StreamOptions | St
   options = typeof options === 'function' ? {} : ((options || {}) as StreamOptions);
 
   if (typeof callback === 'function') return worker.call(this, options, callback);
-  return new Promise((resolve, reject) => worker.call(this, options, (err, res) => (err ? reject(err) : resolve(res!))));
+  return new Promise((resolve, reject) => worker.call(this, options, (err, res) => (err ? reject(err) : resolve(res as ReadStream))));
 }
