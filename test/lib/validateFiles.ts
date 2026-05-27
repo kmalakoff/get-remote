@@ -6,7 +6,7 @@ import statsSpys from 'fs-stats-spys';
 import path from 'path';
 import { CONTENTS, TARGET, TMP_DIR } from './constants.ts';
 
-export default function validateFiles(options: string | { type?: string; strip?: boolean | number }, _type?: string | ((err?: Error) => void), callback?: (err?: Error) => void): void | Promise<null> {
+export default function validateFiles(options: string | { type?: string; strip?: boolean | number }, _type?: string | ((err?: Error | null) => void), callback?: (err?: Error | null) => void): void | Promise<null> {
   callback = typeof _type === 'function' ? _type : callback;
   _type = typeof _type === 'function' ? undefined : _type;
 
@@ -53,7 +53,7 @@ export default function validateFiles(options: string | { type?: string; strip?:
             assert.equal(cr(fs.readFileSync(fs.realpathSync(entry.fullPath), 'utf8')), CONTENTS);
           }
         },
-        (err?: Error) => {
+        (err?: Error | null) => {
           if (err) return callback(err);
           assert.equal(spys.dir.callCount, 3);
           assert.equal(spys.file.callCount, 7);
@@ -64,5 +64,5 @@ export default function validateFiles(options: string | { type?: string; strip?:
     }
     return;
   }
-  return new Promise((resolve, reject) => validateFiles(options, _type, (err?: Error) => (err ? reject(err) : resolve(null))));
+  return new Promise((resolve, reject) => validateFiles(options, _type, (err?: Error | null) => (err ? reject(err) : resolve(null))));
 }

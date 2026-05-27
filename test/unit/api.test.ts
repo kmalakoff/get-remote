@@ -56,10 +56,10 @@ describe('api', () => {
 
     it('should provide a extract method', (done) => {
       const options = { strip: 1 };
-      get(`${URL}/test/data/fixture.tar.gz`).extract(TARGET, options, (err?: Error) => {
+      get(`${URL}/test/data/fixture.tar.gz`).extract(TARGET, options, (err?: Error | null) => {
         if (err) return done(err);
 
-        validateFiles(options, 'tar.gz', (err?: Error) => {
+        validateFiles(options, 'tar.gz', (err?: Error | null) => {
           if (err) return done(err);
 
           done();
@@ -72,7 +72,7 @@ describe('api', () => {
       get(`${URL}/test/data/fixture.tar.gz`)
         .extract(TARGET, options)
         .then(() => {
-          validateFiles(options, 'tar.gz', (err?: Error) => {
+          validateFiles(options, 'tar.gz', (err?: Error | null) => {
             if (err) return done(err);
             done();
           });
@@ -81,7 +81,7 @@ describe('api', () => {
     });
 
     it('should provide a file method', (done) => {
-      get(`${URL}/test/data/fixture.json`).file(TARGET, (err?: Error) => {
+      get(`${URL}/test/data/fixture.json`).file(TARGET, (err?: Error | null) => {
         if (err) return done(err);
 
         fs.readdir(TARGET, (err, files) => {
@@ -154,7 +154,7 @@ describe('api', () => {
       mkdirp(TARGET, (err: Error | null) => {
         if (err) return done(err);
 
-        get(`${URL}/test/data/fixture.json`).pipe(fs.createWriteStream(path.join(TARGET, 'fixture.json')), (err?: Error) => {
+        get(`${URL}/test/data/fixture.json`).pipe(fs.createWriteStream(path.join(TARGET, 'fixture.json')), (err?: Error | null) => {
           if (err) return done(err);
 
           assert.equal(cr(fs.readFileSync(path.join(TARGET, 'fixture.json'), 'utf8')), cr(FIXTURE_JSON));
@@ -201,7 +201,7 @@ describe('api', () => {
 
   describe('unhappy path', () => {
     it('should fail to stream a missing endpoint', (done) => {
-      get(`${URL}/test/data/fixture.json-junk`).stream((err?: Error) => {
+      get(`${URL}/test/data/fixture.json-junk`).stream((err?: Error | null) => {
         assert.ok(!!err);
         done();
       });
@@ -213,14 +213,14 @@ describe('api', () => {
         .then(() => {
           assert.ok(false);
         })
-        .catch((err?: Error) => {
+        .catch((err?: Error | null) => {
           assert.ok(!!err);
           done();
         });
     });
 
     it('should fail to extract a missing endpoint', (done) => {
-      get(`${URL}/test/data/fixture.tar.gz-junk`).extract(TARGET, { strip: 1 }, (err?: Error) => {
+      get(`${URL}/test/data/fixture.tar.gz-junk`).extract(TARGET, { strip: 1 }, (err?: Error | null) => {
         assert.ok(!!err);
         done();
       });
@@ -232,14 +232,14 @@ describe('api', () => {
         .then(() => {
           assert.ok(false);
         })
-        .catch((err?: Error) => {
+        .catch((err?: Error | null) => {
           assert.ok(!!err);
           done();
         });
     });
 
     it('should fail to download file for a missing endpoint', (done) => {
-      get(`${URL}/test/data/fixture.json-junk`).file(TARGET, (err?: Error) => {
+      get(`${URL}/test/data/fixture.json-junk`).file(TARGET, (err?: Error | null) => {
         assert.ok(!!err);
         done();
       });
@@ -251,14 +251,14 @@ describe('api', () => {
         .then(() => {
           assert.ok(false);
         })
-        .catch((err?: Error) => {
+        .catch((err?: Error | null) => {
           assert.ok(!!err);
           done();
         });
     });
 
     it('should fail to head a missing endpoint', (done) => {
-      get(`${URL}/test/data/fixture.json-junk`).head((err?: Error) => {
+      get(`${URL}/test/data/fixture.json-junk`).head((err?: Error | null) => {
         assert.ok(!!err);
         done();
       });
@@ -270,14 +270,14 @@ describe('api', () => {
         .then(() => {
           assert.ok(false);
         })
-        .catch((err?: Error) => {
+        .catch((err?: Error | null) => {
           assert.ok(!!err);
           done();
         });
     });
 
     it('should fail to get json for a missing endpoint', (done) => {
-      get(`${URL}/test/data/fixture.json-junk`).json((err?: Error) => {
+      get(`${URL}/test/data/fixture.json-junk`).json((err?: Error | null) => {
         assert.ok(!!err);
         done();
       });
@@ -289,14 +289,14 @@ describe('api', () => {
         .then(() => {
           assert.ok(false);
         })
-        .catch((err?: Error) => {
+        .catch((err?: Error | null) => {
           assert.ok(!!err);
           done();
         });
     });
 
     it('should fail to pipe a missing endpoint', (done) => {
-      get(`${URL}/test/data/fixture.json-junk`).pipe(fs.createWriteStream(path.join(TMP_DIR, 'fixture.json')), (err?: Error) => {
+      get(`${URL}/test/data/fixture.json-junk`).pipe(fs.createWriteStream(path.join(TMP_DIR, 'fixture.json')), (err?: Error | null) => {
         assert.ok(!!err);
         done();
       });
@@ -308,14 +308,14 @@ describe('api', () => {
         .then(() => {
           assert.ok(false);
         })
-        .catch((err?: Error) => {
+        .catch((err?: Error | null) => {
           assert.ok(!!err);
           done();
         });
     });
 
     it('should fail to get text for a missing endpoint', (done) => {
-      get(`${URL}/test/data/fixture.text-junk`).text((err?: Error) => {
+      get(`${URL}/test/data/fixture.text-junk`).text((err?: Error | null) => {
         assert.ok(!!err);
         done();
       });
@@ -327,7 +327,7 @@ describe('api', () => {
         .then(() => {
           assert.ok(false);
         })
-        .catch((err?: Error) => {
+        .catch((err?: Error | null) => {
           assert.ok(!!err);
           done();
         });

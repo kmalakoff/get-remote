@@ -66,7 +66,7 @@ describe('download', () => {
   });
 
   it('get and rename file', (done) => {
-    get(`${URL}/test/data/fixture.tar`).file(TARGET, { filename: 'bar.tar' }, (err?: Error) => {
+    get(`${URL}/test/data/fixture.tar`).file(TARGET, { filename: 'bar.tar' }, (err?: Error | null) => {
       if (err) return done(err);
       fs.readdir(TARGET, (err, files) => {
         if (err) return done(err);
@@ -77,7 +77,7 @@ describe('download', () => {
   });
 
   it('save file', (done) => {
-    get(`${URL}/test/data/fixture.tar`).file(TARGET, (err?: Error) => {
+    get(`${URL}/test/data/fixture.tar`).file(TARGET, (err?: Error | null) => {
       if (err) return done(err);
       fs.readdir(TARGET, (err, files) => {
         if (err) return done(err);
@@ -89,10 +89,10 @@ describe('download', () => {
 
   it('extract file', (done) => {
     const options = { strip: 1 };
-    get(`${URL}/test/data/fixture.tar`).extract(TARGET, options, (err?: Error) => {
+    get(`${URL}/test/data/fixture.tar`).extract(TARGET, options, (err?: Error | null) => {
       if (err) return done(err);
 
-      validateFiles(options, 'tar.gz', (err?: Error) => {
+      validateFiles(options, 'tar.gz', (err?: Error | null) => {
         if (err) return done(err);
         done();
       });
@@ -100,7 +100,7 @@ describe('download', () => {
   });
 
   it('extract file that is not compressed', (done) => {
-    get(`${URL}/test/data/fixture.js`).extract(TARGET, (err?: Error) => {
+    get(`${URL}/test/data/fixture.js`).extract(TARGET, (err?: Error | null) => {
       if (err) return done(err);
 
       fs.readdir(TARGET, (err, files) => {
@@ -112,7 +112,7 @@ describe('download', () => {
   });
 
   it('error on 404', (done) => {
-    get(`${URL}/test/data/404`).stream((err?: Error) => {
+    get(`${URL}/test/data/404`).stream((err?: Error | null) => {
       assert.ok(err);
       assert.equal(err.message, 'Response code 404 (Not Found)');
       done();
@@ -165,7 +165,7 @@ describe('download', () => {
   });
 
   it('handle query string', (done) => {
-    get(`${URL}/test/data/fixture.tar?param=value`).file(TARGET, (err?: Error) => {
+    get(`${URL}/test/data/fixture.tar?param=value`).file(TARGET, (err?: Error | null) => {
       if (err) return done(err);
       fs.readdir(TARGET, (err, files) => {
         if (err) return done(err);

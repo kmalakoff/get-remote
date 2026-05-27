@@ -11,23 +11,23 @@ export interface OptionsInternal extends Options {
   time?: number;
 }
 
-export type Callback = (error?: Error) => void;
-export type FileCallback = (error?: Error, filePath?: string) => void;
+export type Callback = (error?: Error | null) => void;
+export type FileCallback = (error?: Error | null, filePath?: string) => void;
 
 export interface HeadResponse {
   statusCode: number;
   headers: object | Headers;
 }
-export type HeadCallback = (error?: Error, res?: HeadResponse) => void;
+export type HeadCallback = (error?: Error | null, res?: HeadResponse) => void;
 
 export interface JSONResponse {
   statusCode: number;
   headers: object | Headers;
   body: object;
 }
-export type JSONCallback = (error?: Error, stream?: JSONResponse) => void;
+export type JSONCallback = (error?: Error | null, stream?: JSONResponse) => void;
 
-export type PipeCallback = (error?: Error) => void;
+export type PipeCallback = (error?: Error | null) => void;
 
 export interface StreamOptions {
   method?: string;
@@ -43,14 +43,14 @@ export interface ReadStream extends NodeJS.ReadableStream {
   size?: number;
   basename?: string;
 }
-export type StreamCallback = (error?: Error, stream?: ReadStream) => void;
+export type StreamCallback = (error?: Error | null, stream?: ReadStream) => void;
 
 export interface TextResponse {
   statusCode: number;
   headers: object | Headers;
   body: string;
 }
-export type TextCallback = (error?: Error, stream?: TextResponse) => void;
+export type TextCallback = (error?: Error | null, stream?: TextResponse) => void;
 
 export interface StreamSource extends ReadStream {
   size?: number;

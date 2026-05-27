@@ -9,7 +9,7 @@ import getBasename from '../sourceStats/basename.ts';
 import type { FileCallback, Options } from '../types.ts';
 import type Response from './index.ts';
 
-export type Callback = (error?: Error, fullPath?: string) => void;
+export type Callback = (error?: Error | null, fullPath?: string) => void;
 
 function worker(this: Response, dest: string, options: Options, callback: Callback) {
   options = { ...this.options, ...options };
@@ -21,12 +21,13 @@ function worker(this: Response, dest: string, options: Options, callback: Callba
     const fullPath = basename === undefined ? dest : path.join(dest, basename);
     const tempPath = tempSuffix(fullPath);
 
+    const responseStream = res; // capture narrowed value before entering closures
     mkdirp(path.dirname(tempPath), (err) => {
-      if (err) return callback(err ?? undefined);
+      if (err) return callback(err);
 
       // write to temp file
-      res = pump(res!, fs.createWriteStream(tempPath));
-      oo(res, ['error', 'end', 'close', 'finish'], (err: Error | null) => {
+      const piped = pump(responseStream, fs.createWriteStream(tempPath));
+      oo(piped, ['error', 'end', 'close', 'finish'], (err: Error | null) => {
         if (err) return rm(tempPath, () => callback(err));
 
         // atomic rename to final destination
@@ -62,5 +63,5 @@ export default function file(this: Response, dest: string, options?: Options | F
   options = typeof options === 'function' ? {} : ((options || {}) as Options);
 
   if (typeof callback === 'function') return worker.call(this, dest, options, callback);
-  return new Promise((resolve, reject) => worker.call(this, dest, options, (err, res) => (err ? reject(err) : resolve(res!))));
+  return new Promise((resolve, reject) => worker.call(this, dest, options, (err, res) => (err ? reject(err) : resolve(res as string))));
 }
