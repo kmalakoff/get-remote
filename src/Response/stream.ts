@@ -51,6 +51,10 @@ function worker(this: ResponseClass, options: StreamOptions, callback: StreamCal
     getFile(this.endpoint, tempPath, (err, result) => {
       if (err) return callback(err);
       if (!result) return callback(new Error('No result'));
+      if (result.statusCode < 200 || result.statusCode >= 300) {
+        rmSync(result.path);
+        return callback(new Error(`Response code ${result.statusCode} (${http.STATUS_CODES[result.statusCode]})`));
+      }
       const res = fs.createReadStream(result.path) as ReadStream;
       res.headers = result.headers;
       res.statusCode = result.statusCode;
