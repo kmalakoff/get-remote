@@ -5,10 +5,10 @@ import http from 'http';
 import https from 'https';
 import Module from 'module';
 import oo from 'on-one';
-import os from 'os';
 import path from 'path';
 import suffix from 'temp-suffix';
 import url from 'url';
+import { tmpdir } from '../compat.ts';
 import type { Callback } from '../lib/wrapResponse.ts';
 import wrapResponse from '../lib/wrapResponse.ts';
 
@@ -16,7 +16,6 @@ const URL_REGEX = /^(([^:/?#]+):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
 const __dirname = path.dirname(typeof __filename === 'undefined' ? url.fileURLToPath(import.meta.url) : __filename);
-const tmpdir = typeof os.tmpdir === 'function' ? os.tmpdir : _require('os-shim').tmpdir;
 
 // node 0.x does not support https or has untrusted certs
 const major = +process.versions.node.split('.')[0];
