@@ -1,4 +1,4 @@
 {
   "upgrade": true,
-  "reject": ["readable-stream", "support-color", "progress-stream", "pump", "mkdirp-classic", "lzma-native", "content-disposition"]
+  "reject": ["readable-stream", "progress-stream", "pump", "mkdirp-classic", "lzma-native", "content-disposition"]
 }
