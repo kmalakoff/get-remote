@@ -4,8 +4,13 @@
  */
 
 import Module from 'module';
+import os from 'os';
 
 const _require = typeof require === 'undefined' ? Module.createRequire(import.meta.url) : require;
+
+export function tmpdir(): string {
+  return typeof os.tmpdir === 'function' ? os.tmpdir() : _require('os-shim').tmpdir();
+}
 
 /**
  * Stream compatibility - Transform class
