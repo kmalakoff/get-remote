@@ -8,6 +8,7 @@ import Pinkie from 'pinkie-promise';
 import { TARGET, TMP_DIR } from '../lib/constants.ts';
 import validateFiles from '../lib/validateFiles.ts';
 
+// Network access: this suite downloads live archive fixtures from GitHub.
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 const EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip'];

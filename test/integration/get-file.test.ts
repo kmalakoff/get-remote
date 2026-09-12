@@ -9,6 +9,7 @@ import Queue from 'queue-cb';
 
 import { TARGET, TMP_DIR } from '../lib/constants.ts';
 
+// Network access: this suite downloads live fixtures from GitHub, npm, and Node.js.
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 
 describe('get-file', () => {

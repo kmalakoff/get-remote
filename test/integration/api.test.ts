@@ -11,6 +11,7 @@ import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants.ts';
 import streamToBuffer from '../lib/streamToBuffer.ts';
 import validateFiles from '../lib/validateFiles.ts';
 
+// Network access: this suite uses the live GitHub fixture endpoint.
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 const FIXTURE_JSON = fs.readFileSync(path.join(DATA_DIR, 'fixture.json'), 'utf8');
 
