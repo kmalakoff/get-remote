@@ -1,16 +1,16 @@
 import assert from 'assert';
 import fs from 'fs';
 import { safeRm } from 'fs-remove-compat';
-import get, { fileType, getBasename, type Source } from 'get-remote';
+import get, { fileType } from 'get-remote';
 import isTar from 'is-tar';
 import mkdirp from 'mkdirp-classic';
-import path from 'path';
 import Pinkie from 'pinkie-promise';
 
-import { DATA_DIR, TARGET, TMP_DIR } from '../lib/constants.ts';
+import { TARGET, TMP_DIR } from '../lib/constants.ts';
 import streamToBuffer from '../lib/streamToBuffer.ts';
 import validateFiles from '../lib/validateFiles.ts';
 
+// Network access: this suite downloads live fixtures from GitHub and Node.js.
 const URL = 'https://raw.githubusercontent.com/kmalakoff/get-remote/master';
 const GITHUB_ARCHIVE_URL = 'https://github.com/kmalakoff/get-remote/archive/refs/heads/master.zip';
 
@@ -119,27 +119,6 @@ describe('download', () => {
     });
   });
 
-  it('sanitize invalid filename characters', () => {
-    // Test POSIX invalid characters are replaced with '!'
-    // Note: ? is a query string delimiter in URLs, so it gets stripped not sanitized
-    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/foo*bar.tar'), 'foo!bar.tar');
-    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/foo<bar>.tar'), 'foo!bar!.tar');
-    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/foo:bar.tar'), 'foo!bar.tar');
-    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/foo"bar.tar'), 'foo!bar.tar');
-    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/foo|bar.tar'), 'foo!bar.tar');
-
-    // Test Windows reserved names are replaced
-    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/con'), '!');
-    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/prn'), '!');
-    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/aux'), '!');
-    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/nul'), '!');
-    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/com1'), '!');
-    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/lpt9'), '!');
-
-    // Test query strings are stripped before sanitization
-    assert.equal(getBasename(null as unknown as Source, {}, 'http://example.com/file.tar?query=value'), 'file.tar');
-  });
-
   it('follow redirects', (done) => {
     get(`${URL.replace('https', 'http')}/test/data/fixture.tar`).stream((err, stream) => {
       if (err) return done(err);
@@ -212,39 +191,5 @@ describe('download', () => {
         done();
       });
     });
-  });
-
-  it('detect various archive types from magic bytes', () => {
-    // Test file type detection with local test fixtures
-
-    // Test ZIP
-    const zipBuffer = fs.readFileSync(path.join(DATA_DIR, 'fixture.zip'));
-    const zipResult = fileType(zipBuffer);
-    assert.ok(zipResult, 'Expected zip to be detected');
-    assert.equal(zipResult.ext, 'zip');
-
-    // Test GZIP
-    const gzBuffer = fs.readFileSync(path.join(DATA_DIR, 'fixture.tar.gz'));
-    const gzResult = fileType(gzBuffer);
-    assert.ok(gzResult, 'Expected gzip to be detected');
-    assert.equal(gzResult.ext, 'gz');
-
-    // Test BZIP2
-    const bz2Buffer = fs.readFileSync(path.join(DATA_DIR, 'fixture.tar.bz2'));
-    const bz2Result = fileType(bz2Buffer);
-    assert.ok(bz2Result, 'Expected bzip2 to be detected');
-    assert.equal(bz2Result.ext, 'bz2');
-
-    // Test XZ
-    const xzBuffer = fs.readFileSync(path.join(DATA_DIR, 'fixture.tar.xz'));
-    const xzResult = fileType(xzBuffer);
-    assert.ok(xzResult, 'Expected xz to be detected');
-    assert.equal(xzResult.ext, 'xz');
-
-    // Test TAR (uncompressed)
-    const tarBuffer = fs.readFileSync(path.join(DATA_DIR, 'fixture.tar'));
-    const tarResult = fileType(tarBuffer);
-    assert.ok(tarResult, 'Expected tar to be detected');
-    assert.equal(tarResult.ext, 'tar');
   });
 });

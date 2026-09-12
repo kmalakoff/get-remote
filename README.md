@@ -1,98 +1,58 @@
 ## get-remote
 
-Download a text, json, a file with optional extract, get a stream, or head an endpoint.
+Download text or JSON, save a response to a file, stream it, extract an archive, or send a HEAD request. The API supports callbacks and Promises.
 
-Callbacks
-
-```
-var assert = require('assert')
-var get = require('get-remote'))
-
-// get stream
-get('http://api.com/fixture.json').stream(function (err, stream) {
-  // do something
-});
-
-// get and extract
-get('http://api.com/fixture.tar.gz').extract(process.cwd(), { strip: 1 }, function (err) {
-  // do something
-});
-
-// get to file with inferred name of 'fixture.json'
-get('http://api.com/fixture.json').file(process.cwd(), function (err) {
-  // do something
-});
-
-// head the endpoint
-get('http://api.com/fixture.json').head(function (err, res) {
-  assert.equal(res.statusCode, 200);
-  assert.ok(!!res.headers);
-});
-
-// get json
-get('http://api.com/fixture.json').json(function (err, res) {
-  assert.ok(!!res.headers);
-  assert.ok(!!res.statusCode);
-  assert.ok(!!res.body);
-  // do something with res.body
-});
-
-// pipe to write stream
-get('http://api.com/fixture.json').pipe(fs.createWriteStream(path.join(process.cwd(), 'fixture.json')), function (err) {
-  // do someting
-});
-
-// get text
-get('http://api.com/fixture.text').text(function (err, res) {
-  assert.ok(!!res.headers);
-  assert.ok(!!res.statusCode);
-  assert.ok(!!res.body);
-  // do something with res.body
-});
-
-
-// get and extract - callbacks
-get('https://cdn.jsdelivr.net/gh/nodejs/Release@main/schedule.json').extract(fullPath, { strip: 1 }, function(err) {
-  
-  // do something
-})
+```bash
+npm install get-remote
 ```
 
-Promises
+### Promise API
 
+This example is an ES module and uses top-level `await`. It reads public package metadata from the npm registry.
+
+```js
+import get from 'get-remote';
+import fs from 'node:fs';
+import path from 'node:path';
+
+const url = 'https://registry.npmjs.org/get-remote/latest';
+const response = await get(url).json();
+console.log(response.statusCode, response.body.name); // 200 get-remote
+
+await get(url).file(process.cwd(), {
+  filename: 'get-remote.json'
+});
+
+await get(url).pipe(
+  fs.createWriteStream(path.join(process.cwd(), 'get-remote-copy.json'))
+);
 ```
-var assert = require('assert')
-var get = require('get-remote'))
 
-// get stream
-var stream = await get('http://api.com/fixture.json').stream();
+The response methods return status and headers along with the parsed JSON or text body. `stream()` returns the response stream, `head()` returns status and headers, and `file()` infers a filename unless you provide one.
 
-// get and extract
-await get('http://api.com/fixture.tar.gz').extract(process.cwd(), { strip: 1 });
+### Callback API
 
-// get to file with inferred name of 'fixture.json'
-await get('http://api.com/fixture.json').file(process.cwd());
+```js
+const get = require('get-remote');
 
-// get to file with explicit name of 'get.json'
-await get('http://api.com/fixture.json').file(process.cwd(), {filename: 'get.json'});
-
-// head the endpoint
-var res = await get('http://api.com/fixture.json').head(function (err, res) {
-assert.equal(res.statusCode, 200);
-assert.ok(!!res.headers);
-
-// get json
-var res = await get('http://api.com/fixture.json').json();
-assert.ok(!!res.headers);
-assert.ok(!!res.statusCode);
-assert.ok(!!res.body);
-
-// pipe to write stream
-await get('http://api.com/fixture.json').pipe(fs.createWriteStream(path.join(process.cwd(), 'fixture.json'))));
-
-// get text
-var res = await get('http://api.com/fixture.text').text();
-assert.ok(!!res.headers);
-assert.ok(!!res.statusCode);
-assert.ok(!!res.body);
+get('https://registry.npmjs.org/get-remote/latest').text(function (error, response) {
+  if (error) throw error;
+  console.log(response.statusCode, JSON.parse(response.body).name); // 200 get-remote
+});
 ```
+
+### Archive extraction
+
+Install `fast-extract` when you want `extract()` to unpack an archive:
+
+```bash
+npm install fast-extract
+```
+
+```js
+await get('https://your-service.example/archive.tar.gz').extract(process.cwd(), { strip: 1 });
+```
+
+Replace the URL with an archive endpoint you control. Without `fast-extract`, `extract()` downloads the compressed file without unpacking it and reports a warning.
+
+The package supports Node >=0.8 and is MIT licensed. See the [API docs](https://kmalakoff.github.io/get-remote/) and [GitHub issues](https://github.com/kmalakoff/get-remote/issues).
