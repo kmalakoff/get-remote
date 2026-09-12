@@ -3,7 +3,6 @@ var path = require('path');
 var fs = require('fs');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp-classic');
-var progressStream = require('progress-stream');
 
 var download = require('../..');
 
