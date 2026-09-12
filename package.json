@@ -1,6 +1,6 @@
 {
   "name": "download-extract",
-  "version": "1.2.1",
+  "version": "0.1.0",
   "description": "Download a file and optionally extract it",
   "keywords": [
     "download",
