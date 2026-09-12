@@ -18,12 +18,12 @@
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint .",
-    "test": "mocha-compat test/spec/**/*.test.js --no-timeouts",
-    "prepublishOnly": "dtd \"npm run lint\" \"depcheck\""
+    "prepublishOnly": "dtd \"npm run lint\" \"depcheck\"",
+    "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
   },
   "dependencies": {
     "content-disposition": "^0.5.3",
-    "fast-extract": "^0.1.19",
+    "fast-extract": "^0.1.20",
     "fs-write-stream-atomic": "^1.0.10",
     "once": "^1.4.0",
     "progress-stream": "^2.0.0"
