@@ -7,33 +7,31 @@ var semver = require('semver');
 
 var download = require('../..');
 
-// var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tar.xz', 'tgz', 'zip'];
-var EXTRACT_TYPES = ['zip'];
+var EXTRACT_TYPES = ['tar', 'tar.bz2', 'tar.gz', 'tar.xz', 'tgz', 'zip'];
+// var EXTRACT_TYPES = ['zip'];
 
 function addTests(extractType) {
   it('extract file (' + extractType + ')', function (done) {
     download('http://extractors.com/foo.' + extractType, TMP_DIR, { strip: 1, extract: true }, function (err) {
       assert.ok(!err);
 
-      var destPath = extractType === 'zip' ? path.join(TMP_DIR, 'data') : TMP_DIR;
-      fs.readdir(destPath, function (err, files) {
+      fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
         assert.deepEqual(files.sort(), ['file.txt', 'link']);
-        extractType === 'zip' || assert.equal(fs.realpathSync(path.join(destPath, 'link')), path.join(destPath, 'file.txt'));
+        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
         done();
       });
     });
   });
 
   it('extract file without extension (' + extractType + ')', function (done) {
-    download('http://extractors.com/foo-' + extractType, TMP_DIR, { strip: 1, extract: '.' + extractType, filename: 'fixture.zip' }, function (err) {
+    download('http://extractors.com/foo-' + extractType, TMP_DIR, { strip: 1, extract: '.' + extractType, filename: 'fixture.' + extractType }, function (err) {
       assert.ok(!err);
 
-      var destPath = extractType === 'zip' ? path.join(TMP_DIR, 'data') : TMP_DIR;
-      fs.readdir(destPath, function (err, files) {
+      fs.readdir(TMP_DIR, function (err, files) {
         assert.ok(!err);
         assert.deepEqual(files.sort(), ['file.txt', 'link']);
-        extractType === 'zip' || assert.equal(fs.realpathSync(path.join(destPath, 'link')), path.join(destPath, 'file.txt'));
+        assert.equal(fs.realpathSync(path.join(TMP_DIR, 'link')), path.join(TMP_DIR, 'file.txt'));
         done();
       });
     });
