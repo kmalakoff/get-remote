@@ -16,20 +16,20 @@
   "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
   "main": "index.js",
   "scripts": {
-    "format": "eslint . --fix",
+    "format": "prettier --write .",
     "lint": "eslint .",
     "test": "mocha-compat test/spec/**/*.test.js --no-timeouts"
   },
   "dependencies": {
     "content-disposition": "^0.5.3",
-    "fast-extract": "^0.1.11",
+    "fast-extract": "^0.1.17",
     "fs-write-stream-atomic": "^1.0.10",
     "once": "^1.4.0",
     "progress-stream": "^2.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.1.0",
+    "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.20.2",
@@ -44,6 +44,7 @@
     "prettier": "^2.0.5",
     "random-buffer": "^0.1.0",
     "require_optional": "^1.0.1",
+    "rimraf": "^2.7.1",
     "semver": "^5.7.1"
   },
   "engines": {
