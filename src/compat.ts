@@ -9,13 +9,13 @@ import os from 'os';
  * - Uses native os.tmpdir on Node 0.10+
  * - Falls back to os-shim on Node 0.8
  */
-var hasTmpdir = typeof os.tmpdir === 'function';
+const hasTmpdir = typeof os.tmpdir === 'function';
 
 export function tmpdir(): string {
   if (hasTmpdir) {
     return os.tmpdir();
   }
-  var osShim = require('os-shim');
+  const osShim = require('os-shim');
   return osShim.tmpdir();
 }
 
@@ -24,14 +24,14 @@ export function tmpdir(): string {
  * - Uses native Object.assign on Node 4.0+
  * - Falls back to manual property copy on Node 0.8-3.x
  */
-var hasObjectAssign = typeof Object.assign === 'function';
-var _hasOwnProperty = Object.prototype.hasOwnProperty;
+const hasObjectAssign = typeof Object.assign === 'function';
+const _hasOwnProperty = Object.prototype.hasOwnProperty;
 
 export function objectAssign<T, U>(target: T, source: U): T & U {
   if (hasObjectAssign) {
     return Object.assign(target, source);
   }
-  for (var key in source) {
+  for (const key in source) {
     if (_hasOwnProperty.call(source, key)) {
       // biome-ignore lint/suspicious/noExplicitAny: Generic object assignment for Node 0.8 compat
       (target as any)[key] = (source as any)[key];
