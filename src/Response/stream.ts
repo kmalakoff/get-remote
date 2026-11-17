@@ -69,11 +69,14 @@ function worker(this: ResponseClass, options: StreamOptions, callback: StreamCal
   const parsed = URL_REGEX.exec(this.endpoint);
   if (!parsed) return callback(new Error('Invalid URL'));
   const protocol = parsed[1];
-  const host = parsed[4];
+  const authority = (parsed[4] || '').replace(/^[^@]*@/, '');
+  const portMatch = /^(.*?)(?::(\d*))?$/.exec(authority) as RegExpExecArray;
+  const host = portMatch[1].replace(/^\[(.*)\]$/, '$1'); // bracketed IPv6 literal
   const urlPath = parsed[5] + (parsed[6] || '');
 
   const secure = protocol === 'https:';
-  const requestOptions: http.RequestOptions = { host, path: urlPath, port: secure ? 443 : 80, method: options.method || 'GET' };
+  const port = portMatch[2] ? +portMatch[2] : secure ? 443 : 80;
+  const requestOptions: http.RequestOptions = { host, path: urlPath, port, method: options.method || 'GET' };
   const req = secure ? https.request(requestOptions) : http.request(requestOptions);
   const end: Callback = (err?: Error | null, res?: ReadStream) => callback(err, res);
   req.on('response', (res: http.IncomingMessage) => {
