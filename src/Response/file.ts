@@ -2,6 +2,7 @@ import fs from 'fs';
 import { rm } from 'fs-remove-compat';
 import mkdirp from 'mkdirp-classic';
 import path from 'path';
+import { renameInto } from 'staged-cache';
 import tempSuffix from 'temp-suffix';
 import pump from '../lib/pump.ts';
 import getBasename from '../sourceStats/basename.ts';
@@ -39,22 +40,7 @@ function worker(this: Response, dest: string, options: Options, callback: Callba
             rm(tempPath, () => callback(err));
             return;
           }
-          fs.rename(tempPath, fullPath, (err) => {
-            if (err) {
-              const code = (err as NodeJS.ErrnoException).code;
-              // On Windows, EPERM can occur if dest is locked by another process
-              // EEXIST/ENOTEMPTY means another process won the race - that's ok
-              // trust that only if a regular file is at dest
-              if (code === 'EPERM' || code === 'EEXIST' || code === 'ENOTEMPTY') {
-                return fs.stat(fullPath, (statErr, stats) => {
-                  if (statErr || !stats.isFile()) return rm(tempPath, () => callback(err));
-                  rm(tempPath, () => callback(undefined, fullPath));
-                });
-              }
-              return rm(tempPath, () => callback(err));
-            }
-            callback(undefined, fullPath);
-          });
+          renameInto(tempPath, fullPath, (err) => (err ? callback(err) : callback(undefined, fullPath)));
         });
       };
       responseStream.on('aborted', () => {
